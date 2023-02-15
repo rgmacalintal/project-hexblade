@@ -1,19 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Project_Hexblade.Models;
 using System.Diagnostics;
-using FirebaseAdmin.Auth;
 
 namespace Project_Hexblade.Controllers
 {
     public class HomeController : Controller
     {
-        FirebaseAuth auth;
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            auth = new FirebaseAuth()
         }
 
         public IActionResult Index()
