@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Project_Hexblade.Data;
-using Google.Cloud.Firestore;
 
 var builder = WebApplication.CreateBuilder(args);
 
