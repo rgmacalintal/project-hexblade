@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using project_hexblade.Areas.Identity.Data;
+using Hexblade.Areas.Identity.Data;
 
-namespace project_hexblade.Areas.Identity.Data;
+namespace Hexblade.Areas.Identity.Data;
 
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {

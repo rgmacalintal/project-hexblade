@@ -1,4 +1,4 @@
-namespace project_hexblade.Models
+namespace Hexblade.Models
 {
     public class ErrorViewModel
     {

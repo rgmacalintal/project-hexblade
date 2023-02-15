@@ -18,9 +18,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using project_hexblade.Areas.Identity.Data;
+using Hexblade.Areas.Identity.Data;
 
-namespace project_hexblade.Areas.Identity.Pages.Account
+namespace Hexblade.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {

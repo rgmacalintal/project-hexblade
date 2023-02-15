@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using project_hexblade.Models;
+using Hexblade.Models;
 using System.Diagnostics;
 
-namespace project_hexblade.Controllers
+namespace Hexblade.Controllers
 {
     public class HomeController : Controller
     {
