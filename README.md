@@ -16,4 +16,6 @@ and easy-to-customize web-app. The idea is to have each "chunk" of the
 
 - [Team Hexblade OneNote](https://algonquinlivecom-my.sharepoint.com/personal/solo0069_algonquinlive_com1/_layouts/15/Doc.aspx?sourcedoc={0fd92fe6-ab6f-4b02-abfd-3a3af722ea4d}&action=edit&wd=target%28Project%20Overview.one%7Cbbed25e5-0408-4cde-8fbc-d47303da112d%2FProject%20Hexblade%7Cf97a9684-4f3e-44c5-bce0-f7ca2dc9a206%2F%29&wdorigin=NavigationUrl)
 
+- [Project Plan](https://algonquinlivecom-my.sharepoint.com/:w:/g/personal/solo0069_algonquinlive_com1/EaAdR2frTDtIjC6u5wN5hwEBWJzholk2NoyXQpoiVpnskw?e=3BuRMU)
+
 - [Initial Repository](https://github.com/tjmoyes/project-hexblade)
