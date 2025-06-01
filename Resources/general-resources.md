@@ -28,14 +28,14 @@
 
 ## Character Sheet Examples / Visual Inspos
 
-![Chararcter Sheet 1](./images/CS1.png)
+![Chararcter Sheet 1](./images/character-sheets/CS1.png)
 
-![Chararcter Sheet 2](./images/CS2.jpeg)
+![Chararcter Sheet 2](./images/character-sheets/CS2.jpeg)
 
-![Chararcter Sheet 3](./images/CS3.jpeg)
+![Chararcter Sheet 3](./images/character-sheets/CS3.jpeg)
 
-![Chararcter Sheet 4](./images/CS4.jpeg)
+![Chararcter Sheet 4](./images/character-sheets/CS4.jpeg)
 
-![Chararcter Sheet 5](./images/CS5.jpeg)
+![Chararcter Sheet 5](./images/character-sheets/CS5.jpeg)
 
-![Chararcter Sheet 6](./images/CS6.jpeg)
+![Chararcter Sheet 6](./images/character-sheets/CS6.jpeg)
