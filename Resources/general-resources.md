@@ -1,5 +1,9 @@
 # General Resources
 
+## Work Breakdown Structure (WBS)
+
+![WBS](./images/WBS.png)
+
 ## Learning Resources
 
 - [LinkedIn Learning - .NET](https://www.linkedin.com/learning/topics/dot-net)
