@@ -19,3 +19,5 @@ and easy-to-customize web-app. The idea is to have each "chunk" of the
 - [Project Plan](https://algonquinlivecom-my.sharepoint.com/:w:/g/personal/solo0069_algonquinlive_com1/EaAdR2frTDtIjC6u5wN5hwEBWJzholk2NoyXQpoiVpnskw?e=3BuRMU)
 
 - [Initial Repository](https://github.com/tjmoyes/project-hexblade)
+
+- [Dev IDE Setup](./Resources/dev-tools/ide-installation.md)
