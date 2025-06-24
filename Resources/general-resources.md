@@ -4,6 +4,12 @@
 
 ![WBS](./images/WBS.png)
 
+## Tools and Guidelines
+
+- [WCAG Standards](https://www.w3.org/WAI/standards-guidelines/wcag/)
+
+- [Coolers](https://coolors.co/)
+
 ## Learning Resources
 
 - [LinkedIn Learning - .NET](https://www.linkedin.com/learning/topics/dot-net)
