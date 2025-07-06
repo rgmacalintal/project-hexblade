@@ -24,31 +24,37 @@ and easy-to-customize web-app. The idea is to have each "chunk" of the
 
 ### Logo Ideas
 
-![Logo 1](./Resources/images/ui-design/logos/logo1.png)
+|||
+| ------- | ------- |
+|![Logo 1](./Resources/images/ui-design/logos/logo1.png)|![Logo 2](./Resources/images/ui-design/logos/logo2.png)|
+|![Logo 3](./Resources/images/ui-design/logos/logo3.png)|![Logo 4](./Resources/images/ui-design/logos/logo4.png)|
 
-![Logo 2](./Resources/images/ui-design/logos/logo2.png)
-
-![Logo 3](./Resources/images/ui-design/logos/logo3.png)
-
-![Logo 4](./Resources/images/ui-design/logos/logo4.png)
-
-### Sample Character Sheet
-
-![Character Sheet](./Resources/images/ui-design/gui/character-sheet.png)
 
 ### Sample Character Pages
 
-![Character Page 1](./Resources/images/ui-design/gui/character1.png)
+|Light Mode|Dark Mode|
+| -------- | ------- |
+|![Character Page 1](./Resources/images/ui-design/gui/character1.png)|![Character Page 2](./Resources/images/ui-design/gui/character2.png)|
+|![Character Page Light](./Resources/images/ui-design/gui/character-light.png)|![Character Page Dark](./Resources/images/ui-design/gui/character-dark.png)|
 
-![Character Page 2](./Resources/images/ui-design/gui/character2.png)
+## Character Select Pages
 
-![Character Page 3](./Resources/images/ui-design/gui/character3.png)
+|||
+| -------- | ------- |
+|<img src="./Resources/images/ui-design/gui/char-select.png" width=420>|![Character Select View Light](./Resources/images/ui-design/gui/char-select-light.png)|
 
-### Login Page
 
-![Login 1](./Resources/images/ui-design/gui/login1.png)
+### Login Page Ideas
 
-![Login 2](./Resources/images/ui-design/gui/login2.png)
+||||
+| -------- | ------- | ------- |
+|![Login Light](./Resources/images/ui-design/gui/login-light.png)|![Login Dark 1](./Resources/images/ui-design/gui/login-dark1.png)|![Login Dark 2](./Resources/images/ui-design/gui/login-dark2.png)|
+
+### Account Creation Pages
+
+||||
+| -------- | ------- | ------- |
+|![Create Acc Light](./Resources/images/ui-design/gui/create-acc-light.png)|![Create Acc Dark 1](./Resources/images/ui-design/gui/create-acc-dark1.png)|![Create Acc Dark 2](./Resources/images/ui-design/gui/create-acc-dark2.png)|
 
 ## Backend Design / Structure Ideas
 
