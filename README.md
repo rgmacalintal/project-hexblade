@@ -16,7 +16,7 @@ and easy-to-customize web-app. The idea is to have each "chunk" of the
 
 - [Team Hexblade OneNote](https://algonquinlivecom-my.sharepoint.com/personal/solo0069_algonquinlive_com1/_layouts/15/Doc.aspx?sourcedoc={0fd92fe6-ab6f-4b02-abfd-3a3af722ea4d}&action=edit&wd=target%28Project%20Overview.one%7Cbbed25e5-0408-4cde-8fbc-d47303da112d%2FProject%20Hexblade%7Cf97a9684-4f3e-44c5-bce0-f7ca2dc9a206%2F%29&wdorigin=NavigationUrl)
 
-- [Project Plan](https://algonquinlivecom-my.sharepoint.com/:w:/g/personal/solo0069_algonquinlive_com1/Ea3Z8opN_YlDjEMOg-0GbGcB5u9wkHxlhm-hJuP8xoM7Qw?e=lh4caB)
+- [OLD Project Plan](https://algonquinlivecom-my.sharepoint.com/:w:/g/personal/solo0069_algonquinlive_com1/Ea3Z8opN_YlDjEMOg-0GbGcB5u9wkHxlhm-hJuP8xoM7Qw?e=lh4caB)
 
 - [Technical Report](https://algonquinlivecom-my.sharepoint.com/:w:/g/personal/solo0069_algonquinlive_com1/EfSt2mMSjSZKsacq6utmSZ8BxblZ6gibvK_jJnBIKmxu7w?e=rDqDjs)
 
@@ -39,11 +39,15 @@ and easy-to-customize web-app. The idea is to have each "chunk" of the
 |![Character Page 1](./Resources/images/ui-design/gui/character1.png)|![Character Page 2](./Resources/images/ui-design/gui/character2.png)|
 |![Character Page Light](./Resources/images/ui-design/gui/character-light.png)|![Character Page Dark](./Resources/images/ui-design/gui/character-dark.png)|
 
-## Character Select Pages
+### Character Select Pages
 
 |||
 | -------- | ------- |
 |<img src="./Resources/images/ui-design/gui/char-select.png" width=420>|![Character Select View Light](./Resources/images/ui-design/gui/char-select-light.png)|
+
+### Character Creation Wizard Page
+
+![Character Creation Wizard](./Resources/images/ui-design/gui/character-creator-wizard.png)
 
 
 ### Login Page Ideas
@@ -59,6 +63,23 @@ and easy-to-customize web-app. The idea is to have each "chunk" of the
 |![Create Acc Light](./Resources/images/ui-design/gui/create-acc-light.png)|![Create Acc Dark 1](./Resources/images/ui-design/gui/create-acc-dark1.png)|![Create Acc Dark 2](./Resources/images/ui-design/gui/create-acc-dark2.png)|
 
 ## Backend Design / Structure Ideas
+
+### KeyCloak Session Authetication Logic
+
+![Session Authetication](./Resources/images/backend-design/keycloak.png)
+
+### Character Creation Logic
+
+![Character Creation](./Resources/images/backend-design/character-creation.png)
+
+
+### Rule Component Replacement Logic
+
+![Rule Component Replacement](./Resources/images/backend-design/rule-component-replacement.png)
+
+### Rule Conflict Resolution
+
+![Rule Conflict Resolution](./Resources/images/backend-design/rule-conflict-resolution.png.png)
 
 ### ATK Modifier Logic
 
