@@ -10,6 +10,8 @@
 
 - [Coolers](https://coolors.co/)
 
+- [MySQL Community Downloads](https://dev.mysql.com/downloads/workbench)
+
 ## Learning Resources
 
 - [LinkedIn Learning - .NET](https://www.linkedin.com/learning/topics/dot-net)
@@ -17,6 +19,8 @@
 - [LinkedIn Learning - Python](https://www.linkedin.com/learning/topics/python)
 
 - [LinkedIn Learning - ReactJS](https://www.linkedin.com/learning/topics/react-js)
+
+- [MySQL Workbench: SQL Development](https://www.mysql.com/products/workbench/dev)
 
 ## Inspirations
 
