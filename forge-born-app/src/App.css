@@ -1,0 +1,240 @@
+﻿/* Wrapper that does NOT move on sidebar open */
+.login-wrapper {
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+    padding: 40px;
+    background-color: #1d1d1d;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* IMPORTANT: Prevent shifting or margin change */
+.login-wrapper.sidebar-open {
+    margin-left: 0 !important;
+    transform: none !important;
+}
+
+/* Sidebar styles */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px; /* hidden off screen */
+    width: 250px;
+    height: 100vh;
+    background-color: #222;
+    padding: 60px 20px 20px;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.7);
+    color: white;
+    transition: left 0.3s ease;
+    z-index: 9999;
+    overflow-y: auto;
+}
+
+.sidebar.open {
+    left: 0; /* slide in */
+}
+
+/* Overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 9998;
+}
+
+/* Top bar: Language and Menu buttons */
+.top-bar {
+    display: flex;
+    gap: 24px;
+    position: absolute;
+    top: 30px;
+    left: -280px;
+}
+
+/* Left side stack Language and Menu vertically */
+.left-side {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Language button */
+.language-btn {
+    background-color: #333;
+    border: none;
+    border-radius: 12px;
+    padding: 16px 24px;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    
+}
+
+/* Menu button */
+.menu-btn {
+    background-color: transparent;
+    border: none;
+    color: #ffa756;
+    font-size: 28px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 32px;
+    border-radius: 10px;
+}
+
+/* Logo aligned right */
+.center-logo {
+    /*   display: flex;
+    justify-content: right;
+    align-items: right;
+    margin-top: 20px;
+    padding-right: 0;*/
+    display: flex;
+    gap: 24px;
+    position: absolute;
+    margin-top: 20px;
+    right: -400px;
+}
+
+.logo-img {
+    height: 120px;
+    object-fit: contain;
+    margin-top: -55px;
+}
+
+/* Sidebar menu button */
+.sidebar-menu-btn {
+    width: 100%;
+    justify-content: flex-start;
+    font-size: 20px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    background-color: transparent;
+    color: #ffa756;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sidebar-menu-btn:hover {
+    background-color: rgba(255, 167, 86, 0.2);
+}
+
+/* Sidebar menu list */
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar ul li {
+    padding: 15px 10px;
+    border-bottom: 1px solid #444;
+    cursor: pointer;
+    font-size: 16px;
+    user-select: none;
+    transition: background-color 0.2s;
+}
+
+.sidebar ul li:hover {
+    background-color: grey;
+    color: black;
+}
+
+/* Main content styles */
+.login-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.login-heading {
+    font-size: 36px;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    margin-top: 120px;
+    color: white;
+    text-align: center;
+}
+
+.subheading {
+    font-size: 18px;
+    color: #ccc;
+    text-align: center;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    text-align: left;
+}
+
+    .login-form label {
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #ccc;
+    }
+
+.login-form input {
+    padding: 16px;
+    border: none;
+    border-radius: 10px;
+    background-color: #444;
+    color: white;
+    font-size: 16px;
+}
+
+.login-btn {
+    background-color: #ffa756;
+    border: none;
+    border-radius: 10px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    color: black;
+    transition: background-color 0.3s ease;
+}
+
+.login-btn:hover {
+    background-color: #ff9640;
+}
+
+.footer-links {
+    font-size: 14px;
+    text-align: center;
+    color: #ccc;
+}
+
+.footer-links a {
+    color: #ffa756;
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+/* Fullscreen dark background wrapper */
+.fullscreen-wrapper {
+    background-color: #1d1d1d;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
