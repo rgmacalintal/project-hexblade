@@ -1,4 +1,6 @@
-# Project Hexblade
+# Project Hexblade / FORGEBORN
+
+![FORGEBORN](./Resources/images/ui-design/logos/main-logo.png)
 
 Currently under the working title "Project Hexblade", this is a D&amp;D web-app
 for use as a companion app for players to use at tables. D&amp;D can be a
