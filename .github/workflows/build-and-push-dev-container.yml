@@ -20,7 +20,7 @@
 name: Dev Build
 
 on:
-  workflow_dispatch: 
+  workflow_dispatch: {}
     
   push:
     branches: [ "dev" ]
