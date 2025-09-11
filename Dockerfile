@@ -1,17 +1,23 @@
-FROM mcr.microsoft.com/dotnet/sdk:9.0@sha256:3fcf6f1e809c0553f9feb222369f58749af314af6f063f389cbd2f913b4ad556 AS build
-WORKDIR /App
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+USER $APP_UID
+WORKDIR /app
+EXPOSE 8080
+EXPOSE 8081
 
-# Copy everything
-COPY . ./
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["project-hexblade.csproj", "./"]
+RUN dotnet restore "project-hexblade.csproj"
+COPY . .
+WORKDIR "/src/"
+RUN dotnet build "./project-hexblade.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# Restore as distinct layers
-RUN dotnet restore
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./project-hexblade.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# Build and publish a release
-RUN dotnet publish -o out
-
-# Build runtime images
-FROM mcr.microsoft.com/dotnet/aspnet:9.0@sha256:b4bea3a52a0a77317fa93c5bbdb076623f81e3e2f201078d89914da71318b5d8
-WORKDIR /App
-COPY --from=build /App/out .
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "project-hexblade.dll"]
