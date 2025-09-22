@@ -1,6 +1,0 @@
-@project_hexblade.Server_HostAddress = http://localhost:5287
-
-GET {{project_hexblade.Server_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
