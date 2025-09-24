@@ -1,7 +1,7 @@
 ﻿using Forgeborn.Server.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace DemoApp.Data
+namespace Forgeborn.Server.Data
 {
     public class ForgebornContext : DbContext
     {

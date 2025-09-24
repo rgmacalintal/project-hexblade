@@ -1,7 +1,7 @@
 ﻿using Forgeborn.Server.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace DemoApp.Data.Service
+namespace Forgeborn.Server.Data.Service
 {
     public class UserService : IUserService
     {
