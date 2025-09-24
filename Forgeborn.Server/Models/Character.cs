@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Forgeborn.Server.Models
 {
-    public class Characters
+    public class Character
     {
         public int Id { get; set; }
         [Required]
@@ -21,10 +21,10 @@ namespace Forgeborn.Server.Models
 
         public int UserId { get; set; }
         [ForeignKey(nameof(UserId))]
-        public Users? User { get; set; }
+        public User? User { get; set; }
         public int RulesetId { get; set; }
         [ForeignKey(nameof(RulesetId))]
-        public Rulesets? Ruleset { get; set; }
+        public Ruleset? Ruleset { get; set; }
 
     }
 }
