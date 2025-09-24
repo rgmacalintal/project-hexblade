@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Project_Hexblade.Server.Models
+namespace Forgeborn.Server.Models
 {
     public class Users
     {
