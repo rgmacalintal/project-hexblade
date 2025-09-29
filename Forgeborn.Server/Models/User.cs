@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Project_Hexblade.Server.Models
+namespace Forgeborn.Server.Models
 {
-    public class Users
+    public class User
     {
         public int Id { get; set; }
         [Required]
@@ -20,7 +20,7 @@ namespace Project_Hexblade.Server.Models
         [Required]
         [EmailAddress]
         public string Email { get; set; } = null!;
-        public DateTime CreatedOn { get; set; } = DateTime.Now;
+        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
 
     }
 }

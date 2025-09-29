@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Project_Hexblade.Server.Models
+namespace Forgeborn.Server.Models
 {
-    public class Lobbies
+    public class Lobby
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
@@ -11,7 +11,7 @@ namespace Project_Hexblade.Server.Models
 
         public int PlayerId { get; set; }
         [ForeignKey(nameof(PlayerId))]
-        public Players Host { get; set; } = null!;
+        public Player Host { get; set; } = null!;
         
     }
 }

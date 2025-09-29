@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Project_Hexblade.Server.Models
+namespace Forgeborn.Server.Models
 {
-    public class Rulesets
+    public class Ruleset
     {
         public int Id { get; set; }
         [Required]
@@ -14,6 +14,6 @@ namespace Project_Hexblade.Server.Models
 
         public int CharacterId { get; set; }
         [ForeignKey(nameof(CharacterId))]
-        public Characters? CreatedBy { get; set; }
+        public Character? CreatedBy { get; set; }
     }
 }
