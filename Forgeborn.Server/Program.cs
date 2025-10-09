@@ -14,7 +14,7 @@ var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING"
                        builder.Configuration.GetConnectionString("forgebornDB") ??
                        throw new InvalidOperationException("DB_CONNECTION_STRING is missing");
 
-builder.Services.AddDbContext<ForgebornContext>(options => 
+builder.Services.AddDbContext<ApplicationDbContext>(options => 
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
         .LogTo(Console.WriteLine, LogLevel.Information)
         .EnableSensitiveDataLogging()
