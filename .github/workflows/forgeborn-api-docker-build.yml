@@ -1,4 +1,4 @@
-name: forgeborn-api-docker-build.yml
+name: Forgeborn API Docker Build & Push - Dev
 
 on:
   push:
