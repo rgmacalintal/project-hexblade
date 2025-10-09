@@ -2,7 +2,7 @@
 
 namespace Forgeborn.Server.Models.Items
 {
-    public class Item
+    public class Items
     {
 
         public enum RarityVal

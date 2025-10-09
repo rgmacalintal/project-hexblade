@@ -1,6 +1,6 @@
 ﻿namespace Forgeborn.Server.Models.Items
 {
-    public class Vehicle : Item
+    public class Vehicles : Items
     {
         public enum VType
         {

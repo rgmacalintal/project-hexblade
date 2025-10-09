@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Forgeborn.Server.Models.Items
 {
-    public class Weapon : Item
+    public class Weapons : Items
     {
         public struct DmgTypeStruct
         {

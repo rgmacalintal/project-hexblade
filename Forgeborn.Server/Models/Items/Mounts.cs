@@ -1,6 +1,6 @@
 ﻿namespace Forgeborn.Server.Models.Items
 {
-    public class Mount
+    public class Mounts : Items
     {
         // Add reference to creature
     }

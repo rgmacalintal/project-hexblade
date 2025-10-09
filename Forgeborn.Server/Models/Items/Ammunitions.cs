@@ -1,6 +1,6 @@
 ﻿namespace Forgeborn.Server.Models.Items
 {
-    public class Ammunition : Item
+    public class Ammunitions : Items
     {
         public string Effect { get; set; } = string.Empty;
     }

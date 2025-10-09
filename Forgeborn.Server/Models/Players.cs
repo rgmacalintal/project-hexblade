@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Forgeborn.Server.Models
 {
-    public class Player
+    public class Players
     {
         public int Id { get; set; }
         public bool IsHost { get; set; }
@@ -11,12 +11,12 @@ namespace Forgeborn.Server.Models
 
         public int UserId { get; set; }
         [ForeignKey(nameof(UserId))]
-        public User? User { get; set; }
+        public Users? User { get; set; }
         public int CharacterId { get; set; }
         [ForeignKey(nameof(CharacterId))]
-        public Character? Character { get; set; }
+        public Characters? Character { get; set; }
         public int LobbyId { get; set; }
         [ForeignKey(nameof(LobbyId))]
-        public Lobby? Lobby { get; set; }
+        public Lobbys? Lobby { get; set; }
     }
 }

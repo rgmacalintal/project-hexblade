@@ -1,6 +1,6 @@
 ﻿namespace Forgeborn.Server.Models.Items
 {
-    public class Tool : Item
+    public class Tools : Items
     {
         public string Description { get; set; } = string.Empty;
     }
