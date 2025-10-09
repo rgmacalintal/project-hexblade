@@ -25,21 +25,23 @@ namespace Forgeborn.Server.Models.Items
 
         }
 
-        private static string defaultTraits = "{" +
-            "'simple' : true," +
-            "'martial' : false," +
-            "'melee' : true," +
-            "'ranged' : false," +
-            "'staff' : false," +
-            "'reach' : 5," +
-            "'range' : 0," +
-            "'canBeThrown' : false," +
-            "'light' : true," +
-            "'heavy' : false," +
-            "'finesse' : true," +
-            "'ammunition' : false," +
-            "'loading' : false" +
-        "}";
+        public struct WeaponTraits
+        {
+            public bool simple = true;
+            public bool martial = false;
+            public bool melee = true;
+            public bool ranged = false;
+            public bool staff = false;
+            public int reach = 5;
+            public int range = 0;
+            public bool canBeThrown = false;
+            public bool light = true;
+            public bool heavy = false;
+            public bool finesse = true;
+            public bool ammunition = false;
+            public bool loading = false;
+            public WeaponTraits() { }
+        }
 
         [Required]
         int Attack { get; set; } = 0;
@@ -47,7 +49,7 @@ namespace Forgeborn.Server.Models.Items
         public int Damage { get; set; } = 0;
         [Required]
         public DmgTypeStruct DamageType { get; set; }
-        public JObject Traits { get; set; } = JObject.Parse(defaultTraits);
+        public WeaponTraits Traits { get; set; }
 
     }
 }
