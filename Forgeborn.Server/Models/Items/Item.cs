@@ -22,12 +22,14 @@ namespace Forgeborn.Server.Models.Items
 
         public int Id { get; set; }
         [Required]
-        public string Name { get; set; } = null!;
-        public string Cost { get; set; } = null!;
-        public string Weight { get; set; } = null!;
+        public string Name { get; set; } = string.Empty;
+        public string Cost { get; set; } = string.Empty;
+        public string Weight { get; set; } = string.Empty;
         public SourceVal Source { get; set; } = SourceVal.Homebrew;
         public RarityVal Rarity { get; set; } = RarityVal.None;
         public bool WondrousItem { get; set; } = false;
+        public bool Attunement { get; set; } = false;
+        public string Requirements { get; set; } = string.Empty;
 
     }
 }

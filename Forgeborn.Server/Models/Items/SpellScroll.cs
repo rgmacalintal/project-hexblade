@@ -3,6 +3,6 @@
     public class SpellScroll : Item
     {
         public int Level { get; set; } = 0;
-        public string Description { get; set; } = null!;
+        public string Description { get; set; } = string.Empty;
     }
 }

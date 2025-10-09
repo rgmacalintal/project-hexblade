@@ -27,17 +27,17 @@ namespace Forgeborn.Server.Models.Items
 
         private static string defaultTraits = "{" +
             "'simple' : true," +
-            "'martial' : false" +
-            "'melee' : true" +
-            "'ranged' : false" +
-            "'staff' : false" +
-            "'reach' : 5" +
-            "'range' : 0" +
-            "'canBeThrown' : false" +
-            "'light' : true" +
-            "'heavy' : false" +
-            "'finesse' : true" +
-            "'ammunition' : false" +
+            "'martial' : false," +
+            "'melee' : true," +
+            "'ranged' : false," +
+            "'staff' : false," +
+            "'reach' : 5," +
+            "'range' : 0," +
+            "'canBeThrown' : false," +
+            "'light' : true," +
+            "'heavy' : false," +
+            "'finesse' : true," +
+            "'ammunition' : false," +
             "'loading' : false" +
         "}";
 
