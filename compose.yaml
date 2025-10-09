@@ -1,0 +1,21 @@
+﻿services:
+  forgeborn.server:
+    image: forgeborn-api:dev
+    build:
+      context: ./Forgeborn.Server
+      dockerfile: Dockerfile
+    env_file:
+      - ./Forgeborn.Server/.env
+    ports:
+      - "8080:8080"
+
+  forgeborn.client:
+    build:
+      context: ./forgeborn.client
+      dockerfile: Dockerfile
+    image: forgeborn-ui:dev
+    ports:
+      - "3000:80"
+    tty: true
+    depends_on:
+      - forgeborn.server

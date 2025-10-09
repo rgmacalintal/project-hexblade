@@ -9,4 +9,9 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
+  <ItemGroup>
+    <Script Include="..\.dockerignore">
+      <Link>.dockerignore</Link>
+    </Script>
+  </ItemGroup>
 </Project>
