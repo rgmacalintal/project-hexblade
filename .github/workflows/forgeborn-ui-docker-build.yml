@@ -1,4 +1,4 @@
-name: forgeborn-ui-docker-build.yml
+name: Forgeborn UI Docker Build & Push - Dev
 
 on:
   push:
