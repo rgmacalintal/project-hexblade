@@ -1,8 +1,11 @@
-﻿name: Manual Dev Build
+name: Forgeborn UI Docker Build & Push - Dev
 
 on:
-  workflow_dispatch: 
-    
+  push:
+    branches: [ "dev" ]
+    paths:
+      - 'forgeborn.client/**'
+
 permissions:
   contents: read
 
@@ -10,9 +13,9 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout Repo"
-        uses: "actions/checkout@v4"
-        
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
       - name: "Login to Docker Registry"
         uses: "docker/login-action@v3"
         with:
@@ -25,10 +28,11 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
+      
       - name: Build and Push
         uses: docker/build-push-action@v6
         with:
+          context: "./forgeborn.client"
           push: true
-          tags: forgeborn/forgeborn-dev:latest
+          tags: docker-registry.graknet.ca/forgeborn-api:dev
 
