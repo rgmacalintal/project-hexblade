@@ -1,0 +1,33 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Forgeborn.Server.Models.Items
+{
+    public class Item
+    {
+
+        public enum RarityVal
+        {
+            None,
+            Common,
+            Uncommon,
+            Rare,
+            VeryRare,
+            Legendary
+        }
+        public enum SourceVal
+        {
+            DND,
+            Homebrew
+        }
+
+        public int Id { get; set; }
+        [Required]
+        public string Name { get; set; } = null!;
+        public string Cost { get; set; } = null!;
+        public string Weight { get; set; } = null!;
+        public SourceVal Source { get; set; } = SourceVal.Homebrew;
+        public RarityVal Rarity { get; set; } = RarityVal.None;
+        public bool WondrousItem { get; set; } = false;
+
+    }
+}
