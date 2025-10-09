@@ -3,15 +3,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Forgeborn.Server.Models
 {
-    public class Lobby
+    public class Rulesets
     {
         public int Id { get; set; }
+        [Required]
         public string Name { get; set; } = null!;
+        public string Description { get; set; } = null!;
         public DateTime CreatedOn { get; set; } = DateTime.Now;
 
-        public int PlayerId { get; set; }
-        [ForeignKey(nameof(PlayerId))]
-        public Player Host { get; set; } = null!;
-        
+
+        public int CharacterId { get; set; }
+        [ForeignKey(nameof(CharacterId))]
+        public Characters? CreatedBy { get; set; }
     }
 }
