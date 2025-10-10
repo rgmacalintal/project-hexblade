@@ -4,7 +4,7 @@ namespace Forgeborn.Server.Data.Service
 {
     public interface IUserService
     {
-        Task<IEnumerable<User>> GetAll();
-        Task Add(User user);
+        Task<IEnumerable<Users>> GetAll();
+        Task Add(Users user);
     }
 }
