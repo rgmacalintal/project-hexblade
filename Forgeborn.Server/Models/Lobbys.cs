@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Project_Hexblade.Server.Models
 {
-    public class Lobbies
+    public class Lobbys
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;

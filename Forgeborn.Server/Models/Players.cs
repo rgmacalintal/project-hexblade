@@ -17,6 +17,6 @@ namespace Project_Hexblade.Server.Models
         public Characters? Character { get; set; }
         public int LobbyId { get; set; }
         [ForeignKey(nameof(LobbyId))]
-        public Lobbies? Lobby { get; set; }
+        public Lobbys? Lobby { get; set; }
     }
 }

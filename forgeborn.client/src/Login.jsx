@@ -13,7 +13,7 @@ export default function Login({ toggleSidebar, sidebarOpen }) {
 
                 <form className="login-form">
                     <label>Username</label>
-                    <input type="text" placeholder="Tracy Chesu" />
+                    <input type="text" placeholder="Username" />
 
                     <label>Password</label>
                     <input type="password" placeholder="********" />

@@ -18,7 +18,7 @@ namespace Project_Hexblade.Server.Models
         //[DataType(DataType.Password)]
         //[Compare("Password", ErrorMessage = "Passwords must match")]
         //public string ConfirmPassword { get; set; } = null!;
-        // FUNCTION VARIABLE
+        // FUNCTION VARIABLE ^^^
         [Required]
         [EmailAddress]
         public string Email { get; set; } = null!;
