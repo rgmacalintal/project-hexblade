@@ -5,6 +5,7 @@ on:
     branches: [ "dev" ]
     paths:
       - 'forgeborn.client/**'
+  workflow_dispatch:
 
 permissions:
   contents: read
