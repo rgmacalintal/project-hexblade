@@ -26,7 +26,7 @@ namespace Forgeborn.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(User user)
+        public async Task<IActionResult> Create(Users user)
         {
             if (ModelState.IsValid)
             {
@@ -39,7 +39,7 @@ namespace Forgeborn.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(User user)
+        public async Task<IActionResult> Get(Users user)
         {
             var users = await _userService.GetAll();
             return View(users);
