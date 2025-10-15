@@ -34,5 +34,5 @@ jobs:
         with:
           context: "./forgeborn.client"
           push: true
-          tags: docker-registry.graknet.ca/forgeborn-api:dev
+          tags: docker-registry.graknet.ca/forgeborn-ui:dev
 
