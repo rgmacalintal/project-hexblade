@@ -11,8 +11,8 @@ namespace Forgeborn.Server.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<Users> Users { get; set; }
-        public DbSet<Characters> Characters { get; set; }
-        public DbSet<Rulesets> Rulesets { get; set; }
-        public DbSet<CharacterRulesets> CharacterRules { get; set; }
+        //public DbSet<Characters> Characters { get; set; }
+        //public DbSet<Rulesets> Rulesets { get; set; }
+        //public DbSet<CharacterRulesets> CharacterRules { get; set; }
     }
 }
