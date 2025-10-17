@@ -7,18 +7,34 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
-var connectionString = builder.Configuration.GetConnectionString("forgebornDB");
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowAll",
+//        policy => policy
+//            .AllowAnyOrigin()
+//            .AllowAnyMethod()
+//            .AllowAnyHeader());
+//});
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp",
+        policy => policy
+            .WithOrigins("https://localhost:49867")
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
+
+var connectionString = builder.Configuration.GetConnectionString("forgebornDB");
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 var app = builder.Build();
 
-app.UseDefaultFiles();
-app.MapStaticAssets();
+app.UseCors("AllowReactApp");
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -29,6 +45,9 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseDefaultFiles();
+app.MapStaticAssets();
 
 app.MapFallbackToFile("/index.html");
 
