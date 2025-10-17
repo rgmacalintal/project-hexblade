@@ -1,0 +1,15 @@
+# directories
+**/bin/
+**/obj/
+**/out/
+.env
+appsettings.json
+CHANGELOG.md
+
+# files
+Dockerfile*
+**/*.trx
+**/*.md
+**/*.ps1
+**/*.cmd
+**/*.sh

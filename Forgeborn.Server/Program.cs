@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
@@ -30,6 +31,16 @@ builder.Services.AddCors(options =>
 
 var connectionString = builder.Configuration.GetConnectionString("forgebornDB");
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+//var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ??
+//                      builder.Configuration.GetConnectionString("forgebornDB") ??
+//                       throw new InvalidOperationException("DB_CONNECTION_STRING is missing");
+
+//builder.Services.AddDbContext<ApplicationDbContext>(options => 
+//    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+//        .LogTo(Console.WriteLine, LogLevel.Information)
+//        .EnableSensitiveDataLogging()
+//        .EnableDetailedErrors()
+//    );
 
 var app = builder.Build();
 
@@ -39,7 +50,6 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

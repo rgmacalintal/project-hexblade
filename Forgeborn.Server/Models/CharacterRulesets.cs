@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Project_Hexblade.Server.Models
+namespace Forgeborn.Server.Models
 {
     public class CharacterRulesets
     {

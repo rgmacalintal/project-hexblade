@@ -1,4 +1,4 @@
-namespace Project_Hexblade.Server.Models
+namespace Forgeborn.Server.Models
 {
     public class ErrorViewModel
     {

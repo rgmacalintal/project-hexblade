@@ -3,7 +3,7 @@ using Project_Hexblade.Server.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Project_Hexblade.Server.Models
+namespace Forgeborn.Server.Models
 {
     public class Characters
     {
@@ -11,6 +11,7 @@ namespace Project_Hexblade.Server.Models
             "'contents' : { }" +
         "}";
         [Key]
+
         public int Id { get; set; }
         [Required]
         public string Name { get; set; } = null!;

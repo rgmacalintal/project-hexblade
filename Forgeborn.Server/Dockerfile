@@ -1,23 +1,17 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 WORKDIR /app
 EXPOSE 8080
-EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Forgeborn.Server/Forgeborn.Server.csproj", "Forgeborn.Server/"]
-COPY ["forgeborn.client/forgeborn.client.esproj", "forgeborn.client/"]
-RUN dotnet restore "Forgeborn.Server/Forgeborn.Server.csproj"
+COPY ["Forgeborn.Server.csproj", "."]
+RUN dotnet restore "Forgeborn.Server.csproj"
 COPY . .
-WORKDIR "/src/Forgeborn.Server"
-RUN dotnet build "./Forgeborn.Server.csproj" -c $BUILD_CONFIGURATION -o /app/build
-
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Forgeborn.Server.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet build "Forgeborn.Server.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet publish "Forgeborn.Server.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "Forgeborn.Server.dll"]
