@@ -480,3 +480,4 @@ appsettings.*.json
 appsettings.json
 /.idea/
 .env
+/forgeborn.client/package-lock.json
