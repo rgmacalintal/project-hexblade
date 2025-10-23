@@ -21,10 +21,16 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         .EnableDetailedErrors()
     );
 
+builder.Services.AddHealthChecks()
+    .AddSqlServer(connectionString);
+
 var app = builder.Build();
 
 app.UseDefaultFiles();
 app.MapStaticAssets();
+
+app.MapHealthChecks("/health");
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
