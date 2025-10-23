@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using Project_Hexblade.Server.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,6 +10,7 @@ namespace Forgeborn.Server.Models
         private static string emptyInventory = "{" +
             "'contents' : { }" +
         "}";
+        [Key]
 
         public int Id { get; set; }
         [Required]

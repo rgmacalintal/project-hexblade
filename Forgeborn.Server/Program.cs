@@ -8,7 +8,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp",
+        policy => policy
+            .WithOrigins("https://localhost:49867")
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
 
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ??
                        builder.Configuration.GetConnectionString("forgebornDB") ??
@@ -26,12 +36,9 @@ builder.Services.AddHealthChecks()
 
 var app = builder.Build();
 
-app.UseDefaultFiles();
-app.MapStaticAssets();
+app.UseCors("AllowReactApp");
 
 app.MapHealthChecks("/health");
-
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -42,6 +49,9 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseDefaultFiles();
+app.MapStaticAssets();
 
 app.MapFallbackToFile("/index.html");
 

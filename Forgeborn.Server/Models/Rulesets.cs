@@ -5,6 +5,7 @@ namespace Forgeborn.Server.Models
 {
     public class Rulesets
     {
+        [Key]
         public int Id { get; set; }
         [Required]
         public string Name { get; set; } = null!;
