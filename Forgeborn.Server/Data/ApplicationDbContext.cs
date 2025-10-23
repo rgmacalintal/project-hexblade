@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Text.Json;
-﻿using Forgeborn.Server.Models;
+using Forgeborn.Server.Models;
 using Forgeborn.Server.Models.Items;
 using System.Collections.Generic;
 using System.Linq;

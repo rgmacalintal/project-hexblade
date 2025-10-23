@@ -1,6 +1,7 @@
 ﻿services:
-  forgeborn.server:
+  forgeborn-api:
     image: forgeborn-api:dev
+    container_name: forgeborn-api
     build:
       context: ./Forgeborn.Server
       dockerfile: Dockerfile
@@ -9,13 +10,14 @@
     ports:
       - "8080:8080"
 
-  forgeborn.client:
+  forgeborn-ui:
     build:
       context: ./forgeborn.client
       dockerfile: Dockerfile
+    container_name: forgeborn-ui
     image: forgeborn-ui:dev
     ports:
-      - "3000:80"
+      - "3000:3000"
     tty: true
     depends_on:
-      - forgeborn.server
+      - forgeborn-api

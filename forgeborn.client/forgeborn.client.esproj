@@ -10,7 +10,6 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
   <ItemGroup>
-    <None Include=".vscode\launch.json" />
     <Script Include="..\.dockerignore">
       <Link>.dockerignore</Link>
     </Script>

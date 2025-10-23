@@ -1,5 +1,6 @@
 using Forgeborn.Server.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +16,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
         policy => policy
-            .WithOrigins("https://localhost:49867")
+            .WithOrigins("http://localhost:3000")
             .AllowAnyMethod()
             .AllowAnyHeader());
 });
@@ -32,11 +33,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     );
 
 builder.Services.AddHealthChecks()
-    .AddSqlServer(connectionString);
+    .AddMySql(
+        connectionString: connectionString,
+        name: "forgebornDB",
+        failureStatus: HealthStatus.Unhealthy,
+        timeout: TimeSpan.FromSeconds(3),
+        tags: new[] { "database", "critical" }
+    );
 
 var app = builder.Build();
-
-app.UseCors("AllowReactApp");
 
 app.MapHealthChecks("/health");
 // Configure the HTTP request pipeline.
@@ -44,15 +49,14 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-app.UseHttpsRedirection();
+
+app.UseAuthorization();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseCors("AllowReactApp");
 
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.UseDefaultFiles();
-app.MapStaticAssets();
-
-app.MapFallbackToFile("/index.html");
 
 app.Run();
