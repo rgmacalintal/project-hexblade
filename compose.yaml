@@ -16,6 +16,8 @@
       dockerfile: Dockerfile
     container_name: forgeborn-ui
     image: forgeborn-ui:dev
+    env_file:
+      - ./forgeborn.client/.env
     ports:
       - "3000:3000"
     tty: true

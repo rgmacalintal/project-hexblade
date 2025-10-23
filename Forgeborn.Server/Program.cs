@@ -16,7 +16,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
         policy => policy
-            .WithOrigins("http://localhost:3000")
+            .WithOrigins("http://localhost:3000","http://forgeborn-ui:3000", "https://forgeborn.graknet.ca")
             .AllowAnyMethod()
             .AllowAnyHeader());
 });
