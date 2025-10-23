@@ -42,17 +42,11 @@ namespace Forgeborn.Server.Controllers
             if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
                 return BadRequest("Username and password are required.");
 
-            // ✨ QUERY: check database for matching user
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Username == request.Username && u.Password == request.Password);
 
             if (user == null)
                 return Unauthorized("Invalid username or password.");
-
-            //var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == loginData.Username);
-
-            //if (user == null || !VerifyPassword(loginData.Password, user.Password))
-            //    return Unauthorized("Invalid credentials.");
 
             return Ok(new
             {
