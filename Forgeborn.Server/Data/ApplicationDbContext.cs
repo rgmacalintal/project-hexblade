@@ -5,7 +5,6 @@ using Forgeborn.Server.Models;
 using Forgeborn.Server.Models.Items;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json.Linq;
 
 namespace Forgeborn.Server.Data
 {
@@ -37,6 +36,30 @@ namespace Forgeborn.Server.Data
                           v => JObject.Parse(v)
                       );
             });
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Armors>(x => {
+                x.ComplexProperty(y => y.Traits, y => { y.IsRequired(); });
+            });
+
+            modelBuilder.Entity<Weapons>(x => {
+                x.ComplexProperty(y => y.DamageType, y => { y.IsRequired(); });
+                x.ComplexProperty(y => y.Traits, y => { y.IsRequired(); });
+            });
+
+            modelBuilder.Entity<Characters>(entity =>
+            {
+                entity.Property(e => e.Inventory)
+                .HasColumnType("json")
+                .HasConversion(
+                    v => JsonSerializer.Serialize(v, new JsonSerializerOptions()),
+                    v => JsonSerializer.Deserialize<JObject>(v, new JsonSerializerOptions())
+                    );
+            });
+
+            base.OnModelCreating(modelBuilder);
         }
 
         public DbSet<Users> Users { get; set; } = default!;
