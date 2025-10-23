@@ -42,18 +42,12 @@ var app = builder.Build();
 
 app.UseDefaultFiles();
 app.MapStaticAssets();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+app.MapControllers();
+app.MapOpenApi();
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 app.UseCors("AllowReact");
 app.MapControllers();
-
-app.MapFallbackToFile("/index.html");
+app.UseRouting();
 
 app.Run();
