@@ -18,8 +18,8 @@ namespace Forgeborn.Server.Models
         [Required]
         public string Race { get; set; } = null!;
         [Required]
-        public JsonContent Stats { get; set; } = null!;
-        public JsonContent[] Inventory { get; set; } = [];
+        public JObject Stats { get; set; } = JObject.Parse("");
+        public JObject Inventory { get; set; } = JObject.Parse(emptyInventory);
         public string Background { get; set; } = null!;
         public string Journal { get; set; } = null!;
         public DateTime CreatedOn { get; set; } = DateTime.Now;

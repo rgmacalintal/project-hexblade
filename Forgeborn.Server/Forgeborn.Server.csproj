@@ -7,7 +7,7 @@
     <RootNamespace>Forgeborn.Server</RootNamespace>
     <SpaRoot>..\forgeborn.client</SpaRoot>
     <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
-    <SpaProxyServerUrl>http://localhost:3000</SpaProxyServerUrl>
+    <SpaProxyServerUrl>https://localhost:3000</SpaProxyServerUrl>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <UserSecretsId>19cb3d21-7170-4bc0-bd57-1af69c5f2aaa</UserSecretsId>
   </PropertyGroup>
@@ -29,10 +29,10 @@
     <PackageReference Include="System.Text.Json" Version="9.0.9" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\forgeborn.client\forgeborn.client.esproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\forgeborn.client\forgeborn.client.esproj">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+        </ProjectReference>
+    </ItemGroup>
 
 </Project>

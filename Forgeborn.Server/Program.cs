@@ -5,10 +5,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
@@ -25,7 +22,7 @@ var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING"
                        builder.Configuration.GetConnectionString("forgebornDB") ??
                        throw new InvalidOperationException("DB_CONNECTION_STRING is missing");
 
-builder.Services.AddDbContext<ApplicationDbContext>(options => 
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
         .LogTo(Console.WriteLine, LogLevel.Information)
         .EnableSensitiveDataLogging()
@@ -43,20 +40,20 @@ builder.Services.AddHealthChecks()
 
 var app = builder.Build();
 
-app.MapHealthChecks("/health");
+app.UseDefaultFiles();
+app.MapStaticAssets();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
-app.UseStaticFiles();
-app.UseRouting();
-app.UseCors("AllowReactApp");
-
-app.UseAuthorization();
-
+app.UseCors("AllowReact");
 app.MapControllers();
+
+app.MapFallbackToFile("/index.html");
 
 app.Run();

@@ -1,83 +1,62 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Forgeborn.Server.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Forgeborn.Server.Controllers
 {
-    public class CharacterRulesetsController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CharacterRulesetsController : ControllerBase
     {
-        // GET: CharacterRulesetsController
-        public ActionResult Index()
+        // In-memory list for demo purposes
+        private static List<CharacterRulesets> CharacterRuleset = new List<CharacterRulesets>();
+
+        // GET: api/CharacterRulesets
+        [HttpGet]
+        public ActionResult<IEnumerable<CharacterRulesets>> GetCharacterRuleset()
         {
-            return View();
+            return Ok(CharacterRuleset);
         }
 
-        // GET: CharacterRulesetsController/Details/5
-        public ActionResult Details(int id)
+        // GET: api/CharacterRulesets/{id}
+        [HttpGet("{id}")]
+        public ActionResult<CharacterRulesets> GetCharacterRuleset(int id)
         {
-            return View();
+            var chruleset = CharacterRuleset.FirstOrDefault(u => u.Id == id);
+            if (chruleset == null) return NotFound();
+            return Ok(chruleset);
         }
 
-        // GET: CharacterRulesetsController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: CharacterRulesetsController/Create
+        // POST: api/CharacterRulesets
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult<CharacterRulesets> CreateCharacterRuleset(CharacterRulesets chruleset)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            chruleset.Id = CharacterRuleset.Count > 0 ? CharacterRuleset.Max(u => u.Id) + 1 : 1;
+            CharacterRuleset.Add(chruleset);
+            return CreatedAtAction(nameof(GetCharacterRuleset), new { id = chruleset.Id }, chruleset);
         }
 
-        // GET: CharacterRulesetsController/Edit/5
-        public ActionResult Edit(int id)
+        // PUT: api/CharacterRulesets/5
+        [HttpPut("{id}")]
+        public IActionResult UpdateCharacterRuleset(int id, CharacterRulesets updatedCharacterRuleset)
         {
-            return View();
+            var chruleset = CharacterRuleset.FirstOrDefault(u => u.Id == id);
+            if (chruleset == null) return NotFound();
+
+            chruleset.IsActive = updatedCharacterRuleset.IsActive;
+
+            return NoContent();
         }
 
-        // POST: CharacterRulesetsController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        // DELETE: api/CharacterRulesets/5
+        [HttpDelete("{id}")]
+        public IActionResult DeleteCharacterRuleset(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var chruleset = CharacterRuleset.FirstOrDefault(u => u.Id == id);
+            if (chruleset == null) return NotFound();
+
+            CharacterRuleset.Remove(chruleset);
+            return NoContent();
         }
 
-        // GET: CharacterRulesetsController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: CharacterRulesetsController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }

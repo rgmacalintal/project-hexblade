@@ -1,83 +1,62 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Forgeborn.Server.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Forgeborn.Server.Controllers
 {
-    public class LobbysController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class LobbysController : ControllerBase
     {
-        // GET: LobbysController
-        public ActionResult Index()
+        // In-memory list for demo purposes
+        private static List<Lobbys> Lobby = new List<Lobbys>();
+
+        // GET: api/Lobbys
+        [HttpGet]
+        public ActionResult<IEnumerable<Lobbys>> GetLobby()
         {
-            return View();
+            return Ok(Lobby);
         }
 
-        // GET: LobbysController/Details/5
-        public ActionResult Details(int id)
+        // GET: api/Lobbys/{id}
+        [HttpGet("{id}")]
+        public ActionResult<Lobbys> GetLobby(int id)
         {
-            return View();
+            var lobby = Lobby.FirstOrDefault(u => u.Id == id);
+            if (lobby == null) return NotFound();
+            return Ok(lobby);
         }
 
-        // GET: LobbysController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: LobbysController/Create
+        // POST: api/Lobbys
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult<Lobbys> CreateLobby(Lobbys lobby)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            lobby.Id = Lobby.Count > 0 ? Lobby.Max(u => u.Id) + 1 : 1;
+            Lobby.Add(lobby);
+            return CreatedAtAction(nameof(GetLobby), new { id = lobby.Id }, lobby);
         }
 
-        // GET: LobbysController/Edit/5
-        public ActionResult Edit(int id)
+        // PUT: api/Lobbys/5
+        [HttpPut("{id}")]
+        public IActionResult UpdateLobby(int id, Lobbys updatedLobby)
         {
-            return View();
+            var lobby = Lobby.FirstOrDefault(u => u.Id == id);
+            if (lobby == null) return NotFound();
+
+            lobby.Name = updatedLobby.Name;
+
+            return NoContent();
         }
 
-        // POST: LobbysController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        // DELETE: api/Lobbys/5
+        [HttpDelete("{id}")]
+        public IActionResult DeleteCharacterRuleset(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            var lobby = Lobby.FirstOrDefault(u => u.Id == id);
+            if (lobby == null) return NotFound();
 
-        // GET: LobbysController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: LobbysController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            Lobby.Remove(lobby);
+            return NoContent();
         }
     }
 }
