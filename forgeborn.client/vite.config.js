@@ -20,6 +20,10 @@ export default defineConfig({
     },
     server: {
         proxy: {
+            '^/api': {
+                target,
+                secure: false
+            },
         },
         port: 3000
     }
