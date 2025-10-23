@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Project_Hexblade.Server.Models;
+using Forgeborn.Server.Models;
 using Forgeborn.Server.Data;
 using System.Security.Cryptography;
 using System.Text;

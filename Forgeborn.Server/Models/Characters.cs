@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
-using Project_Hexblade.Server.Models;
+using Forgeborn.Server.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
