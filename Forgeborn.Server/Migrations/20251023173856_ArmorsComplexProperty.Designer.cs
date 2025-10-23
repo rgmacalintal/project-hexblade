@@ -5,6 +5,7 @@ using Forgeborn.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -12,9 +13,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Forgeborn.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251023173856_ArmorsComplexProperty")]
+    partial class ArmorsComplexProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,24 +67,12 @@ namespace Forgeborn.Server.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("Charisma")
-                        .HasColumnType("int");
-
                     b.Property<string>("Class")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("Constitution")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<int>("Dexterity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Intelligence")
-                        .HasColumnType("int");
 
                     b.Property<string>("Inventory")
                         .IsRequired()
@@ -102,13 +93,7 @@ namespace Forgeborn.Server.Migrations
                     b.Property<int>("RulesetId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Strength")
-                        .HasColumnType("int");
-
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Wisdom")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

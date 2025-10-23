@@ -19,8 +19,26 @@ namespace Forgeborn.Server.Models
         public string Class { get; set; } = null!;
         [Required]
         public string Race { get; set; } = null!;
+        //[Required]
+        //public JObject Stats { get; set; } = null!;
         [Required]
-        public JObject Stats { get; set; } = null!;
+        [Range (0, 30)]
+        public int Strength { get; set; } = 0;
+        [Required]
+        [Range(0, 30)]
+        public int Dexterity { get; set; } = 0;
+        [Required]
+        [Range(0, 30)]
+        public int Constitution { get; set; } = 0;
+        [Required]
+        [Range(0, 30)]
+        public int Intelligence { get; set; } = 0;
+        [Required]
+        [Range(0, 30)]
+        public int Wisdom { get; set; } = 0;
+        [Required]
+        [Range(0, 30)]
+        public int Charisma { get; set; } = 0;
         public JObject Inventory { get; set; } = JObject.Parse(emptyInventory);
         public string Background { get; set; } = null!;
         public string Journal { get; set; } = null!;
