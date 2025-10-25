@@ -1,83 +1,62 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Forgeborn.Server.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Forgeborn.Server.Controllers
 {
-    public class PlayersController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PlayersController : ControllerBase
     {
-        // GET: PlayersController
-        public ActionResult Index()
+        // In-memory list
+        private static List<Players> Player = new List<Players>();
+
+        // GET: api/Players
+        [HttpGet]
+        public ActionResult<IEnumerable<Players>> GetPlayer()
         {
-            return View();
+            return Ok(Player);
         }
 
-        // GET: PlayersController/Details/5
-        public ActionResult Details(int id)
+        // GET: api/Players/{id}
+        [HttpGet("{id}")]
+        public ActionResult<Players> GetPlayer(int id)
         {
-            return View();
+            var player = Player.FirstOrDefault(u => u.Id == id);
+            if (player == null) return NotFound();
+            return Ok(player);
         }
 
-        // GET: PlayersController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: PlayersController/Create
+        // POST: api/Players
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult<Players> CreatePlayer(Players player)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            player.Id = Player.Count > 0 ? Player.Max(u => u.Id) + 1 : 1;
+            Player.Add(player);
+            return CreatedAtAction(nameof(GetPlayer), new { id = player.Id }, player);
         }
 
-        // GET: PlayersController/Edit/5
-        public ActionResult Edit(int id)
+        // PUT: api/Players/5
+        [HttpPut("{id}")]
+        public IActionResult UpdatePlayer(int id, Players updatedPlayer)
         {
-            return View();
+            var player = Player.FirstOrDefault(u => u.Id == id);
+            if (player == null) return NotFound();
+
+            player.IsHost = updatedPlayer.IsHost;
+
+            return NoContent();
         }
 
-        // POST: PlayersController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        // DELETE: api/Players/5
+        [HttpDelete("{id}")]
+        public IActionResult DeletePlayer(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            var player = Player.FirstOrDefault(u => u.Id == id);
+            if (player == null) return NotFound();
 
-        // GET: PlayersController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: PlayersController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            Player.Remove(player);
+            return NoContent();
         }
     }
 }

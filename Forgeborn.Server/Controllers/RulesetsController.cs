@@ -1,83 +1,63 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Forgeborn.Server.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Forgeborn.Server.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class RulesetsController : Controller
     {
-        // GET: RulesetsController
-        public ActionResult Index()
+        // In-memory list
+        private static List<Rulesets> Ruleset = new List<Rulesets>();
+
+        // GET: api/Rulesets
+        [HttpGet]
+        public ActionResult<IEnumerable<Players>> GetPlayer()
         {
-            return View();
+            return Ok(Ruleset);
         }
 
-        // GET: RulesetsController/Details/5
-        public ActionResult Details(int id)
+        // GET: api/Rulesets/{id}
+        [HttpGet("{id}")]
+        public ActionResult<Rulesets> GetRuleset(int id)
         {
-            return View();
+            var ruleset = Ruleset.FirstOrDefault(u => u.Id == id);
+            if (ruleset == null) return NotFound();
+            return Ok(ruleset);
         }
 
-        // GET: RulesetsController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: RulesetsController/Create
+        // POST: api/Rulesets
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult<Rulesets> CreateRuleset(Rulesets ruleset)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            ruleset.Id = Ruleset.Count > 0 ? Ruleset.Max(u => u.Id) + 1 : 1;
+            Ruleset.Add(ruleset);
+            return CreatedAtAction(nameof(GetRuleset), new { id = ruleset.Id }, ruleset);
         }
 
-        // GET: RulesetsController/Edit/5
-        public ActionResult Edit(int id)
+        // PUT: api/Rulesets/5
+        [HttpPut("{id}")]
+        public IActionResult UpdateRuleset(int id, Rulesets updatedRuleset)
         {
-            return View();
+            var ruleset = Ruleset.FirstOrDefault(u => u.Id == id);
+            if (ruleset == null) return NotFound();
+
+            ruleset.Name = updatedRuleset.Name;
+            ruleset.Description = updatedRuleset.Description;
+
+            return NoContent();
         }
 
-        // POST: RulesetsController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        // DELETE: api/Players/5
+        [HttpDelete("{id}")]
+        public IActionResult DeletePlayer(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            var player = Player.FirstOrDefault(u => u.Id == id);
+            if (player == null) return NotFound();
 
-        // GET: RulesetsController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: RulesetsController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            Player.Remove(player);
+            return NoContent();
         }
     }
 }

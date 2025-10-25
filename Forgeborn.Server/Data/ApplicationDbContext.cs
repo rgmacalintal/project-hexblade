@@ -5,6 +5,7 @@ using Forgeborn.Server.Models;
 using Forgeborn.Server.Models.Items;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace Forgeborn.Server.Data
 {
@@ -22,20 +23,6 @@ namespace Forgeborn.Server.Data
                 "forgebornDB",
                 new MySqlServerVersion(new Version(8, 4, 6))
             );
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Characters>(entity =>
-            {
-                // CS1660: Use HasConversion(Func<TModel, TProvider>, Func<TProvider, TModel>)
-                entity.Property(e => e.Stats)
-                      .HasColumnType("json")
-                      .HasConversion(
-                          v => JsonSerializer.Serialize(v, new JsonSerializerOptions()),
-                          v => JObject.Parse(v)
-                      );
-            });
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

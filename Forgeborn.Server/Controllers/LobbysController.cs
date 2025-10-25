@@ -8,7 +8,7 @@ namespace Forgeborn.Server.Controllers
     [ApiController]
     public class LobbysController : ControllerBase
     {
-        // In-memory list for demo purposes
+        // In-memory list
         private static List<Lobbys> Lobby = new List<Lobbys>();
 
         // GET: api/Lobbys
@@ -50,7 +50,7 @@ namespace Forgeborn.Server.Controllers
 
         // DELETE: api/Lobbys/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteCharacterRuleset(int id)
+        public IActionResult DeleteLobby(int id)
         {
             var lobby = Lobby.FirstOrDefault(u => u.Id == id);
             if (lobby == null) return NotFound();

@@ -7,7 +7,7 @@ namespace Forgeborn.Server.Controllers
     [ApiController]
     public class CharacterRulesetsController : ControllerBase
     {
-        // In-memory list for demo purposes
+        // In-memory list
         private static List<CharacterRulesets> CharacterRuleset = new List<CharacterRulesets>();
 
         // GET: api/CharacterRulesets
