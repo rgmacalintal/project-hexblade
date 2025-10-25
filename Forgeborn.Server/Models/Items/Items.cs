@@ -20,6 +20,7 @@ namespace Forgeborn.Server.Models.Items
             Homebrew
         }
 
+        [Key]
         public int Id { get; set; }
         [Required]
         public string Name { get; set; } = string.Empty;

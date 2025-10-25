@@ -10,6 +10,7 @@ namespace Forgeborn.Server.Models
         private static readonly string defaultInventory = "{ " +
             "'inventory' : { } }";
 
+        [Key]
         public int Id { get; set; }
         [Required]
         public string Name { get; set; } = null!;
@@ -17,8 +18,6 @@ namespace Forgeborn.Server.Models
         public string Class { get; set; } = null!;
         [Required]
         public string Race { get; set; } = null!;
-        //[Required]
-        //public JObject Stats { get; set; } = null!;
         [Required]
         [Range (0, 30)]
         public int Strength { get; set; } = 0;
@@ -37,7 +36,7 @@ namespace Forgeborn.Server.Models
         [Required]
         [Range(0, 30)]
         public int Charisma { get; set; } = 0;
-        public JObject Inventory { get; set; } = JObject.Parse(emptyInventory);
+        public JObject Inventory { get; set; } = JObject.Parse(defaultInventory);
         public string Background { get; set; } = null!;
         public string Journal { get; set; } = null!;
         public DateTime CreatedOn { get; set; } = DateTime.Now;

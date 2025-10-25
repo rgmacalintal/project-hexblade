@@ -5,6 +5,7 @@ namespace Forgeborn.Server.Models
 {
     public class CharacterRulesets
     {
+        [Key]
         public int Id { get; set; }
         public bool IsActive { get; set; }
         public DateTime AssignedDate { get; set; } = DateTime.Now;
