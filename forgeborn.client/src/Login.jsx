@@ -18,15 +18,13 @@ export default function Login({ toggleSidebar, sidebarOpen }) {
 
         if (response.ok) {
             const data = await response.json();
-            //alert(`Welcome, ${data.username}!`);
-            //navigate('/welcome');
             console.log('Login success:', data);
             localStorage.setItem('username', data.username);
             alert(`Welcome, ${data.username}!`);
             navigate('/welcome', { state: { username: data.username } });
         } else {
             const error = await response.text();
-            console.log('Login unsuccessful:', error);
+            console.log('Login failed:', error);
             alert(`Login failed: ${error}`);
         }
     }
