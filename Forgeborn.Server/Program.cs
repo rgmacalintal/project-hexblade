@@ -51,6 +51,5 @@ app.UseAuthorization();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseCors("AllowReactApp");
-app.UseRouting();
 
 app.Run();
