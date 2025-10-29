@@ -40,14 +40,17 @@ builder.Services.AddHealthChecks()
 
 var app = builder.Build();
 
-app.UseDefaultFiles();
-app.MapStaticAssets();
-app.MapControllers();
-app.MapOpenApi();
-app.UseHttpsRedirection();
+app.MapHealthChecks("/health");
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+}
+
 app.UseAuthorization();
-app.UseCors("AllowReact");
-app.MapControllers();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseCors("AllowReactApp");
 app.UseRouting();
 
 app.Run();

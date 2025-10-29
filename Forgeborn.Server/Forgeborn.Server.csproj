@@ -7,7 +7,7 @@
         <RootNamespace>Forgeborn.Server</RootNamespace>
         <SpaRoot>..\forgeborn.client</SpaRoot>
         <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
-        <SpaProxyServerUrl>https://localhost:3000</SpaProxyServerUrl>
+        <SpaProxyServerUrl>http://localhost:3000</SpaProxyServerUrl>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <UserSecretsId>19cb3d21-7170-4bc0-bd57-1af69c5f2aaa</UserSecretsId>
     </PropertyGroup>
