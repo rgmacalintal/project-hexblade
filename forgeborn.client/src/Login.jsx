@@ -1,36 +1,8 @@
-﻿import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+﻿import React from 'react';
+import { Link } from 'react-router-dom';
 import Layout from './Layout';
 
 export default function Login({ toggleSidebar, sidebarOpen }) {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const navigate = useNavigate();
-
-    async function handleLogin(e) {
-        e.preventDefault();
-
-        const response = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            //alert(`Welcome, ${data.username}!`);
-            //navigate('/welcome');
-            console.log('Login success:', data);
-            localStorage.setItem('username', data.username);
-            alert(`Welcome, ${data.username}!`);
-            navigate('/welcome', { state: { username: data.username } });
-        } else {
-            const error = await response.text();
-            console.log('Login unsuccessful:', error);
-            alert(`Login failed: ${error}`);
-        }
-    }
-
     return (
         <div className="fullscreen-wrapper">
             <Layout toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen}>
@@ -39,16 +11,21 @@ export default function Login({ toggleSidebar, sidebarOpen }) {
                     <p className="subheading">Sign in to continue.</p>
                 </div>
 
-                <form className="login-form" onSubmit={handleLogin}>
+                <form className="login-form">
                     <label>Username</label>
-                    <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
+                    <input type="text" placeholder="Tracy Chesu" />
 
                     <label>Password</label>
-                    <input type="password" placeholder="********" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                    <input type="password" placeholder="********" />
 
-                    <button type="submit" className="login-btn">
+                    <Link
+                        to="/welcome"
+                        state={{ from: 'login' }}
+                        className="login-btn"
+                        style={{ display: 'inline-block', textAlign: 'center', textDecoration: 'none', color: 'white' }}
+                    >
                         Log in
-                    </button>
+                    </Link>
 
                     <p className="footer-links">
                         <Link to="/forgot-password">Forgot Password?</Link>

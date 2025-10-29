@@ -1,23 +1,109 @@
 .welcome-page {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 150vh;
     color: white;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    padding: 40px;
+    position: relative;
 }
 
 .welcome-text {
+    font-size: 4rem;
+    font-weight: 700;
+    color: #ffa756;
+    animation: wave 3s infinite ease-in-out;
+    margin-bottom: 30px;
+    text-shadow: 0 4px 20px rgba(255, 167, 86, 0.3);
+    letter-spacing: 2px;
+}
+
+.welcome-subtitle {
+    font-size: 1.5rem;
+    color: #ccc;
+    margin-bottom: 50px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out 0.5s forwards;
+}
+
+.welcome-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    max-width: 800px;
+    margin-top: 40px;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out 1s forwards;
+}
+
+.feature-card {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 167, 86, 0.2);
+    border-radius: 20px;
+    padding: 30px;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+.profile-card {
+    background: rgba(0, 0, 0, 0.2);
+    
+
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    text-align: center;
+    margin-top: -800px;
+    margin-right: -1080px;
+    height: 0%;
+}
+.feature-card:hover {
+    transform: translateY(-10px);
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 167, 86, 0.4);
+    box-shadow: 0 10px 30px rgba(255, 167, 86, 0.2);
+}
+
+.feature-icon {
     font-size: 3rem;
-    animation: wave 2s infinite ease-in-out;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.feature-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #ffa756;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.feature-description {
+    color: #ccc;
+    line-height: 1.6;
+    font-size: 1rem;
 }
 
 @keyframes wave {
     0%, 100% {
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
-
     50% {
-        transform: translateY(-10px);
+        transform: translateY(-15px) scale(1.05);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

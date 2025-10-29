@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './Login';
 import Signup from './Signup';
 import Welcome from './Welcome';
+import HomePage from './HomePage';
+import Profile from './Profile';
 import './App.css';
 
 function App() {
@@ -14,6 +16,10 @@ function App() {
             <Routes>
                 <Route
                     path="/"
+                    element={<HomePage toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />}
+                />
+                <Route
+                    path="/login"
                     element={<Login toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />}
                 />
                 <Route
@@ -23,6 +29,10 @@ function App() {
                 <Route
                     path="/welcome"
                     element={<Welcome toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />}
+                />
+                <Route
+                    path="/profile"
+                    element={<Profile toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />}
                 />
             </Routes>
         </BrowserRouter>

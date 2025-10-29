@@ -11,7 +11,7 @@ export default function Signup({ toggleSidebar, sidebarOpen }) {
                         <h2 className="login-heading">Create Account</h2>
                         <p className="subheading">Sign up to get started.</p>
                     </div>
-
+                    
                     <form className="login-form">
                         <label>Name</label>
                         <input type="text" placeholder="Your Name" />
@@ -25,9 +25,9 @@ export default function Signup({ toggleSidebar, sidebarOpen }) {
                         <label>Re-enter Password</label>
                         <input type="password" placeholder="********" />
 
-                        <button type="submit" className="login-btn">
+                        <Link to="/welcome" state={{ from: 'signup' }} className="login-btn" style={{ display: 'inline-block', textAlign: 'center', textDecoration: 'none', color: 'white' }}>
                             Sign Up
-                        </button>
+                        </Link>
 
                         <p className="footer-links">
                             <Link to="/">Already have an account? Login</Link>
