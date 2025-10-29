@@ -44,7 +44,7 @@ namespace Forgeborn.Server.Models.Items
         }
 
         [Required]
-        int Attack { get; set; } = 0;
+        public int Attack { get; set; } = 0;
         [Required]
         public int Damage { get; set; } = 0;
         [Required]
