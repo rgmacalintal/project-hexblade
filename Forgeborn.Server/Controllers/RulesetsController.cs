@@ -49,14 +49,14 @@ namespace Forgeborn.Server.Controllers
             return NoContent();
         }
 
-        // DELETE: api/Players/5
+        // DELETE: api/Rulesets/5
         [HttpDelete("{id}")]
         public IActionResult DeletePlayer(int id)
         {
-            var player = Player.FirstOrDefault(u => u.Id == id);
-            if (player == null) return NotFound();
+            var ruleset = Ruleset.FirstOrDefault(u => u.Id == id);
+            if (ruleset == null) return NotFound();
 
-            Player.Remove(player);
+            Ruleset.Remove(ruleset);
             return NoContent();
         }
     }
