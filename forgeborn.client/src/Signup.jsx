@@ -30,7 +30,7 @@ export default function Signup({ toggleSidebar, sidebarOpen }) {
                 alert(data.message || "Registration successful.");
                 navigate('/');
             } else if (response.status === 409) {
-                const conflictMsg = await reponse.text();
+                const conflictMsg = await response.text();
                 alert(conflictMsg);
             } else {
                 const errorText = await response.text();
@@ -79,7 +79,7 @@ export default function Signup({ toggleSidebar, sidebarOpen }) {
                             required
                         />
 
-                        <label>Re-enter Password</label>
+                        <label>Confirm Password</label>
                         <input
                             type="password"
                             placeholder="********"
