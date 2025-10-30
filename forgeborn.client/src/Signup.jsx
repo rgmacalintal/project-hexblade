@@ -88,9 +88,9 @@ export default function Signup({ toggleSidebar, sidebarOpen }) {
                             required
                         />
 
-                        <button type="submit" className="login-btn">
+                        <Link to="/welcome" state={{ from: 'signup' }} className="login-btn" style={{ display: 'inline-block', textAlign: 'center', textDecoration: 'none', color: 'white' }}>
                             Sign Up
-                        </button>
+                        </Link>
 
                         <p className="footer-links">
                             <Link to="/">Already have an account? Login</Link>
