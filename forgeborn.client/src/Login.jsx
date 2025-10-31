@@ -3,6 +3,32 @@ import { Link } from 'react-router-dom';
 import Layout from './Layout';
 
 export default function Login({ toggleSidebar, sidebarOpen }) {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+
+    async function handleLogin(e) {
+        e.preventDefault();
+
+        const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Login success:', data);
+            localStorage.setItem('username', data.username);
+            alert(`Welcome, ${data.username}!`);
+            navigate('/welcome', { state: { username: data.username } });
+        } else {
+            const error = await response.text();
+            console.log('Login failed:', error);
+            alert(`Login failed: ${error}`);
+        }
+    }
+
     return (
         <div className="fullscreen-wrapper">
             <Layout toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen}>

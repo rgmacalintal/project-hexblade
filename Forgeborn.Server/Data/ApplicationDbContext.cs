@@ -33,6 +33,7 @@ namespace Forgeborn.Server.Data
                 .HasColumnType("json")
                 .HasConversion(
                     v => JsonSerializer.Serialize(v, new JsonSerializerOptions()),
+                    // WARNING: Possible null reference return
                     v => JsonSerializer.Deserialize<JObject>(v, new JsonSerializerOptions())
                     );
             });
@@ -40,6 +41,7 @@ namespace Forgeborn.Server.Data
             base.OnModelCreating(modelBuilder);
         }
 
+        // Primary classes
         public DbSet<Users> Users { get; set; } = default!;
         public DbSet<Characters> Characters { get; set; } = default!;
         public DbSet<CharacterRulesets> CharacterRulesets { get; set; } = default!;
@@ -56,6 +58,5 @@ namespace Forgeborn.Server.Data
         public DbSet<Tools> Tools { get; set; } = default!;
         public DbSet<Vehicles> Vehicles { get; set; } = default!;
         public DbSet<Weapons> Weapons { get; set; } = default!;
-
     }
 }
