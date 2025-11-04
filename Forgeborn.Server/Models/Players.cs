@@ -5,6 +5,7 @@ namespace Forgeborn.Server.Models
 {
     public class Players
     {
+        [Key]
         public int Id { get; set; }
         public bool IsHost { get; set; }
 
