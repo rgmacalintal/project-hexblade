@@ -13,14 +13,14 @@ namespace Forgeborn.Server.Controllers
 
         // GET: api/Mounts
         [HttpGet]
-        public ActionResult<IEnumerable<Mounts>> GetMount()
+        public ActionResult<IEnumerable<Mounts>> Get()
         {
             return Ok(Mount);
         }
 
         // GET: api/Mounts/{id}
         [HttpGet("{id}")]
-        public ActionResult<Mounts> GetMount(int id)
+        public ActionResult<Mounts> Get(int id)
         {
             var mount = Mount.FirstOrDefault(u => u.Id == id);
             if (mount == null) return NotFound();
@@ -29,16 +29,16 @@ namespace Forgeborn.Server.Controllers
 
         // POST: api/Mounts
         [HttpPost]
-        public ActionResult<Mounts> CreateMount(Mounts mount)
+        public ActionResult<Mounts> Create(Mounts mount)
         {
             mount.Id = Mount.Count > 0 ? Mount.Max(u => u.Id) + 1 : 1;
             Mount.Add(mount);
-            return CreatedAtAction(nameof(GetMount), new { id = mount.Id }, mount);
+            return CreatedAtAction(nameof(Get), new { id = mount.Id }, mount);
         }
 
         // PUT: api/Mounts/5
         [HttpPut("{id}")]
-        public IActionResult UpdateMount(int id, Mounts updatedMount)
+        public IActionResult Update(int id, Mounts updatedMount)
         {
             var mount = Mount.FirstOrDefault(u => u.Id == id);
             if (mount == null) return NotFound();
@@ -57,7 +57,7 @@ namespace Forgeborn.Server.Controllers
 
         // DELETE: api/Mounts/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteMount(int id)
+        public IActionResult Delete(int id)
         {
             var mount = Mount.FirstOrDefault(u => u.Id == id);
             if (mount == null) return NotFound();

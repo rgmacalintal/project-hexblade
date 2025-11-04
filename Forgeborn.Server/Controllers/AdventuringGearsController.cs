@@ -13,14 +13,14 @@ namespace Forgeborn.Server.Controllers
 
         // GET: api/AdventuringGears
         [HttpGet]
-        public ActionResult<IEnumerable<AdventuringGears>> GetAdventuringGear()
+        public ActionResult<IEnumerable<AdventuringGears>> Get()
         {
             return Ok(AdventuringGear);
         }
 
         // GET: api/AdventuringGears/{id}
         [HttpGet("{id}")]
-        public ActionResult<AdventuringGears> GetAdventuringGear(int id)
+        public ActionResult<AdventuringGears> Get(int id)
         {
             var agear = AdventuringGear.FirstOrDefault(u => u.Id == id);
             if (agear == null) return NotFound();
@@ -29,16 +29,16 @@ namespace Forgeborn.Server.Controllers
 
         // POST: api/AdventuringGears
         [HttpPost]
-        public ActionResult<AdventuringGears> CreateAdventuringGear(AdventuringGears agear)
+        public ActionResult<AdventuringGears> Create(AdventuringGears agear)
         {
             agear.Id = AdventuringGear.Count > 0 ? AdventuringGear.Max(u => u.Id) + 1 : 1;
             AdventuringGear.Add(agear);
-            return CreatedAtAction(nameof(GetAdventuringGear), new { id = agear.Id }, agear);
+            return CreatedAtAction(nameof(Get), new { id = agear.Id }, agear);
         }
 
         // PUT: api/AdventuringGears/5
         [HttpPut("{id}")]
-        public IActionResult UpdateAdventuringGear(int id, AdventuringGears updatedAdventuringGear)
+        public IActionResult Update(int id, AdventuringGears updatedAdventuringGear)
         {
             var agear = AdventuringGear.FirstOrDefault(u => u.Id == id);
             if (agear == null) return NotFound();
@@ -58,7 +58,7 @@ namespace Forgeborn.Server.Controllers
 
         // DELETE: api/AdventuringGears/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteAdventuringGear(int id)
+        public IActionResult Delete(int id)
         {
             var agear = AdventuringGear.FirstOrDefault(u => u.Id == id);
             if (agear == null) return NotFound();

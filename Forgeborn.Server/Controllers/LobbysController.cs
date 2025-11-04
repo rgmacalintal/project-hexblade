@@ -13,14 +13,14 @@ namespace Forgeborn.Server.Controllers
 
         // GET: api/Lobbys
         [HttpGet]
-        public ActionResult<IEnumerable<Lobbys>> GetLobby()
+        public ActionResult<IEnumerable<Lobbys>> Get()
         {
             return Ok(Lobby);
         }
 
         // GET: api/Lobbys/{id}
         [HttpGet("{id}")]
-        public ActionResult<Lobbys> GetLobby(int id)
+        public ActionResult<Lobbys> Get(int id)
         {
             var lobby = Lobby.FirstOrDefault(u => u.Id == id);
             if (lobby == null) return NotFound();
@@ -29,16 +29,16 @@ namespace Forgeborn.Server.Controllers
 
         // POST: api/Lobbys
         [HttpPost]
-        public ActionResult<Lobbys> CreateLobby(Lobbys lobby)
+        public ActionResult<Lobbys> Create(Lobbys lobby)
         {
             lobby.Id = Lobby.Count > 0 ? Lobby.Max(u => u.Id) + 1 : 1;
             Lobby.Add(lobby);
-            return CreatedAtAction(nameof(GetLobby), new { id = lobby.Id }, lobby);
+            return CreatedAtAction(nameof(Get), new { id = lobby.Id }, lobby);
         }
 
         // PUT: api/Lobbys/5
         [HttpPut("{id}")]
-        public IActionResult UpdateLobby(int id, Lobbys updatedLobby)
+        public IActionResult Update(int id, Lobbys updatedLobby)
         {
             var lobby = Lobby.FirstOrDefault(u => u.Id == id);
             if (lobby == null) return NotFound();
@@ -50,7 +50,7 @@ namespace Forgeborn.Server.Controllers
 
         // DELETE: api/Lobbys/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteLobby(int id)
+        public IActionResult Delete(int id)
         {
             var lobby = Lobby.FirstOrDefault(u => u.Id == id);
             if (lobby == null) return NotFound();

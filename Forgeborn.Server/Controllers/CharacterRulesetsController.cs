@@ -12,14 +12,14 @@ namespace Forgeborn.Server.Controllers
 
         // GET: api/CharacterRulesets
         [HttpGet]
-        public ActionResult<IEnumerable<CharacterRulesets>> GetCharacterRuleset()
+        public ActionResult<IEnumerable<CharacterRulesets>> Get()
         {
             return Ok(CharacterRuleset);
         }
 
         // GET: api/CharacterRulesets/{id}
         [HttpGet("{id}")]
-        public ActionResult<CharacterRulesets> GetCharacterRuleset(int id)
+        public ActionResult<CharacterRulesets> Get(int id)
         {
             var chruleset = CharacterRuleset.FirstOrDefault(u => u.Id == id);
             if (chruleset == null) return NotFound();
@@ -28,16 +28,16 @@ namespace Forgeborn.Server.Controllers
 
         // POST: api/CharacterRulesets
         [HttpPost]
-        public ActionResult<CharacterRulesets> CreateCharacterRuleset(CharacterRulesets chruleset)
+        public ActionResult<CharacterRulesets> Create(CharacterRulesets chruleset)
         {
             chruleset.Id = CharacterRuleset.Count > 0 ? CharacterRuleset.Max(u => u.Id) + 1 : 1;
             CharacterRuleset.Add(chruleset);
-            return CreatedAtAction(nameof(GetCharacterRuleset), new { id = chruleset.Id }, chruleset);
+            return CreatedAtAction(nameof(Get), new { id = chruleset.Id }, chruleset);
         }
 
         // PUT: api/CharacterRulesets/5
         [HttpPut("{id}")]
-        public IActionResult UpdateCharacterRuleset(int id, CharacterRulesets updatedCharacterRuleset)
+        public IActionResult Update(int id, CharacterRulesets updatedCharacterRuleset)
         {
             var chruleset = CharacterRuleset.FirstOrDefault(u => u.Id == id);
             if (chruleset == null) return NotFound();
@@ -49,7 +49,7 @@ namespace Forgeborn.Server.Controllers
 
         // DELETE: api/CharacterRulesets/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteCharacterRuleset(int id)
+        public IActionResult Delete(int id)
         {
             var chruleset = CharacterRuleset.FirstOrDefault(u => u.Id == id);
             if (chruleset == null) return NotFound();

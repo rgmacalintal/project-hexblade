@@ -13,14 +13,14 @@ namespace Forgeborn.Server.Controllers
 
         // GET: api/Tools
         [HttpGet]
-        public ActionResult<IEnumerable<Tools>> GetTool()
+        public ActionResult<IEnumerable<Tools>> Get()
         {
             return Ok(Tool);
         }
 
         // GET: api/Tools/{id}
         [HttpGet("{id}")]
-        public ActionResult<Tools> GetTool(int id)
+        public ActionResult<Tools> Get(int id)
         {
             var tool = Tool.FirstOrDefault(u => u.Id == id);
             if (tool == null) return NotFound();
@@ -29,16 +29,16 @@ namespace Forgeborn.Server.Controllers
 
         // POST: api/Tools
         [HttpPost]
-        public ActionResult<Tools> CreateTool(Tools tool)
+        public ActionResult<Tools> Create(Tools tool)
         {
             tool.Id = Tool.Count > 0 ? Tool.Max(u => u.Id) + 1 : 1;
             Tool.Add(tool);
-            return CreatedAtAction(nameof(GetTool), new { id = tool.Id }, tool);
+            return CreatedAtAction(nameof(Get), new { id = tool.Id }, tool);
         }
 
         // PUT: api/Tools/5
         [HttpPut("{id}")]
-        public IActionResult UpdateTool(int id, Tools updatedTool)
+        public IActionResult Update(int id, Tools updatedTool)
         {
             var tool = Tool.FirstOrDefault(u => u.Id == id);
             if (tool == null) return NotFound();
@@ -58,7 +58,7 @@ namespace Forgeborn.Server.Controllers
 
         // DELETE: api/Tools/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteTool(int id)
+        public IActionResult Delete(int id)
         {
             var tool = Tool.FirstOrDefault(u => u.Id == id);
             if (tool == null) return NotFound();

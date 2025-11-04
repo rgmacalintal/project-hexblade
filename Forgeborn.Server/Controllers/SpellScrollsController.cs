@@ -13,14 +13,14 @@ namespace Forgeborn.Server.Controllers
 
         // GET: api/SpellScrolls
         [HttpGet]
-        public ActionResult<IEnumerable<SpellScrolls>> GetSpellScroll()
+        public ActionResult<IEnumerable<SpellScrolls>> Get()
         {
             return Ok(SpellScroll);
         }
 
         // GET: api/SpellScrolls/{id}
         [HttpGet("{id}")]
-        public ActionResult<SpellScrolls> GetSpellScroll(int id)
+        public ActionResult<SpellScrolls> Get(int id)
         {
             var scroll = SpellScroll.FirstOrDefault(u => u.Id == id);
             if (scroll == null) return NotFound();
@@ -29,16 +29,16 @@ namespace Forgeborn.Server.Controllers
 
         // POST: api/SpellScrolls
         [HttpPost]
-        public ActionResult<SpellScrolls> CreateSpellScroll(SpellScrolls scroll)
+        public ActionResult<SpellScrolls> Create(SpellScrolls scroll)
         {
             scroll.Id = SpellScroll.Count > 0 ? SpellScroll.Max(u => u.Id) + 1 : 1;
             SpellScroll.Add(scroll);
-            return CreatedAtAction(nameof(GetSpellScroll), new { id = scroll.Id }, scroll);
+            return CreatedAtAction(nameof(Get), new { id = scroll.Id }, scroll);
         }
 
         // PUT: api/SpellScrolls/5
         [HttpPut("{id}")]
-        public IActionResult UpdateSpellScroll(int id, SpellScrolls updatedSpellScroll)
+        public IActionResult Update(int id, SpellScrolls updatedSpellScroll)
         {
             var scroll = SpellScroll.FirstOrDefault(u => u.Id == id);
             if (scroll == null) return NotFound();
@@ -59,7 +59,7 @@ namespace Forgeborn.Server.Controllers
 
         // DELETE: api/SpellScrolls/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteSpellScroll(int id)
+        public IActionResult Delete(int id)
         {
             var scroll = SpellScroll.FirstOrDefault(u => u.Id == id);
             if (scroll == null) return NotFound();

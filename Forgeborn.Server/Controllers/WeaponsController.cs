@@ -13,14 +13,14 @@ namespace Forgeborn.Server.Controllers
 
         // GET: api/Weapons
         [HttpGet]
-        public ActionResult<IEnumerable<Weapons>> GetWeapon()
+        public ActionResult<IEnumerable<Weapons>> Get()
         {
             return Ok(Weapon);
         }
 
         // GET: api/Weapons/{id}
         [HttpGet("{id}")]
-        public ActionResult<Weapons> GetWeapon(int id)
+        public ActionResult<Weapons> Get(int id)
         {
             var weapon = Weapon.FirstOrDefault(u => u.Id == id);
             if (weapon == null) return NotFound();
@@ -29,16 +29,16 @@ namespace Forgeborn.Server.Controllers
 
         // POST: api/Weapons
         [HttpPost]
-        public ActionResult<Weapons> CreateWeapon(Weapons weapon)
+        public ActionResult<Weapons> Create(Weapons weapon)
         {
             weapon.Id = Weapon.Count > 0 ? Weapon.Max(u => u.Id) + 1 : 1;
             Weapon.Add(weapon);
-            return CreatedAtAction(nameof(GetWeapon), new { id = weapon.Id }, weapon);
+            return CreatedAtAction(nameof(Get), new { id = weapon.Id }, weapon);
         }
 
         // PUT: api/Weapons/5
         [HttpPut("{id}")]
-        public IActionResult UpdateWeapon(int id, Weapons updatedWeapon)
+        public IActionResult Update(int id, Weapons updatedWeapon)
         {
             var weapon = Weapon.FirstOrDefault(u => u.Id == id);
             if (weapon == null) return NotFound();
@@ -61,7 +61,7 @@ namespace Forgeborn.Server.Controllers
 
         // DELETE: api/Weapons/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteWeapon(int id)
+        public IActionResult Delete(int id)
         {
             var weapon = Weapon.FirstOrDefault(u => u.Id == id);
             if (weapon == null) return NotFound();

@@ -13,14 +13,14 @@ namespace Forgeborn.Server.Controllers
 
         // GET: api/Ammunitions
         [HttpGet]
-        public ActionResult<IEnumerable<Ammunitions>> GetAmmunitions()
+        public ActionResult<IEnumerable<Ammunitions>> Get()
         {
             return Ok(Ammunition);
         }
 
         // GET: api/Ammunitions/{id}
         [HttpGet("{id}")]
-        public ActionResult<Ammunitions> GetAmmunition(int id)
+        public ActionResult<Ammunitions> Get(int id)
         {
             var ammunition = Ammunition.FirstOrDefault(u => u.Id == id);
             if (ammunition == null) return NotFound();
@@ -29,16 +29,16 @@ namespace Forgeborn.Server.Controllers
 
         // POST: api/Ammunitions
         [HttpPost]
-        public ActionResult<Ammunitions> CreateAmmunition(Ammunitions ammunition)
+        public ActionResult<Ammunitions> Create(Ammunitions ammunition)
         {
             ammunition.Id = Ammunition.Count > 0 ? Ammunition.Max(u => u.Id) + 1 : 1;
             Ammunition.Add(ammunition);
-            return CreatedAtAction(nameof(GetAmmunition), new { id = ammunition.Id }, ammunition);
+            return CreatedAtAction(nameof(Get), new { id = ammunition.Id }, ammunition);
         }
 
         // PUT: api/Ammunitions/5
         [HttpPut("{id}")]
-        public IActionResult UpdateAmmunition(int id, Ammunitions updatedAmmunition)
+        public IActionResult Update(int id, Ammunitions updatedAmmunition)
         {
             var ammunition = Ammunition.FirstOrDefault(u => u.Id == id);
             if (ammunition == null) return NotFound();
@@ -58,7 +58,7 @@ namespace Forgeborn.Server.Controllers
 
         // DELETE: api/Ammunitions/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteAmmunition(int id)
+        public IActionResult Delete(int id)
         {
             var ammunition = Ammunition.FirstOrDefault(u => u.Id == id);
             if (ammunition == null) return NotFound();

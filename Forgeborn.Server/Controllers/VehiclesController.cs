@@ -13,14 +13,14 @@ namespace Forgeborn.Server.Controllers
 
         // GET: api/Vehicles
         [HttpGet]
-        public ActionResult<IEnumerable<Vehicles>> GetVehicle()
+        public ActionResult<IEnumerable<Vehicles>> Get()
         {
             return Ok(Vehicle);
         }
 
         // GET: api/Vehicles/{id}
         [HttpGet("{id}")]
-        public ActionResult<Vehicles> GetVehicle(int id)
+        public ActionResult<Vehicles> Get(int id)
         {
             var vehicle = Vehicle.FirstOrDefault(u => u.Id == id);
             if (vehicle == null) return NotFound();
@@ -29,16 +29,16 @@ namespace Forgeborn.Server.Controllers
 
         // POST: api/Vehicles
         [HttpPost]
-        public ActionResult<Vehicles> CreateVehicle(Vehicles vehicle)
+        public ActionResult<Vehicles> Create(Vehicles vehicle)
         {
             vehicle.Id = Vehicle.Count > 0 ? Vehicle.Max(u => u.Id) + 1 : 1;
             Vehicle.Add(vehicle);
-            return CreatedAtAction(nameof(GetVehicle), new { id = vehicle.Id }, vehicle);
+            return CreatedAtAction(nameof(Get), new { id = vehicle.Id }, vehicle);
         }
 
         // PUT: api/Vehicles/5
         [HttpPut("{id}")]
-        public IActionResult UpdateVehicle(int id, Vehicles updatedVehicle)
+        public IActionResult Update(int id, Vehicles updatedVehicle)
         {
             var vehicle = Vehicle.FirstOrDefault(u => u.Id == id);
             if (vehicle == null) return NotFound();
@@ -58,7 +58,7 @@ namespace Forgeborn.Server.Controllers
 
         // DELETE: api/Vehicles/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteVehicle(int id)
+        public IActionResult Delete(int id)
         {
             var vehicle = Vehicle.FirstOrDefault(u => u.Id == id);
             if (vehicle == null) return NotFound();

@@ -13,14 +13,14 @@ namespace Forgeborn.Server.Controllers
 
         // GET: api/Rulesets
         [HttpGet]
-        public ActionResult<IEnumerable<Players>> GetPlayer()
+        public ActionResult<IEnumerable<Players>> Get()
         {
             return Ok(Ruleset);
         }
 
         // GET: api/Rulesets/{id}
         [HttpGet("{id}")]
-        public ActionResult<Rulesets> GetRuleset(int id)
+        public ActionResult<Rulesets> Get(int id)
         {
             var ruleset = Ruleset.FirstOrDefault(u => u.Id == id);
             if (ruleset == null) return NotFound();
@@ -29,16 +29,16 @@ namespace Forgeborn.Server.Controllers
 
         // POST: api/Rulesets
         [HttpPost]
-        public ActionResult<Rulesets> CreateRuleset(Rulesets ruleset)
+        public ActionResult<Rulesets> Create(Rulesets ruleset)
         {
             ruleset.Id = Ruleset.Count > 0 ? Ruleset.Max(u => u.Id) + 1 : 1;
             Ruleset.Add(ruleset);
-            return CreatedAtAction(nameof(GetRuleset), new { id = ruleset.Id }, ruleset);
+            return CreatedAtAction(nameof(Get), new { id = ruleset.Id }, ruleset);
         }
 
         // PUT: api/Rulesets/5
         [HttpPut("{id}")]
-        public IActionResult UpdateRuleset(int id, Rulesets updatedRuleset)
+        public IActionResult Update(int id, Rulesets updatedRuleset)
         {
             var ruleset = Ruleset.FirstOrDefault(u => u.Id == id);
             if (ruleset == null) return NotFound();
@@ -51,7 +51,7 @@ namespace Forgeborn.Server.Controllers
 
         // DELETE: api/Rulesets/5
         [HttpDelete("{id}")]
-        public IActionResult DeletePlayer(int id)
+        public IActionResult Delete(int id)
         {
             var ruleset = Ruleset.FirstOrDefault(u => u.Id == id);
             if (ruleset == null) return NotFound();

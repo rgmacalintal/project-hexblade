@@ -13,14 +13,14 @@ namespace Forgeborn.Server.Controllers
 
         // GET: api/Armors
         [HttpGet]
-        public ActionResult<IEnumerable<Armors>> GetArmor()
+        public ActionResult<IEnumerable<Armors>> Get()
         {
             return Ok(Armor);
         }
 
         // GET: api/Armors/{id}
         [HttpGet("{id}")]
-        public ActionResult<Armors> GetArmor(int id)
+        public ActionResult<Armors> Get(int id)
         {
             var armor = Armor.FirstOrDefault(u => u.Id == id);
             if (armor == null) return NotFound();
@@ -29,16 +29,16 @@ namespace Forgeborn.Server.Controllers
 
         // POST: api/Armors
         [HttpPost]
-        public ActionResult<Armors> CreateArmor(Armors armor)
+        public ActionResult<Armors> Create(Armors armor)
         {
             armor.Id = Armor.Count > 0 ? Armor.Max(u => u.Id) + 1 : 1;
             Armor.Add(armor);
-            return CreatedAtAction(nameof(GetArmor), new { id = armor.Id }, armor);
+            return CreatedAtAction(nameof(Get), new { id = armor.Id }, armor);
         }
 
         // PUT: api/Armors/5
         [HttpPut("{id}")]
-        public IActionResult UpdateArmor(int id, Armors updatedArmor)
+        public IActionResult Update(int id, Armors updatedArmor)
         {
             var armor = Armor.FirstOrDefault(u => u.Id == id);
             if (armor == null) return NotFound();
@@ -60,7 +60,7 @@ namespace Forgeborn.Server.Controllers
 
         // DELETE: api/Armors/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteArmor(int id)
+        public IActionResult Delete(int id)
         {
             var armor = Armor.FirstOrDefault(u => u.Id == id);
             if (armor == null) return NotFound();
