@@ -44,9 +44,7 @@ namespace Forgeborn.Server.Models
         public int UserId { get; set; }
         [ForeignKey(nameof(UserId))]
         public Users? User { get; set; }
-        public int RulesetId { get; set; }
-        [ForeignKey(nameof(RulesetId))]
-        public Rulesets? Ruleset { get; set; }
+        public ICollection<Rulesets> Players { get; set; } = new List<Rulesets>();
 
     }
 }
