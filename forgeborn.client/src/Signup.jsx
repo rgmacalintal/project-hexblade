@@ -34,7 +34,7 @@ export default function Signup({ toggleSidebar, sidebarOpen }) {
                 alert(conflictMsg);
             } else {
                 const errorText = await response.text();
-                alert(errorText || "Registration failed.");
+                alert(errorText || "Registration unsuccessful.");
             }
         } catch (error) {
             console.error("Registration failed:", error);
@@ -48,7 +48,7 @@ export default function Signup({ toggleSidebar, sidebarOpen }) {
                 <div className="signup-page">
                     <div className="login-header">
                         <h2 className="login-heading">Create Account</h2>
-                        <p className="subheading">Sign up to get started.</p>
+                        <p className="subheading">Sign up to get started!</p>
                     </div>
 
                     <form className="login-form" onSubmit={handleSignup}>
@@ -64,7 +64,7 @@ export default function Signup({ toggleSidebar, sidebarOpen }) {
                         <label>Email</label>
                         <input
                             type="email"
-                            placeholder="test@test.com"
+                            placeholder="Email Address"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
@@ -88,12 +88,12 @@ export default function Signup({ toggleSidebar, sidebarOpen }) {
                             required
                         />
 
-                        <Link to="/welcome" state={{ from: 'signup' }} className="login-btn" style={{ display: 'inline-block', textAlign: 'center', textDecoration: 'none', color: 'white' }}>
+                        <button type="submit" className="login-btn">
                             Sign Up
-                        </Link>
+                        </button>
 
                         <p className="footer-links">
-                            <Link to="/">Already have an account? Login</Link>
+                            <Link to="/">Already have an account? Login!</Link>
                         </p>
                     </form>
                 </div>

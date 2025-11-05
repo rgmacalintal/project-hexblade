@@ -1,5 +1,5 @@
-﻿import React from 'react';
-import { Link } from 'react-router-dom';
+﻿import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Layout from './Layout';
 
 export default function Login({ toggleSidebar, sidebarOpen }) {
@@ -37,21 +37,28 @@ export default function Login({ toggleSidebar, sidebarOpen }) {
                     <p className="subheading">Sign in to continue.</p>
                 </div>
 
-                <form className="login-form">
+                <form className="login-form" onSubmit={handleLogin}>
                     <label>Username</label>
-                    <input type="text" placeholder="Tracy Chesu" />
+                    <input
+                        type="text"
+                        placeholder="Username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        required
+                    />
 
                     <label>Password</label>
-                    <input type="password" placeholder="********" />
+                    <input
+                        type="password"
+                        placeholder="********"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
 
-                    <Link
-                        to="/welcome"
-                        state={{ from: 'login' }}
-                        className="login-btn"
-                        style={{ display: 'inline-block', textAlign: 'center', textDecoration: 'none', color: 'white' }}
-                    >
-                        Log in
-                    </Link>
+                    <button type="submit" className="login-btn">
+                        Login
+                    </button>
 
                     <p className="footer-links">
                         <Link to="/forgot-password">Forgot Password?</Link>
