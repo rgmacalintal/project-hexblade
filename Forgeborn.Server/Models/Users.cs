@@ -24,5 +24,7 @@ namespace Forgeborn.Server.Models
         public string Email { get; set; } = null!;
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
 
+        public ICollection<Characters> Players { get; set; } = new List<Characters>();
+
     }
 }

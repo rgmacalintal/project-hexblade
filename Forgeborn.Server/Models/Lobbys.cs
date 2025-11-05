@@ -9,9 +9,7 @@ namespace Forgeborn.Server.Models
         public string Name { get; set; } = null!;
         public DateTime CreatedOn { get; set; } = DateTime.Now;
 
-        public int PlayerId { get; set; }
-        [ForeignKey(nameof(PlayerId))]
-        public Players Host { get; set; } = null!;
-        
+        public ICollection<Players> Players { get; set; } = new List<Players>();
+
     }
 }
