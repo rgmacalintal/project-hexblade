@@ -26,7 +26,7 @@ export default function Welcome({ toggleSidebar, sidebarOpen }) {
             <Layout toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen}>
                 <div className="welcome-page">
                     <h1 className="welcome-text">
-                        Welcome {username ? username : 'to Forgeborn!'}
+                        Welcome {username} to Forgeborn!
                     </h1>
                     <p className="welcome-subtitle">Your journey into the realm of adventure begins here</p>
                     

@@ -120,18 +120,19 @@
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: 30px;
+    top: 10px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 10000;
 }
 
 .logo-img {
-    height: 1000px;
-    margin-top: -400px;
+    max-width: 500px;
+    height: auto;
     object-fit: contain;
-    filter: drop-shadow(0 4px 20px rgba(255, 167, 86, 0.4)); /* Adjusted shadow */
+    filter: drop-shadow(0 4px 20px rgba(255, 167, 86, 0.4));
     transition: all 0.3s ease;
+    margin-top: 0;
 }
 
     .logo-img:hover {
@@ -1271,7 +1272,7 @@ body.dark-theme {
     margin-left: -300px;
     display: flex;
     gap: 24px;
-    align-items: right;
+    align-items: center; /* Changed from 'right' which was invalid for align-items */
     margin-bottom: 30px;
 }
 
