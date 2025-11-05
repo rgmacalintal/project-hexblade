@@ -28,7 +28,7 @@ export default function Signup({ toggleSidebar, sidebarOpen }) {
                 const data = await response.json();
                 console.log('Registration success:', data);
                 alert(data.message || "Registration successful.");
-                navigate('/');
+                navigate('/login');
             } else if (response.status === 409) {
                 const conflictMsg = await response.text();
                 alert(conflictMsg);

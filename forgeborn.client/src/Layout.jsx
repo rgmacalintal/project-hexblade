@@ -1,10 +1,11 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 export default function Layout({ sidebarOpen, toggleSidebar, children }) {
     const [isDarkTheme, setIsDarkTheme] = useState(false);
     const [openSubmenu, setOpenSubmenu] = useState(null);
     const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Check for saved theme preference or default to light
@@ -55,6 +56,12 @@ export default function Layout({ sidebarOpen, toggleSidebar, children }) {
         }
         return true;
     })();
+
+    const handleLogout = () => {
+        localStorage.removeItem('username');
+        alert('You have been logged out.');
+        navigate('/login');
+    }
 
     return (
         <div className={`login-wrapper ${sidebarOpen ? 'sidebar-open' : ''}`}>
@@ -126,8 +133,6 @@ export default function Layout({ sidebarOpen, toggleSidebar, children }) {
                         <ul className="submenu">
                             <li>English</li>
                             <li>French</li>
-                            <li>Spanish</li>
-                            <li>German</li>
                         </ul>
                     </li>
                     <li className="has-submenu">
@@ -142,7 +147,7 @@ export default function Layout({ sidebarOpen, toggleSidebar, children }) {
                         </ul>
                     </li>
                     <li>Help</li>
-                    <li>LogOut</li>
+                    <li onClick={handleLogout} style={{ cursor: 'pointer', color: 'red' }}>Log Out</li>
                     <li>About</li>
                 </ul>
             </nav>

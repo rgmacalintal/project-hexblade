@@ -2,9 +2,21 @@ import React, { useState } from 'react';
 import Layout from './Layout';
 import './Welcome.css';
 import './App.css';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export default function Welcome({ toggleSidebar, sidebarOpen }) {
     const [isCharModalOpen, setIsCharModalOpen] = useState(false);
+    const location = useLocation();
+    const navigate = useNavigate();
+    const username = location.state?.username || localStorage.getItem('username');
+
+    useEffect(() => {
+        if (!username) {
+            alert('Please log in first.');
+            navigate('/login');
+        }
+    }, [username, navigate]);
 
     const openCharModal = () => setIsCharModalOpen(true);
     const closeCharModal = () => setIsCharModalOpen(false);
@@ -13,7 +25,9 @@ export default function Welcome({ toggleSidebar, sidebarOpen }) {
         <div className="fullscreen-wrapper">
             <Layout toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen}>
                 <div className="welcome-page">
-                    <h1 className="welcome-text">Welcome to Forge Born</h1>
+                    <h1 className="welcome-text">
+                        Welcome {username ? username : 'to Forgeborn!'}
+                    </h1>
                     <p className="welcome-subtitle">Your journey into the realm of adventure begins here</p>
                     
                     <div className="welcome-features">
