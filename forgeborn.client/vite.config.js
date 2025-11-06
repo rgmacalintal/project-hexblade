@@ -5,7 +5,7 @@ import { fileURLToPath, URL } from 'node:url';
 
 // https://vitejs.dev/config/
 
-const target = env.ASPNETCORE_URLS;
+const target = env.ASPNETCORE_URLS || 'http://localhost:8080';
 
 export default defineConfig({
     resolve: {
@@ -18,9 +18,11 @@ export default defineConfig({
         proxy: {
             '/api/': {
                 target,
+                changeOrigin: true,
             },
             '/openapi/': {
                 target,
+                changeOrigin: true,
             }
         }
     },
