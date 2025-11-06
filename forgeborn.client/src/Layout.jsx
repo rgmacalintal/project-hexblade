@@ -57,7 +57,15 @@ export default function Layout({ sidebarOpen, toggleSidebar, children }) {
         return true;
     })();
 
-    const handleLogout = () => {
+    function handleLogout() {
+        const username = localStorage.getItem('username');
+
+        if (!username) {
+            alert('Please login first.');
+            navigate('/login');
+            return;
+        }
+
         localStorage.removeItem('username');
         alert('You have been logged out.');
         navigate('/login');

@@ -13,7 +13,7 @@ export default function Welcome({ toggleSidebar, sidebarOpen }) {
 
     useEffect(() => {
         if (!username) {
-            alert('Please log in first.');
+            alert('Please login first.');
             navigate('/login');
         }
     }, [username, navigate]);
