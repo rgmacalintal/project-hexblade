@@ -1,72 +1,157 @@
-﻿using Forgeborn.Server.Models.Items;
-using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Forgeborn.Server.Data;
+using Forgeborn.Server.Models.Items;
 
 namespace Forgeborn.Server.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ArmorsController : ControllerBase
+    public class ArmorsController : Controller
     {
-        // In-memory list
-        private static List<Armors> Armor = new List<Armors>();
+        private readonly ApplicationDbContext _context;
 
-        // GET: api/Armors
-        [HttpGet]
-        public ActionResult<IEnumerable<Armors>> Get()
+        public ArmorsController(ApplicationDbContext context)
         {
-            return Ok(Armor);
+            _context = context;
         }
 
-        // GET: api/Armors/{id}
-        [HttpGet("{id}")]
-        public ActionResult<Armors> Get(int id)
+        // GET: Armors
+        public async Task<IActionResult> Index()
         {
-            var armor = Armor.FirstOrDefault(u => u.Id == id);
-            if (armor == null) return NotFound();
-            return Ok(armor);
+            return View(await _context.Armors.ToListAsync());
         }
 
-        // POST: api/Armors
+        // GET: Armors/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var armors = await _context.Armors
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (armors == null)
+            {
+                return NotFound();
+            }
+
+            return View(armors);
+        }
+
+        // GET: Armors/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Armors/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult<Armors> Create(Armors armor)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Effect,ArmorClass,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Armors armors)
         {
-            armor.Id = Armor.Count > 0 ? Armor.Max(u => u.Id) + 1 : 1;
-            Armor.Add(armor);
-            return CreatedAtAction(nameof(Get), new { id = armor.Id }, armor);
+            if (ModelState.IsValid)
+            {
+                _context.Add(armors);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(armors);
         }
 
-        // PUT: api/Armors/5
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, Armors updatedArmor)
+        // GET: Armors/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
-            var armor = Armor.FirstOrDefault(u => u.Id == id);
-            if (armor == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            armor.Name = updatedArmor.Name;
-            armor.Cost = updatedArmor.Cost;
-            armor.Weight = updatedArmor.Weight;
-            armor.Source = updatedArmor.Source;
-            armor.Rarity = updatedArmor.Rarity;
-            armor.WondrousItem = updatedArmor.WondrousItem;
-            armor.Attunement = updatedArmor.Attunement;
-            armor.Requirements = updatedArmor.Requirements;
-            armor.Effect = updatedArmor.Effect;
-            armor.ArmorClass = updatedArmor.ArmorClass;
-            armor.Traits = updatedArmor.Traits;
-
-            return NoContent();
+            var armors = await _context.Armors.FindAsync(id);
+            if (armors == null)
+            {
+                return NotFound();
+            }
+            return View(armors);
         }
 
-        // DELETE: api/Armors/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        // POST: Armors/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Effect,ArmorClass,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Armors armors)
         {
-            var armor = Armor.FirstOrDefault(u => u.Id == id);
-            if (armor == null) return NotFound();
+            if (id != armors.Id)
+            {
+                return NotFound();
+            }
 
-            Armor.Remove(armor);
-            return NoContent();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(armors);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ArmorsExists(armors.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(armors);
+        }
+
+        // GET: Armors/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var armors = await _context.Armors
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (armors == null)
+            {
+                return NotFound();
+            }
+
+            return View(armors);
+        }
+
+        // POST: Armors/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var armors = await _context.Armors.FindAsync(id);
+            if (armors != null)
+            {
+                _context.Armors.Remove(armors);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool ArmorsExists(int id)
+        {
+            return _context.Armors.Any(e => e.Id == id);
         }
     }
 }

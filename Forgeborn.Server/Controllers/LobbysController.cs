@@ -1,62 +1,157 @@
-﻿using Forgeborn.Server.Models;
-using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Forgeborn.Server.Data;
+using Forgeborn.Server.Models;
 
 namespace Forgeborn.Server.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class LobbysController : ControllerBase
+    public class LobbysController : Controller
     {
-        // In-memory list
-        private static List<Lobbys> Lobby = new List<Lobbys>();
+        private readonly ApplicationDbContext _context;
 
-        // GET: api/Lobbys
-        [HttpGet]
-        public ActionResult<IEnumerable<Lobbys>> Get()
+        public LobbysController(ApplicationDbContext context)
         {
-            return Ok(Lobby);
+            _context = context;
         }
 
-        // GET: api/Lobbys/{id}
-        [HttpGet("{id}")]
-        public ActionResult<Lobbys> Get(int id)
+        // GET: Lobbys
+        public async Task<IActionResult> Index()
         {
-            var lobby = Lobby.FirstOrDefault(u => u.Id == id);
-            if (lobby == null) return NotFound();
-            return Ok(lobby);
+            return View(await _context.Lobbys.ToListAsync());
         }
 
-        // POST: api/Lobbys
+        // GET: Lobbys/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var lobbys = await _context.Lobbys
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (lobbys == null)
+            {
+                return NotFound();
+            }
+
+            return View(lobbys);
+        }
+
+        // GET: Lobbys/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Lobbys/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult<Lobbys> Create(Lobbys lobby)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Name,CreatedOn")] Lobbys lobbys)
         {
-            lobby.Id = Lobby.Count > 0 ? Lobby.Max(u => u.Id) + 1 : 1;
-            Lobby.Add(lobby);
-            return CreatedAtAction(nameof(Get), new { id = lobby.Id }, lobby);
+            if (ModelState.IsValid)
+            {
+                _context.Add(lobbys);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(lobbys);
         }
 
-        // PUT: api/Lobbys/5
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, Lobbys updatedLobby)
+        // GET: Lobbys/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
-            var lobby = Lobby.FirstOrDefault(u => u.Id == id);
-            if (lobby == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            lobby.Name = updatedLobby.Name;
-
-            return NoContent();
+            var lobbys = await _context.Lobbys.FindAsync(id);
+            if (lobbys == null)
+            {
+                return NotFound();
+            }
+            return View(lobbys);
         }
 
-        // DELETE: api/Lobbys/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        // POST: Lobbys/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CreatedOn")] Lobbys lobbys)
         {
-            var lobby = Lobby.FirstOrDefault(u => u.Id == id);
-            if (lobby == null) return NotFound();
+            if (id != lobbys.Id)
+            {
+                return NotFound();
+            }
 
-            Lobby.Remove(lobby);
-            return NoContent();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(lobbys);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!LobbysExists(lobbys.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(lobbys);
+        }
+
+        // GET: Lobbys/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var lobbys = await _context.Lobbys
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (lobbys == null)
+            {
+                return NotFound();
+            }
+
+            return View(lobbys);
+        }
+
+        // POST: Lobbys/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var lobbys = await _context.Lobbys.FindAsync(id);
+            if (lobbys != null)
+            {
+                _context.Lobbys.Remove(lobbys);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool LobbysExists(int id)
+        {
+            return _context.Lobbys.Any(e => e.Id == id);
         }
     }
 }

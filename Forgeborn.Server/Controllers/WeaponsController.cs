@@ -1,73 +1,157 @@
-﻿using Forgeborn.Server.Models.Items;
-using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Forgeborn.Server.Data;
+using Forgeborn.Server.Models.Items;
 
 namespace Forgeborn.Server.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class WeaponsController : ControllerBase
+    public class WeaponsController : Controller
     {
-        // In-memory list
-        private static List<Weapons> Weapon = new List<Weapons>();
+        private readonly ApplicationDbContext _context;
 
-        // GET: api/Weapons
-        [HttpGet]
-        public ActionResult<IEnumerable<Weapons>> Get()
+        public WeaponsController(ApplicationDbContext context)
         {
-            return Ok(Weapon);
+            _context = context;
         }
 
-        // GET: api/Weapons/{id}
-        [HttpGet("{id}")]
-        public ActionResult<Weapons> Get(int id)
+        // GET: Weapons
+        public async Task<IActionResult> Index()
         {
-            var weapon = Weapon.FirstOrDefault(u => u.Id == id);
-            if (weapon == null) return NotFound();
-            return Ok(weapon);
+            return View(await _context.Weapons.ToListAsync());
         }
 
-        // POST: api/Weapons
+        // GET: Weapons/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var weapons = await _context.Weapons
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (weapons == null)
+            {
+                return NotFound();
+            }
+
+            return View(weapons);
+        }
+
+        // GET: Weapons/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Weapons/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult<Weapons> Create(Weapons weapon)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Attack,Damage,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Weapons weapons)
         {
-            weapon.Id = Weapon.Count > 0 ? Weapon.Max(u => u.Id) + 1 : 1;
-            Weapon.Add(weapon);
-            return CreatedAtAction(nameof(Get), new { id = weapon.Id }, weapon);
+            if (ModelState.IsValid)
+            {
+                _context.Add(weapons);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(weapons);
         }
 
-        // PUT: api/Weapons/5
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, Weapons updatedWeapon)
+        // GET: Weapons/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
-            var weapon = Weapon.FirstOrDefault(u => u.Id == id);
-            if (weapon == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            weapon.Name = updatedWeapon.Name;
-            weapon.Cost = updatedWeapon.Cost;
-            weapon.Weight = updatedWeapon.Weight;
-            weapon.Source = updatedWeapon.Source;
-            weapon.Rarity = updatedWeapon.Rarity;
-            weapon.WondrousItem = updatedWeapon.WondrousItem;
-            weapon.Attunement = updatedWeapon.Attunement;
-            weapon.Requirements = updatedWeapon.Requirements;
-            weapon.Attack = updatedWeapon.Attack;
-            weapon.Damage = updatedWeapon.Damage;
-            weapon.DamageType = updatedWeapon.DamageType;
-            weapon.Traits = updatedWeapon.Traits;
-
-            return NoContent();
+            var weapons = await _context.Weapons.FindAsync(id);
+            if (weapons == null)
+            {
+                return NotFound();
+            }
+            return View(weapons);
         }
 
-        // DELETE: api/Weapons/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        // POST: Weapons/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Attack,Damage,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Weapons weapons)
         {
-            var weapon = Weapon.FirstOrDefault(u => u.Id == id);
-            if (weapon == null) return NotFound();
+            if (id != weapons.Id)
+            {
+                return NotFound();
+            }
 
-            Weapon.Remove(weapon);
-            return NoContent();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(weapons);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!WeaponsExists(weapons.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(weapons);
+        }
+
+        // GET: Weapons/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var weapons = await _context.Weapons
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (weapons == null)
+            {
+                return NotFound();
+            }
+
+            return View(weapons);
+        }
+
+        // POST: Weapons/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var weapons = await _context.Weapons.FindAsync(id);
+            if (weapons != null)
+            {
+                _context.Weapons.Remove(weapons);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool WeaponsExists(int id)
+        {
+            return _context.Weapons.Any(e => e.Id == id);
         }
     }
 }

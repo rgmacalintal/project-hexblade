@@ -1,69 +1,157 @@
-﻿using Forgeborn.Server.Models.Items;
-using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Forgeborn.Server.Data;
+using Forgeborn.Server.Models.Items;
 
 namespace Forgeborn.Server.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class MountsController : ControllerBase
+    public class MountsController : Controller
     {
-        // In-memory list
-        private static List<Mounts> Mount = new List<Mounts>();
+        private readonly ApplicationDbContext _context;
 
-        // GET: api/Mounts
-        [HttpGet]
-        public ActionResult<IEnumerable<Mounts>> Get()
+        public MountsController(ApplicationDbContext context)
         {
-            return Ok(Mount);
+            _context = context;
         }
 
-        // GET: api/Mounts/{id}
-        [HttpGet("{id}")]
-        public ActionResult<Mounts> Get(int id)
+        // GET: Mounts
+        public async Task<IActionResult> Index()
         {
-            var mount = Mount.FirstOrDefault(u => u.Id == id);
-            if (mount == null) return NotFound();
-            return Ok(mount);
+            return View(await _context.Mounts.ToListAsync());
         }
 
-        // POST: api/Mounts
+        // GET: Mounts/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var mounts = await _context.Mounts
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (mounts == null)
+            {
+                return NotFound();
+            }
+
+            return View(mounts);
+        }
+
+        // GET: Mounts/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Mounts/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult<Mounts> Create(Mounts mount)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Mounts mounts)
         {
-            mount.Id = Mount.Count > 0 ? Mount.Max(u => u.Id) + 1 : 1;
-            Mount.Add(mount);
-            return CreatedAtAction(nameof(Get), new { id = mount.Id }, mount);
+            if (ModelState.IsValid)
+            {
+                _context.Add(mounts);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(mounts);
         }
 
-        // PUT: api/Mounts/5
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, Mounts updatedMount)
+        // GET: Mounts/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
-            var mount = Mount.FirstOrDefault(u => u.Id == id);
-            if (mount == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            mount.Name = updatedMount.Name;
-            mount.Cost = updatedMount.Cost;
-            mount.Weight = updatedMount.Weight;
-            mount.Source = updatedMount.Source;
-            mount.Rarity = updatedMount.Rarity;
-            mount.WondrousItem = updatedMount.WondrousItem;
-            mount.Attunement = updatedMount.Attunement;
-            mount.Requirements = updatedMount.Requirements;
-
-            return NoContent();
+            var mounts = await _context.Mounts.FindAsync(id);
+            if (mounts == null)
+            {
+                return NotFound();
+            }
+            return View(mounts);
         }
 
-        // DELETE: api/Mounts/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        // POST: Mounts/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Mounts mounts)
         {
-            var mount = Mount.FirstOrDefault(u => u.Id == id);
-            if (mount == null) return NotFound();
+            if (id != mounts.Id)
+            {
+                return NotFound();
+            }
 
-            Mount.Remove(mount);
-            return NoContent();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(mounts);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!MountsExists(mounts.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(mounts);
+        }
+
+        // GET: Mounts/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var mounts = await _context.Mounts
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (mounts == null)
+            {
+                return NotFound();
+            }
+
+            return View(mounts);
+        }
+
+        // POST: Mounts/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var mounts = await _context.Mounts.FindAsync(id);
+            if (mounts != null)
+            {
+                _context.Mounts.Remove(mounts);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool MountsExists(int id)
+        {
+            return _context.Mounts.Any(e => e.Id == id);
         }
     }
 }

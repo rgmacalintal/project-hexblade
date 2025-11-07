@@ -1,70 +1,157 @@
-﻿using Forgeborn.Server.Models.Items;
-using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Forgeborn.Server.Data;
+using Forgeborn.Server.Models.Items;
 
 namespace Forgeborn.Server.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AmmunitionsController : ControllerBase
+    public class AmmunitionsController : Controller
     {
-        // In-memory list
-        private static List<Ammunitions> Ammunition = new List<Ammunitions>();
+        private readonly ApplicationDbContext _context;
 
-        // GET: api/Ammunitions
-        [HttpGet]
-        public ActionResult<IEnumerable<Ammunitions>> Get()
+        public AmmunitionsController(ApplicationDbContext context)
         {
-            return Ok(Ammunition);
+            _context = context;
         }
 
-        // GET: api/Ammunitions/{id}
-        [HttpGet("{id}")]
-        public ActionResult<Ammunitions> Get(int id)
+        // GET: Ammunitions
+        public async Task<IActionResult> Index()
         {
-            var ammunition = Ammunition.FirstOrDefault(u => u.Id == id);
-            if (ammunition == null) return NotFound();
-            return Ok(ammunition);
+            return View(await _context.Ammunitions.ToListAsync());
         }
 
-        // POST: api/Ammunitions
+        // GET: Ammunitions/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var ammunitions = await _context.Ammunitions
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (ammunitions == null)
+            {
+                return NotFound();
+            }
+
+            return View(ammunitions);
+        }
+
+        // GET: Ammunitions/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Ammunitions/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult<Ammunitions> Create(Ammunitions ammunition)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Effect,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Ammunitions ammunitions)
         {
-            ammunition.Id = Ammunition.Count > 0 ? Ammunition.Max(u => u.Id) + 1 : 1;
-            Ammunition.Add(ammunition);
-            return CreatedAtAction(nameof(Get), new { id = ammunition.Id }, ammunition);
+            if (ModelState.IsValid)
+            {
+                _context.Add(ammunitions);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(ammunitions);
         }
 
-        // PUT: api/Ammunitions/5
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, Ammunitions updatedAmmunition)
+        // GET: Ammunitions/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
-            var ammunition = Ammunition.FirstOrDefault(u => u.Id == id);
-            if (ammunition == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            ammunition.Name = updatedAmmunition.Name;
-            ammunition.Cost = updatedAmmunition.Cost;
-            ammunition.Weight = updatedAmmunition.Weight;
-            ammunition.Source = updatedAmmunition.Source;
-            ammunition.Rarity = updatedAmmunition.Rarity;
-            ammunition.WondrousItem = updatedAmmunition.WondrousItem;
-            ammunition.Attunement = updatedAmmunition.Attunement;
-            ammunition.Requirements = updatedAmmunition.Requirements;
-            ammunition.Effect = updatedAmmunition.Effect;
-
-            return NoContent();
+            var ammunitions = await _context.Ammunitions.FindAsync(id);
+            if (ammunitions == null)
+            {
+                return NotFound();
+            }
+            return View(ammunitions);
         }
 
-        // DELETE: api/Ammunitions/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        // POST: Ammunitions/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Effect,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Ammunitions ammunitions)
         {
-            var ammunition = Ammunition.FirstOrDefault(u => u.Id == id);
-            if (ammunition == null) return NotFound();
+            if (id != ammunitions.Id)
+            {
+                return NotFound();
+            }
 
-            Ammunition.Remove(ammunition);
-            return NoContent();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(ammunitions);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!AmmunitionsExists(ammunitions.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(ammunitions);
+        }
+
+        // GET: Ammunitions/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var ammunitions = await _context.Ammunitions
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (ammunitions == null)
+            {
+                return NotFound();
+            }
+
+            return View(ammunitions);
+        }
+
+        // POST: Ammunitions/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var ammunitions = await _context.Ammunitions.FindAsync(id);
+            if (ammunitions != null)
+            {
+                _context.Ammunitions.Remove(ammunitions);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool AmmunitionsExists(int id)
+        {
+            return _context.Ammunitions.Any(e => e.Id == id);
         }
     }
 }

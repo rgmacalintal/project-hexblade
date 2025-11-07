@@ -1,70 +1,157 @@
-﻿using Forgeborn.Server.Models.Items;
-using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Forgeborn.Server.Data;
+using Forgeborn.Server.Models.Items;
 
 namespace Forgeborn.Server.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ToolsController : ControllerBase
+    public class ToolsController : Controller
     {
-        // In-memory list
-        private static List<Tools> Tool = new List<Tools>();
+        private readonly ApplicationDbContext _context;
 
-        // GET: api/Tools
-        [HttpGet]
-        public ActionResult<IEnumerable<Tools>> Get()
+        public ToolsController(ApplicationDbContext context)
         {
-            return Ok(Tool);
+            _context = context;
         }
 
-        // GET: api/Tools/{id}
-        [HttpGet("{id}")]
-        public ActionResult<Tools> Get(int id)
+        // GET: Tools
+        public async Task<IActionResult> Index()
         {
-            var tool = Tool.FirstOrDefault(u => u.Id == id);
-            if (tool == null) return NotFound();
-            return Ok(tool);
+            return View(await _context.Tools.ToListAsync());
         }
 
-        // POST: api/Tools
+        // GET: Tools/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var tools = await _context.Tools
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (tools == null)
+            {
+                return NotFound();
+            }
+
+            return View(tools);
+        }
+
+        // GET: Tools/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Tools/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult<Tools> Create(Tools tool)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Description,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Tools tools)
         {
-            tool.Id = Tool.Count > 0 ? Tool.Max(u => u.Id) + 1 : 1;
-            Tool.Add(tool);
-            return CreatedAtAction(nameof(Get), new { id = tool.Id }, tool);
+            if (ModelState.IsValid)
+            {
+                _context.Add(tools);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(tools);
         }
 
-        // PUT: api/Tools/5
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, Tools updatedTool)
+        // GET: Tools/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
-            var tool = Tool.FirstOrDefault(u => u.Id == id);
-            if (tool == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            tool.Name = updatedTool.Name;
-            tool.Cost = updatedTool.Cost;
-            tool.Weight = updatedTool.Weight;
-            tool.Source = updatedTool.Source;
-            tool.Rarity = updatedTool.Rarity;
-            tool.WondrousItem = updatedTool.WondrousItem;
-            tool.Attunement = updatedTool.Attunement;
-            tool.Requirements = updatedTool.Requirements;
-            tool.Description = updatedTool.Description;
-
-            return NoContent();
+            var tools = await _context.Tools.FindAsync(id);
+            if (tools == null)
+            {
+                return NotFound();
+            }
+            return View(tools);
         }
 
-        // DELETE: api/Tools/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        // POST: Tools/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Description,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Tools tools)
         {
-            var tool = Tool.FirstOrDefault(u => u.Id == id);
-            if (tool == null) return NotFound();
+            if (id != tools.Id)
+            {
+                return NotFound();
+            }
 
-            Tool.Remove(tool);
-            return NoContent();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(tools);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ToolsExists(tools.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(tools);
+        }
+
+        // GET: Tools/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var tools = await _context.Tools
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (tools == null)
+            {
+                return NotFound();
+            }
+
+            return View(tools);
+        }
+
+        // POST: Tools/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var tools = await _context.Tools.FindAsync(id);
+            if (tools != null)
+            {
+                _context.Tools.Remove(tools);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool ToolsExists(int id)
+        {
+            return _context.Tools.Any(e => e.Id == id);
         }
     }
 }

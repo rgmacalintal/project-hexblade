@@ -1,71 +1,157 @@
-﻿using Forgeborn.Server.Models.Items;
-using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Forgeborn.Server.Data;
+using Forgeborn.Server.Models.Items;
 
 namespace Forgeborn.Server.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class SpellScrollsController : ControllerBase
+    public class SpellScrollsController : Controller
     {
-        // In-memory list
-        private static List<SpellScrolls> SpellScroll = new List<SpellScrolls>();
+        private readonly ApplicationDbContext _context;
 
-        // GET: api/SpellScrolls
-        [HttpGet]
-        public ActionResult<IEnumerable<SpellScrolls>> Get()
+        public SpellScrollsController(ApplicationDbContext context)
         {
-            return Ok(SpellScroll);
+            _context = context;
         }
 
-        // GET: api/SpellScrolls/{id}
-        [HttpGet("{id}")]
-        public ActionResult<SpellScrolls> Get(int id)
+        // GET: SpellScrolls
+        public async Task<IActionResult> Index()
         {
-            var scroll = SpellScroll.FirstOrDefault(u => u.Id == id);
-            if (scroll == null) return NotFound();
-            return Ok(scroll);
+            return View(await _context.SpellScrolls.ToListAsync());
         }
 
-        // POST: api/SpellScrolls
+        // GET: SpellScrolls/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var spellScrolls = await _context.SpellScrolls
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (spellScrolls == null)
+            {
+                return NotFound();
+            }
+
+            return View(spellScrolls);
+        }
+
+        // GET: SpellScrolls/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: SpellScrolls/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult<SpellScrolls> Create(SpellScrolls scroll)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Level,Description,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] SpellScrolls spellScrolls)
         {
-            scroll.Id = SpellScroll.Count > 0 ? SpellScroll.Max(u => u.Id) + 1 : 1;
-            SpellScroll.Add(scroll);
-            return CreatedAtAction(nameof(Get), new { id = scroll.Id }, scroll);
+            if (ModelState.IsValid)
+            {
+                _context.Add(spellScrolls);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(spellScrolls);
         }
 
-        // PUT: api/SpellScrolls/5
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, SpellScrolls updatedSpellScroll)
+        // GET: SpellScrolls/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
-            var scroll = SpellScroll.FirstOrDefault(u => u.Id == id);
-            if (scroll == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            scroll.Name = updatedSpellScroll.Name;
-            scroll.Cost = updatedSpellScroll.Cost;
-            scroll.Weight = updatedSpellScroll.Weight;
-            scroll.Source = updatedSpellScroll.Source;
-            scroll.Rarity = updatedSpellScroll.Rarity;
-            scroll.WondrousItem = updatedSpellScroll.WondrousItem;
-            scroll.Attunement = updatedSpellScroll.Attunement;
-            scroll.Requirements = updatedSpellScroll.Requirements;
-            scroll.Level = updatedSpellScroll.Level;
-            scroll.Description = updatedSpellScroll.Description;
-
-            return NoContent();
+            var spellScrolls = await _context.SpellScrolls.FindAsync(id);
+            if (spellScrolls == null)
+            {
+                return NotFound();
+            }
+            return View(spellScrolls);
         }
 
-        // DELETE: api/SpellScrolls/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        // POST: SpellScrolls/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Level,Description,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] SpellScrolls spellScrolls)
         {
-            var scroll = SpellScroll.FirstOrDefault(u => u.Id == id);
-            if (scroll == null) return NotFound();
+            if (id != spellScrolls.Id)
+            {
+                return NotFound();
+            }
 
-            SpellScroll.Remove(scroll);
-            return NoContent();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(spellScrolls);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!SpellScrollsExists(spellScrolls.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(spellScrolls);
+        }
+
+        // GET: SpellScrolls/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var spellScrolls = await _context.SpellScrolls
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (spellScrolls == null)
+            {
+                return NotFound();
+            }
+
+            return View(spellScrolls);
+        }
+
+        // POST: SpellScrolls/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var spellScrolls = await _context.SpellScrolls.FindAsync(id);
+            if (spellScrolls != null)
+            {
+                _context.SpellScrolls.Remove(spellScrolls);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool SpellScrollsExists(int id)
+        {
+            return _context.SpellScrolls.Any(e => e.Id == id);
         }
     }
 }

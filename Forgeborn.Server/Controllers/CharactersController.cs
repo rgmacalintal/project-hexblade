@@ -10,23 +10,23 @@ using Forgeborn.Server.Models;
 
 namespace Forgeborn.Server.Controllers
 {
-    public class CharacterRulesetsController : Controller
+    public class CharactersController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public CharacterRulesetsController(ApplicationDbContext context)
+        public CharactersController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: CharacterRulesets
+        // GET: Characters
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.CharacterRulesets.Include(c => c.Character).Include(c => c.Ruleset);
+            var applicationDbContext = _context.Characters.Include(c => c.User);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: CharacterRulesets/Details/5
+        // GET: Characters/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,45 +34,42 @@ namespace Forgeborn.Server.Controllers
                 return NotFound();
             }
 
-            var characterRulesets = await _context.CharacterRulesets
-                .Include(c => c.Character)
-                .Include(c => c.Ruleset)
+            var characters = await _context.Characters
+                .Include(c => c.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (characterRulesets == null)
+            if (characters == null)
             {
                 return NotFound();
             }
 
-            return View(characterRulesets);
+            return View(characters);
         }
 
-        // GET: CharacterRulesets/Create
+        // GET: Characters/Create
         public IActionResult Create()
         {
-            ViewData["CharacterId"] = new SelectList(_context.Characters, "Id", "Class");
-            ViewData["RulesetId"] = new SelectList(_context.Rulesets, "Id", "Name");
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
             return View();
         }
 
-        // POST: CharacterRulesets/Create
+        // POST: Characters/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,IsActive,AssignedDate,CharacterId,RulesetId")] CharacterRulesets characterRulesets)
+        public async Task<IActionResult> Create([Bind("Id,Name,Class,Race,Strength,Dexterity,Constitution,Intelligence,Wisdom,Charisma,Inventory,Background,Journal,CreatedOn,UserId")] Characters characters)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(characterRulesets);
+                _context.Add(characters);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CharacterId"] = new SelectList(_context.Characters, "Id", "Class", characterRulesets.CharacterId);
-            ViewData["RulesetId"] = new SelectList(_context.Rulesets, "Id", "Name", characterRulesets.RulesetId);
-            return View(characterRulesets);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", characters.UserId);
+            return View(characters);
         }
 
-        // GET: CharacterRulesets/Edit/5
+        // GET: Characters/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,24 +77,23 @@ namespace Forgeborn.Server.Controllers
                 return NotFound();
             }
 
-            var characterRulesets = await _context.CharacterRulesets.FindAsync(id);
-            if (characterRulesets == null)
+            var characters = await _context.Characters.FindAsync(id);
+            if (characters == null)
             {
                 return NotFound();
             }
-            ViewData["CharacterId"] = new SelectList(_context.Characters, "Id", "Class", characterRulesets.CharacterId);
-            ViewData["RulesetId"] = new SelectList(_context.Rulesets, "Id", "Name", characterRulesets.RulesetId);
-            return View(characterRulesets);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", characters.UserId);
+            return View(characters);
         }
 
-        // POST: CharacterRulesets/Edit/5
+        // POST: Characters/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,IsActive,AssignedDate,CharacterId,RulesetId")] CharacterRulesets characterRulesets)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Class,Race,Strength,Dexterity,Constitution,Intelligence,Wisdom,Charisma,Inventory,Background,Journal,CreatedOn,UserId")] Characters characters)
         {
-            if (id != characterRulesets.Id)
+            if (id != characters.Id)
             {
                 return NotFound();
             }
@@ -106,12 +102,12 @@ namespace Forgeborn.Server.Controllers
             {
                 try
                 {
-                    _context.Update(characterRulesets);
+                    _context.Update(characters);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CharacterRulesetsExists(characterRulesets.Id))
+                    if (!CharactersExists(characters.Id))
                     {
                         return NotFound();
                     }
@@ -122,12 +118,11 @@ namespace Forgeborn.Server.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CharacterId"] = new SelectList(_context.Characters, "Id", "Class", characterRulesets.CharacterId);
-            ViewData["RulesetId"] = new SelectList(_context.Rulesets, "Id", "Name", characterRulesets.RulesetId);
-            return View(characterRulesets);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", characters.UserId);
+            return View(characters);
         }
 
-        // GET: CharacterRulesets/Delete/5
+        // GET: Characters/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -135,36 +130,35 @@ namespace Forgeborn.Server.Controllers
                 return NotFound();
             }
 
-            var characterRulesets = await _context.CharacterRulesets
-                .Include(c => c.Character)
-                .Include(c => c.Ruleset)
+            var characters = await _context.Characters
+                .Include(c => c.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (characterRulesets == null)
+            if (characters == null)
             {
                 return NotFound();
             }
 
-            return View(characterRulesets);
+            return View(characters);
         }
 
-        // POST: CharacterRulesets/Delete/5
+        // POST: Characters/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var characterRulesets = await _context.CharacterRulesets.FindAsync(id);
-            if (characterRulesets != null)
+            var characters = await _context.Characters.FindAsync(id);
+            if (characters != null)
             {
-                _context.CharacterRulesets.Remove(characterRulesets);
+                _context.Characters.Remove(characters);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CharacterRulesetsExists(int id)
+        private bool CharactersExists(int id)
         {
-            return _context.CharacterRulesets.Any(e => e.Id == id);
+            return _context.Characters.Any(e => e.Id == id);
         }
     }
 }
