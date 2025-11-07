@@ -8,24 +8,24 @@ using Microsoft.EntityFrameworkCore;
 using Forgeborn.Server.Data;
 using Forgeborn.Server.Models.Items;
 
-namespace Forgeborn.Server.Controllers
+namespace Forgeborn.Server.Controllers.Items
 {
-    public class VehiclesController : Controller
+    public class MountsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public VehiclesController(ApplicationDbContext context)
+        public MountsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Vehicles
+        // GET: Mounts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Vehicles.ToListAsync());
+            return View(await _context.Mounts.ToListAsync());
         }
 
-        // GET: Vehicles/Details/5
+        // GET: Mounts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +33,39 @@ namespace Forgeborn.Server.Controllers
                 return NotFound();
             }
 
-            var vehicles = await _context.Vehicles
+            var mounts = await _context.Mounts
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (vehicles == null)
+            if (mounts == null)
             {
                 return NotFound();
             }
 
-            return View(vehicles);
+            return View(mounts);
         }
 
-        // GET: Vehicles/Create
+        // GET: Mounts/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Vehicles/Create
+        // POST: Mounts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("VehicleType,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Vehicles vehicles)
+        public async Task<IActionResult> Create([Bind("Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Mounts mounts)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(vehicles);
+                _context.Add(mounts);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(vehicles);
+            return View(mounts);
         }
 
-        // GET: Vehicles/Edit/5
+        // GET: Mounts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +73,22 @@ namespace Forgeborn.Server.Controllers
                 return NotFound();
             }
 
-            var vehicles = await _context.Vehicles.FindAsync(id);
-            if (vehicles == null)
+            var mounts = await _context.Mounts.FindAsync(id);
+            if (mounts == null)
             {
                 return NotFound();
             }
-            return View(vehicles);
+            return View(mounts);
         }
 
-        // POST: Vehicles/Edit/5
+        // POST: Mounts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("VehicleType,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Vehicles vehicles)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Mounts mounts)
         {
-            if (id != vehicles.Id)
+            if (id != mounts.Id)
             {
                 return NotFound();
             }
@@ -97,12 +97,12 @@ namespace Forgeborn.Server.Controllers
             {
                 try
                 {
-                    _context.Update(vehicles);
+                    _context.Update(mounts);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!VehiclesExists(vehicles.Id))
+                    if (!MountsExists(mounts.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +113,10 @@ namespace Forgeborn.Server.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(vehicles);
+            return View(mounts);
         }
 
-        // GET: Vehicles/Delete/5
+        // GET: Mounts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,34 +124,34 @@ namespace Forgeborn.Server.Controllers
                 return NotFound();
             }
 
-            var vehicles = await _context.Vehicles
+            var mounts = await _context.Mounts
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (vehicles == null)
+            if (mounts == null)
             {
                 return NotFound();
             }
 
-            return View(vehicles);
+            return View(mounts);
         }
 
-        // POST: Vehicles/Delete/5
+        // POST: Mounts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var vehicles = await _context.Vehicles.FindAsync(id);
-            if (vehicles != null)
+            var mounts = await _context.Mounts.FindAsync(id);
+            if (mounts != null)
             {
-                _context.Vehicles.Remove(vehicles);
+                _context.Mounts.Remove(mounts);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool VehiclesExists(int id)
+        private bool MountsExists(int id)
         {
-            return _context.Vehicles.Any(e => e.Id == id);
+            return _context.Mounts.Any(e => e.Id == id);
         }
     }
 }

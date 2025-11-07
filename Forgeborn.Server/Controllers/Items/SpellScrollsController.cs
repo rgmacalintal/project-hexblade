@@ -8,24 +8,24 @@ using Microsoft.EntityFrameworkCore;
 using Forgeborn.Server.Data;
 using Forgeborn.Server.Models.Items;
 
-namespace Forgeborn.Server.Controllers
+namespace Forgeborn.Server.Controllers.Items
 {
-    public class MountsController : Controller
+    public class SpellScrollsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public MountsController(ApplicationDbContext context)
+        public SpellScrollsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Mounts
+        // GET: SpellScrolls
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Mounts.ToListAsync());
+            return View(await _context.SpellScrolls.ToListAsync());
         }
 
-        // GET: Mounts/Details/5
+        // GET: SpellScrolls/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +33,39 @@ namespace Forgeborn.Server.Controllers
                 return NotFound();
             }
 
-            var mounts = await _context.Mounts
+            var spellScrolls = await _context.SpellScrolls
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (mounts == null)
+            if (spellScrolls == null)
             {
                 return NotFound();
             }
 
-            return View(mounts);
+            return View(spellScrolls);
         }
 
-        // GET: Mounts/Create
+        // GET: SpellScrolls/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Mounts/Create
+        // POST: SpellScrolls/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Mounts mounts)
+        public async Task<IActionResult> Create([Bind("Level,Description,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] SpellScrolls spellScrolls)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(mounts);
+                _context.Add(spellScrolls);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(mounts);
+            return View(spellScrolls);
         }
 
-        // GET: Mounts/Edit/5
+        // GET: SpellScrolls/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +73,22 @@ namespace Forgeborn.Server.Controllers
                 return NotFound();
             }
 
-            var mounts = await _context.Mounts.FindAsync(id);
-            if (mounts == null)
+            var spellScrolls = await _context.SpellScrolls.FindAsync(id);
+            if (spellScrolls == null)
             {
                 return NotFound();
             }
-            return View(mounts);
+            return View(spellScrolls);
         }
 
-        // POST: Mounts/Edit/5
+        // POST: SpellScrolls/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Mounts mounts)
+        public async Task<IActionResult> Edit(int id, [Bind("Level,Description,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] SpellScrolls spellScrolls)
         {
-            if (id != mounts.Id)
+            if (id != spellScrolls.Id)
             {
                 return NotFound();
             }
@@ -97,12 +97,12 @@ namespace Forgeborn.Server.Controllers
             {
                 try
                 {
-                    _context.Update(mounts);
+                    _context.Update(spellScrolls);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!MountsExists(mounts.Id))
+                    if (!SpellScrollsExists(spellScrolls.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +113,10 @@ namespace Forgeborn.Server.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(mounts);
+            return View(spellScrolls);
         }
 
-        // GET: Mounts/Delete/5
+        // GET: SpellScrolls/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,34 +124,34 @@ namespace Forgeborn.Server.Controllers
                 return NotFound();
             }
 
-            var mounts = await _context.Mounts
+            var spellScrolls = await _context.SpellScrolls
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (mounts == null)
+            if (spellScrolls == null)
             {
                 return NotFound();
             }
 
-            return View(mounts);
+            return View(spellScrolls);
         }
 
-        // POST: Mounts/Delete/5
+        // POST: SpellScrolls/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var mounts = await _context.Mounts.FindAsync(id);
-            if (mounts != null)
+            var spellScrolls = await _context.SpellScrolls.FindAsync(id);
+            if (spellScrolls != null)
             {
-                _context.Mounts.Remove(mounts);
+                _context.SpellScrolls.Remove(spellScrolls);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool MountsExists(int id)
+        private bool SpellScrollsExists(int id)
         {
-            return _context.Mounts.Any(e => e.Id == id);
+            return _context.SpellScrolls.Any(e => e.Id == id);
         }
     }
 }

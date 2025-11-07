@@ -8,24 +8,24 @@ using Microsoft.EntityFrameworkCore;
 using Forgeborn.Server.Data;
 using Forgeborn.Server.Models.Items;
 
-namespace Forgeborn.Server.Controllers
+namespace Forgeborn.Server.Controllers.Items
 {
-    public class ArmorsController : Controller
+    public class AdventuringGearsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ArmorsController(ApplicationDbContext context)
+        public AdventuringGearsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Armors
+        // GET: AdventuringGears
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Armors.ToListAsync());
+            return View(await _context.AdventuringGears.ToListAsync());
         }
 
-        // GET: Armors/Details/5
+        // GET: AdventuringGears/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +33,39 @@ namespace Forgeborn.Server.Controllers
                 return NotFound();
             }
 
-            var armors = await _context.Armors
+            var adventuringGears = await _context.AdventuringGears
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (armors == null)
+            if (adventuringGears == null)
             {
                 return NotFound();
             }
 
-            return View(armors);
+            return View(adventuringGears);
         }
 
-        // GET: Armors/Create
+        // GET: AdventuringGears/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Armors/Create
+        // POST: AdventuringGears/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Effect,ArmorClass,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Armors armors)
+        public async Task<IActionResult> Create([Bind("Description,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] AdventuringGears adventuringGears)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(armors);
+                _context.Add(adventuringGears);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(armors);
+            return View(adventuringGears);
         }
 
-        // GET: Armors/Edit/5
+        // GET: AdventuringGears/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +73,22 @@ namespace Forgeborn.Server.Controllers
                 return NotFound();
             }
 
-            var armors = await _context.Armors.FindAsync(id);
-            if (armors == null)
+            var adventuringGears = await _context.AdventuringGears.FindAsync(id);
+            if (adventuringGears == null)
             {
                 return NotFound();
             }
-            return View(armors);
+            return View(adventuringGears);
         }
 
-        // POST: Armors/Edit/5
+        // POST: AdventuringGears/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Effect,ArmorClass,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Armors armors)
+        public async Task<IActionResult> Edit(int id, [Bind("Description,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] AdventuringGears adventuringGears)
         {
-            if (id != armors.Id)
+            if (id != adventuringGears.Id)
             {
                 return NotFound();
             }
@@ -97,12 +97,12 @@ namespace Forgeborn.Server.Controllers
             {
                 try
                 {
-                    _context.Update(armors);
+                    _context.Update(adventuringGears);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ArmorsExists(armors.Id))
+                    if (!AdventuringGearsExists(adventuringGears.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +113,10 @@ namespace Forgeborn.Server.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(armors);
+            return View(adventuringGears);
         }
 
-        // GET: Armors/Delete/5
+        // GET: AdventuringGears/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,34 +124,34 @@ namespace Forgeborn.Server.Controllers
                 return NotFound();
             }
 
-            var armors = await _context.Armors
+            var adventuringGears = await _context.AdventuringGears
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (armors == null)
+            if (adventuringGears == null)
             {
                 return NotFound();
             }
 
-            return View(armors);
+            return View(adventuringGears);
         }
 
-        // POST: Armors/Delete/5
+        // POST: AdventuringGears/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var armors = await _context.Armors.FindAsync(id);
-            if (armors != null)
+            var adventuringGears = await _context.AdventuringGears.FindAsync(id);
+            if (adventuringGears != null)
             {
-                _context.Armors.Remove(armors);
+                _context.AdventuringGears.Remove(adventuringGears);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ArmorsExists(int id)
+        private bool AdventuringGearsExists(int id)
         {
-            return _context.Armors.Any(e => e.Id == id);
+            return _context.AdventuringGears.Any(e => e.Id == id);
         }
     }
 }

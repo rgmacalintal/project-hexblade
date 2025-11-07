@@ -8,24 +8,24 @@ using Microsoft.EntityFrameworkCore;
 using Forgeborn.Server.Data;
 using Forgeborn.Server.Models.Items;
 
-namespace Forgeborn.Server.Controllers
+namespace Forgeborn.Server.Controllers.Items
 {
-    public class WeaponsController : Controller
+    public class ArmorsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public WeaponsController(ApplicationDbContext context)
+        public ArmorsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Weapons
+        // GET: Armors
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Weapons.ToListAsync());
+            return View(await _context.Armors.ToListAsync());
         }
 
-        // GET: Weapons/Details/5
+        // GET: Armors/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +33,39 @@ namespace Forgeborn.Server.Controllers
                 return NotFound();
             }
 
-            var weapons = await _context.Weapons
+            var armors = await _context.Armors
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (weapons == null)
+            if (armors == null)
             {
                 return NotFound();
             }
 
-            return View(weapons);
+            return View(armors);
         }
 
-        // GET: Weapons/Create
+        // GET: Armors/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Weapons/Create
+        // POST: Armors/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Attack,Damage,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Weapons weapons)
+        public async Task<IActionResult> Create([Bind("Effect,ArmorClass,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Armors armors)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(weapons);
+                _context.Add(armors);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(weapons);
+            return View(armors);
         }
 
-        // GET: Weapons/Edit/5
+        // GET: Armors/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +73,22 @@ namespace Forgeborn.Server.Controllers
                 return NotFound();
             }
 
-            var weapons = await _context.Weapons.FindAsync(id);
-            if (weapons == null)
+            var armors = await _context.Armors.FindAsync(id);
+            if (armors == null)
             {
                 return NotFound();
             }
-            return View(weapons);
+            return View(armors);
         }
 
-        // POST: Weapons/Edit/5
+        // POST: Armors/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Attack,Damage,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Weapons weapons)
+        public async Task<IActionResult> Edit(int id, [Bind("Effect,ArmorClass,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Armors armors)
         {
-            if (id != weapons.Id)
+            if (id != armors.Id)
             {
                 return NotFound();
             }
@@ -97,12 +97,12 @@ namespace Forgeborn.Server.Controllers
             {
                 try
                 {
-                    _context.Update(weapons);
+                    _context.Update(armors);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!WeaponsExists(weapons.Id))
+                    if (!ArmorsExists(armors.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +113,10 @@ namespace Forgeborn.Server.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(weapons);
+            return View(armors);
         }
 
-        // GET: Weapons/Delete/5
+        // GET: Armors/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,34 +124,34 @@ namespace Forgeborn.Server.Controllers
                 return NotFound();
             }
 
-            var weapons = await _context.Weapons
+            var armors = await _context.Armors
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (weapons == null)
+            if (armors == null)
             {
                 return NotFound();
             }
 
-            return View(weapons);
+            return View(armors);
         }
 
-        // POST: Weapons/Delete/5
+        // POST: Armors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var weapons = await _context.Weapons.FindAsync(id);
-            if (weapons != null)
+            var armors = await _context.Armors.FindAsync(id);
+            if (armors != null)
             {
-                _context.Weapons.Remove(weapons);
+                _context.Armors.Remove(armors);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool WeaponsExists(int id)
+        private bool ArmorsExists(int id)
         {
-            return _context.Weapons.Any(e => e.Id == id);
+            return _context.Armors.Any(e => e.Id == id);
         }
     }
 }

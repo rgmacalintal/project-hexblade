@@ -8,24 +8,24 @@ using Microsoft.EntityFrameworkCore;
 using Forgeborn.Server.Data;
 using Forgeborn.Server.Models.Items;
 
-namespace Forgeborn.Server.Controllers
+namespace Forgeborn.Server.Controllers.Items
 {
-    public class ToolsController : Controller
+    public class WeaponsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ToolsController(ApplicationDbContext context)
+        public WeaponsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Tools
+        // GET: Weapons
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Tools.ToListAsync());
+            return View(await _context.Weapons.ToListAsync());
         }
 
-        // GET: Tools/Details/5
+        // GET: Weapons/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +33,39 @@ namespace Forgeborn.Server.Controllers
                 return NotFound();
             }
 
-            var tools = await _context.Tools
+            var weapons = await _context.Weapons
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (tools == null)
+            if (weapons == null)
             {
                 return NotFound();
             }
 
-            return View(tools);
+            return View(weapons);
         }
 
-        // GET: Tools/Create
+        // GET: Weapons/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Tools/Create
+        // POST: Weapons/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Description,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Tools tools)
+        public async Task<IActionResult> Create([Bind("Attack,Damage,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Weapons weapons)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(tools);
+                _context.Add(weapons);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(tools);
+            return View(weapons);
         }
 
-        // GET: Tools/Edit/5
+        // GET: Weapons/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +73,22 @@ namespace Forgeborn.Server.Controllers
                 return NotFound();
             }
 
-            var tools = await _context.Tools.FindAsync(id);
-            if (tools == null)
+            var weapons = await _context.Weapons.FindAsync(id);
+            if (weapons == null)
             {
                 return NotFound();
             }
-            return View(tools);
+            return View(weapons);
         }
 
-        // POST: Tools/Edit/5
+        // POST: Weapons/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Description,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Tools tools)
+        public async Task<IActionResult> Edit(int id, [Bind("Attack,Damage,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Weapons weapons)
         {
-            if (id != tools.Id)
+            if (id != weapons.Id)
             {
                 return NotFound();
             }
@@ -97,12 +97,12 @@ namespace Forgeborn.Server.Controllers
             {
                 try
                 {
-                    _context.Update(tools);
+                    _context.Update(weapons);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ToolsExists(tools.Id))
+                    if (!WeaponsExists(weapons.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +113,10 @@ namespace Forgeborn.Server.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(tools);
+            return View(weapons);
         }
 
-        // GET: Tools/Delete/5
+        // GET: Weapons/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,34 +124,34 @@ namespace Forgeborn.Server.Controllers
                 return NotFound();
             }
 
-            var tools = await _context.Tools
+            var weapons = await _context.Weapons
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (tools == null)
+            if (weapons == null)
             {
                 return NotFound();
             }
 
-            return View(tools);
+            return View(weapons);
         }
 
-        // POST: Tools/Delete/5
+        // POST: Weapons/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var tools = await _context.Tools.FindAsync(id);
-            if (tools != null)
+            var weapons = await _context.Weapons.FindAsync(id);
+            if (weapons != null)
             {
-                _context.Tools.Remove(tools);
+                _context.Weapons.Remove(weapons);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ToolsExists(int id)
+        private bool WeaponsExists(int id)
         {
-            return _context.Tools.Any(e => e.Id == id);
+            return _context.Weapons.Any(e => e.Id == id);
         }
     }
 }
