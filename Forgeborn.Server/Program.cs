@@ -1,4 +1,5 @@
 using Forgeborn.Server.Data;
+using Forgeborn.Server.Hubs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
@@ -41,7 +42,11 @@ builder.Services.AddHealthChecks()
         tags: new[] { "database", "critical" }
     );
 
+builder.Services.AddSignalR();
+
 var app = builder.Build();
+
+app.MapHub<CharacterHub>("/hubs/characters");
 
 app.MapHealthChecks("/health");
 // Configure the HTTP request pipeline.

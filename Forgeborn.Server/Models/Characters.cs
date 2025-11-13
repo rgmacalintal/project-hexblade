@@ -19,6 +19,10 @@ namespace Forgeborn.Server.Models
         [Required]
         public string Race { get; set; } = null!;
         [Required]
+        public int MaxHP { get; set; } = 0;
+        [Required]
+        public int CurrentHP { get; set; } = 0;
+        [Required]
         [Range (0, 30)]
         public int Strength { get; set; } = 0;
         [Required]
@@ -41,6 +45,7 @@ namespace Forgeborn.Server.Models
         public string Journal { get; set; } = null!;
         public DateTime CreatedOn { get; set; } = DateTime.Now;
 
+        [Required]
         public int UserId { get; set; }
         [ForeignKey(nameof(UserId))]
         public Users? User { get; set; }

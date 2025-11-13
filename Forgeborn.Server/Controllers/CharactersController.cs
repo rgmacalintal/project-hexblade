@@ -13,10 +13,12 @@ namespace Forgeborn.Server.Controllers
     public class CharactersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly CharacterService _characterService;
 
-        public CharactersController(ApplicationDbContext context)
+        public CharactersController(ApplicationDbContext context, CharacterService characterService)
         {
             _context = context;
+            _characterService = characterService;
         }
 
         // GET: Characters
@@ -160,5 +162,20 @@ namespace Forgeborn.Server.Controllers
         {
             return _context.Characters.Any(e => e.Id == id);
         }
+
+        [HttpPost("{id}/damage")]
+        public async Task<IActionResult> ApplyDamage(int id, [FromBody] string dice)
+        {
+            var newHP = await _characterService.ApplyDamageAsync(id, dice);
+            return Ok(new { currentHP = newHP });
+        }
+
+        [HttpPost("{id}/heal")]
+        public async Task<IActionResult> Heal(int id, [FromBody] string dice)
+        {
+            var newHP = await _characterService.HealAsync(id, dice);
+            return Ok(new { currentHP = newHP });
+        }
+
     }
 }
