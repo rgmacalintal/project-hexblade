@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './Login';
 import Signup from './Signup';
 import Welcome from './Welcome';
+import CreateLobby from './CreateLobby';
+import JoinLobby from './JoinLobby';
 import HomePage from './HomePage';
 import Profile from './Profile';
 import './App.css';
@@ -29,6 +31,14 @@ function App() {
                 <Route
                     path="/welcome"
                     element={<Welcome toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />}
+                />
+                <Route
+                    path="/create-lobby"
+                    element={<CreateLobby toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />}
+                />
+                <Route
+                    path="/join-lobby"
+                    element={<JoinLobby toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />}
                 />
                 <Route
                     path="/profile"

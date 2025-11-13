@@ -29,6 +29,11 @@ export default function Welcome({ toggleSidebar, sidebarOpen }) {
                         Welcome {username} to Forgeborn!
                     </h1>
                     <p className="welcome-subtitle">Your journey into the realm of adventure begins here</p>
+
+                    <div className="lobby-actions">
+                        <button onClick={() => navigate('/create-lobby')} className="header-btn">Create Lobby</button>
+                        <button onClick={() => navigate('/join-lobby')} className="header-btn">Join Lobby</button>
+                    </div>
                     
                     <div className="welcome-features">
                         <div className="feature-card" onClick={openCharModal} role="button" aria-label="Open Character Creation choices">

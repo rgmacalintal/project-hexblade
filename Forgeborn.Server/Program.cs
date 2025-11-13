@@ -1,4 +1,5 @@
 using Forgeborn.Server.Data;
+using Forgeborn.Server.Hubs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
@@ -41,6 +42,8 @@ builder.Services.AddHealthChecks()
         tags: new[] { "database", "critical" }
     );
 
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 app.MapHealthChecks("/health");
@@ -54,9 +57,8 @@ app.UseAuthorization();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseCors("AllowReactApp");
-
 app.UseAuthorization();
-
+app.MapHub<LobbyHub>("/lobbyHub");
 app.MapControllers();
 
 app.Run();

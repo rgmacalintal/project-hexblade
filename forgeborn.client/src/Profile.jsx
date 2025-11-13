@@ -1,10 +1,22 @@
 import React, { useState } from 'react';
 import Layout from './Layout';
 import './App.css';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export default function Profile({ toggleSidebar, sidebarOpen }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedCharacter, setSelectedCharacter] = useState(null);
+    const location = useLocation();
+    const navigate = useNavigate();
+    const username = location.state?.username || localStorage.getItem('username');
+
+    useEffect(() => {
+        if (!username) {
+            alert('Please login first.');
+            navigate('/login');
+        }
+    }, [username, navigate]);
 
     const openCharacterSheet = (character) => {
         setSelectedCharacter(character);
