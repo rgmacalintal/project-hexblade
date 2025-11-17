@@ -18,7 +18,7 @@ export default function CreateLobby({ toggleSidebar, sidebarOpen }) {
 
     useEffect(() => {
         const conn = new HubConnectionBuilder()
-            .withUrl('/lobbyHub')
+            .withUrl('/api/lobbyHub')
             .withAutomaticReconnect()
             .build();
 
@@ -54,7 +54,7 @@ export default function CreateLobby({ toggleSidebar, sidebarOpen }) {
     }, [username, navigate]);
 
     function leaveLobby() {
-        if (connection && lobbyCode) {
+        if (connection) {
             connection.invoke('LeaveLobby', lobbyCode, username)
                 .then(() => {
                     console.log('Left lobby');

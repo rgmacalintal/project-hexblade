@@ -141,9 +141,9 @@ export default function HomePage({ toggleSidebar, sidebarOpen }) {
 
                     {/* CTA Section */}
                     <section className="cta-section">
-                        <h2 className="cta-title">Play on Forge Born® for Free</h2>
-                        <p className="cta-subtitle">Join over 15 million players and GMs playing dungeons and dragons (and hundreds more systems) online</p>
-                        <button className="cta-button primary large">Create Free Account</button>
+                        <h2 className="cta-title">Play on Forgeborn® for Free</h2>
+                        <p className="cta-subtitle">Join over 15 million players and DMs playing dungeons and dragons online</p>
+                        <Link to="/signup" className="cta-button primary large">Create Free Account</Link>
                         <p className="cta-login">Already have an account? <Link to="/login">Login</Link></p>
                     </section>
 
@@ -154,7 +154,7 @@ export default function HomePage({ toggleSidebar, sidebarOpen }) {
                             <Link to="/about">About</Link>
                         </div>
                         <div className="copyright">
-                            © {new Date().getFullYear()} Forge Born. All rights reserved.
+                            © {new Date().getFullYear()} Forgeborn. All rights reserved.
                         </div>
                     </footer>
                 </div>

@@ -63,6 +63,28 @@ namespace Forgeborn.Server.Hubs
                 await Clients.Group(code).SendAsync("ReceiveMessage", message);
         }
 
+        public async Task LeaveLobby(string code, string username)
+        {
+            if (!UserToLobby.ContainsKey(Context.ConnectionId))
+                return;
+
+            UserToLobby.Remove(Context.ConnectionId);
+
+            if (LobbyToHost.TryGetValue(code, out var hostId) && hostId == Context.ConnectionId)
+            {
+                LobbyToHost.Remove(code);
+                await Clients.Group(code).SendAsync("LobbyClosed", "Host left the lobby.");
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, code);
+            }
+            else
+            {
+                await Clients.Group(code).SendAsync("PlayerLeft", username);
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, code);
+            }
+
+            Console.WriteLine($"{username} left the lobby {code}");
+        }
+
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             if (UserToLobby.TryGetValue(Context.ConnectionId, out var code))
