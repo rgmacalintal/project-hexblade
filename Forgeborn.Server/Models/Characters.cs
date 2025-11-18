@@ -50,6 +50,7 @@ namespace Forgeborn.Server.Models
         [ForeignKey(nameof(UserId))]
         public Users? User { get; set; }
         public ICollection<Rulesets> Rulesets { get; set; } = new List<Rulesets>();
+        public ICollection<Players> Players { get; set; } = new List<Players>();
 
     }
 }

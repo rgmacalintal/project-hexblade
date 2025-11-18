@@ -46,8 +46,6 @@ builder.Services.AddSignalR();
 
 var app = builder.Build();
 
-app.MapHub<CharacterHub>("/hubs/characters");
-
 app.MapHealthChecks("/health");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -62,6 +60,7 @@ app.UseCors("AllowReactApp");
 
 app.UseAuthorization();
 
+app.MapHub<CharacterHub>("/hubs/characters");
 app.MapControllers();
 
 app.Run();
