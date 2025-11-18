@@ -2,180 +2,107 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Forgeborn.Server.Data;
 using Forgeborn.Server.Models;
 
 namespace Forgeborn.Server.Controllers
 {
-    public class CharactersController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CharactersController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly CharacterService _characterService;
 
-        public CharactersController(ApplicationDbContext context, CharacterService characterService)
+        public CharactersController(ApplicationDbContext context)
         {
             _context = context;
-            _characterService = characterService;
         }
 
-        // GET: Characters
-        public async Task<IActionResult> Index()
+        // GET: api/Characters
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Characters>>> GetCharacters()
         {
-            var applicationDbContext = _context.Characters.Include(c => c.User);
-            return View(await applicationDbContext.ToListAsync());
+            return await _context.Characters.ToListAsync();
         }
 
-        // GET: Characters/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: api/Characters/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Characters>> GetCharacters(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var characters = await _context.Characters
-                .Include(c => c.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (characters == null)
-            {
-                return NotFound();
-            }
-
-            return View(characters);
-        }
-
-        // GET: Characters/Create
-        public IActionResult Create()
-        {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
-            return View();
-        }
-
-        // POST: Characters/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Class,Race,Strength,Dexterity,Constitution,Intelligence,Wisdom,Charisma,Inventory,Background,Journal,CreatedOn,UserId")] Characters characters)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(characters);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", characters.UserId);
-            return View(characters);
-        }
-
-        // GET: Characters/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var characters = await _context.Characters.FindAsync(id);
+
             if (characters == null)
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", characters.UserId);
-            return View(characters);
+
+            return characters;
         }
 
-        // POST: Characters/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Class,Race,Strength,Dexterity,Constitution,Intelligence,Wisdom,Charisma,Inventory,Background,Journal,CreatedOn,UserId")] Characters characters)
+        // PUT: api/Characters/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutCharacters(int id, Characters characters)
         {
             if (id != characters.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            if (ModelState.IsValid)
+            _context.Entry(characters).State = EntityState.Modified;
+
+            try
             {
-                try
-                {
-                    _context.Update(characters);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CharactersExists(characters.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", characters.UserId);
-            return View(characters);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CharactersExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
-        // GET: Characters/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // POST: api/Characters
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Characters>> PostCharacters(Characters characters)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            _context.Characters.Add(characters);
+            await _context.SaveChangesAsync();
 
-            var characters = await _context.Characters
-                .Include(c => c.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            return CreatedAtAction("GetCharacters", new { id = characters.Id }, characters);
+        }
+
+        // DELETE: api/Characters/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCharacters(int id)
+        {
+            var characters = await _context.Characters.FindAsync(id);
             if (characters == null)
             {
                 return NotFound();
             }
 
-            return View(characters);
-        }
-
-        // POST: Characters/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var characters = await _context.Characters.FindAsync(id);
-            if (characters != null)
-            {
-                _context.Characters.Remove(characters);
-            }
-
+            _context.Characters.Remove(characters);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            return NoContent();
         }
 
         private bool CharactersExists(int id)
         {
             return _context.Characters.Any(e => e.Id == id);
         }
-
-        [HttpPost("{id}/damage")]
-        public async Task<IActionResult> ApplyDamage(int id, [FromBody] string dice)
-        {
-            var newHP = await _characterService.ApplyDamageAsync(id, dice);
-            return Ok(new { currentHP = newHP });
-        }
-
-        [HttpPost("{id}/heal")]
-        public async Task<IActionResult> Heal(int id, [FromBody] string dice)
-        {
-            var newHP = await _characterService.HealAsync(id, dice);
-            return Ok(new { currentHP = newHP });
-        }
-
     }
 }

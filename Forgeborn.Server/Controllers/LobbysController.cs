@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Forgeborn.Server.Data;
 using Forgeborn.Server.Models;
 
 namespace Forgeborn.Server.Controllers
 {
-    public class LobbysController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class LobbysController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
@@ -19,134 +21,83 @@ namespace Forgeborn.Server.Controllers
             _context = context;
         }
 
-        // GET: Lobbys
-        public async Task<IActionResult> Index()
+        // GET: api/Lobbys
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Lobbys>>> GetLobbys()
         {
-            return View(await _context.Lobbys.ToListAsync());
+            return await _context.Lobbys.ToListAsync();
         }
 
-        // GET: Lobbys/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: api/Lobbys/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Lobbys>> GetLobbys(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var lobbys = await _context.Lobbys
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (lobbys == null)
-            {
-                return NotFound();
-            }
-
-            return View(lobbys);
-        }
-
-        // GET: Lobbys/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Lobbys/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,CreatedOn")] Lobbys lobbys)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(lobbys);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(lobbys);
-        }
-
-        // GET: Lobbys/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var lobbys = await _context.Lobbys.FindAsync(id);
+
             if (lobbys == null)
             {
                 return NotFound();
             }
-            return View(lobbys);
+
+            return lobbys;
         }
 
-        // POST: Lobbys/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CreatedOn")] Lobbys lobbys)
+        // PUT: api/Lobbys/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutLobbys(int id, Lobbys lobbys)
         {
             if (id != lobbys.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            if (ModelState.IsValid)
+            _context.Entry(lobbys).State = EntityState.Modified;
+
+            try
             {
-                try
-                {
-                    _context.Update(lobbys);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!LobbysExists(lobbys.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();
             }
-            return View(lobbys);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!LobbysExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
-        // GET: Lobbys/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // POST: api/Lobbys
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Lobbys>> PostLobbys(Lobbys lobbys)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            _context.Lobbys.Add(lobbys);
+            await _context.SaveChangesAsync();
 
-            var lobbys = await _context.Lobbys
-                .FirstOrDefaultAsync(m => m.Id == id);
+            return CreatedAtAction("GetLobbys", new { id = lobbys.Id }, lobbys);
+        }
+
+        // DELETE: api/Lobbys/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteLobbys(int id)
+        {
+            var lobbys = await _context.Lobbys.FindAsync(id);
             if (lobbys == null)
             {
                 return NotFound();
             }
 
-            return View(lobbys);
-        }
-
-        // POST: Lobbys/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var lobbys = await _context.Lobbys.FindAsync(id);
-            if (lobbys != null)
-            {
-                _context.Lobbys.Remove(lobbys);
-            }
-
+            _context.Lobbys.Remove(lobbys);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            return NoContent();
         }
 
         private bool LobbysExists(int id)

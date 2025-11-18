@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Forgeborn.Server.Data;
 using Forgeborn.Server.Models.Items;
 
 namespace Forgeborn.Server.Controllers.Items
 {
-    public class VehiclesController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class VehiclesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
@@ -19,134 +21,83 @@ namespace Forgeborn.Server.Controllers.Items
             _context = context;
         }
 
-        // GET: Vehicles
-        public async Task<IActionResult> Index()
+        // GET: api/Vehicles
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Vehicles>>> GetVehicles()
         {
-            return View(await _context.Vehicles.ToListAsync());
+            return await _context.Vehicles.ToListAsync();
         }
 
-        // GET: Vehicles/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: api/Vehicles/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Vehicles>> GetVehicles(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var vehicles = await _context.Vehicles
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (vehicles == null)
-            {
-                return NotFound();
-            }
-
-            return View(vehicles);
-        }
-
-        // GET: Vehicles/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Vehicles/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("VehicleType,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Vehicles vehicles)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(vehicles);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(vehicles);
-        }
-
-        // GET: Vehicles/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var vehicles = await _context.Vehicles.FindAsync(id);
+
             if (vehicles == null)
             {
                 return NotFound();
             }
-            return View(vehicles);
+
+            return vehicles;
         }
 
-        // POST: Vehicles/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("VehicleType,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Vehicles vehicles)
+        // PUT: api/Vehicles/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutVehicles(int id, Vehicles vehicles)
         {
             if (id != vehicles.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            if (ModelState.IsValid)
+            _context.Entry(vehicles).State = EntityState.Modified;
+
+            try
             {
-                try
-                {
-                    _context.Update(vehicles);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!VehiclesExists(vehicles.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();
             }
-            return View(vehicles);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!VehiclesExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
-        // GET: Vehicles/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // POST: api/Vehicles
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Vehicles>> PostVehicles(Vehicles vehicles)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            _context.Vehicles.Add(vehicles);
+            await _context.SaveChangesAsync();
 
-            var vehicles = await _context.Vehicles
-                .FirstOrDefaultAsync(m => m.Id == id);
+            return CreatedAtAction("GetVehicles", new { id = vehicles.Id }, vehicles);
+        }
+
+        // DELETE: api/Vehicles/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteVehicles(int id)
+        {
+            var vehicles = await _context.Vehicles.FindAsync(id);
             if (vehicles == null)
             {
                 return NotFound();
             }
 
-            return View(vehicles);
-        }
-
-        // POST: Vehicles/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var vehicles = await _context.Vehicles.FindAsync(id);
-            if (vehicles != null)
-            {
-                _context.Vehicles.Remove(vehicles);
-            }
-
+            _context.Vehicles.Remove(vehicles);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            return NoContent();
         }
 
         private bool VehiclesExists(int id)

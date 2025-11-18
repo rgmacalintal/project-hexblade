@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Forgeborn.Server.Data;
 using Forgeborn.Server.Models.Items;
 
 namespace Forgeborn.Server.Controllers.Items
 {
-    public class AdventuringGearsController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AdventuringGearsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
@@ -19,134 +21,83 @@ namespace Forgeborn.Server.Controllers.Items
             _context = context;
         }
 
-        // GET: AdventuringGears
-        public async Task<IActionResult> Index()
+        // GET: api/AdventuringGears
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<AdventuringGears>>> GetAdventuringGears()
         {
-            return View(await _context.AdventuringGears.ToListAsync());
+            return await _context.AdventuringGears.ToListAsync();
         }
 
-        // GET: AdventuringGears/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: api/AdventuringGears/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<AdventuringGears>> GetAdventuringGears(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var adventuringGears = await _context.AdventuringGears
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (adventuringGears == null)
-            {
-                return NotFound();
-            }
-
-            return View(adventuringGears);
-        }
-
-        // GET: AdventuringGears/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: AdventuringGears/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Description,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] AdventuringGears adventuringGears)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(adventuringGears);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(adventuringGears);
-        }
-
-        // GET: AdventuringGears/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var adventuringGears = await _context.AdventuringGears.FindAsync(id);
+
             if (adventuringGears == null)
             {
                 return NotFound();
             }
-            return View(adventuringGears);
+
+            return adventuringGears;
         }
 
-        // POST: AdventuringGears/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Description,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] AdventuringGears adventuringGears)
+        // PUT: api/AdventuringGears/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutAdventuringGears(int id, AdventuringGears adventuringGears)
         {
             if (id != adventuringGears.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            if (ModelState.IsValid)
+            _context.Entry(adventuringGears).State = EntityState.Modified;
+
+            try
             {
-                try
-                {
-                    _context.Update(adventuringGears);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AdventuringGearsExists(adventuringGears.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();
             }
-            return View(adventuringGears);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AdventuringGearsExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
-        // GET: AdventuringGears/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // POST: api/AdventuringGears
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<AdventuringGears>> PostAdventuringGears(AdventuringGears adventuringGears)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            _context.AdventuringGears.Add(adventuringGears);
+            await _context.SaveChangesAsync();
 
-            var adventuringGears = await _context.AdventuringGears
-                .FirstOrDefaultAsync(m => m.Id == id);
+            return CreatedAtAction("GetAdventuringGears", new { id = adventuringGears.Id }, adventuringGears);
+        }
+
+        // DELETE: api/AdventuringGears/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAdventuringGears(int id)
+        {
+            var adventuringGears = await _context.AdventuringGears.FindAsync(id);
             if (adventuringGears == null)
             {
                 return NotFound();
             }
 
-            return View(adventuringGears);
-        }
-
-        // POST: AdventuringGears/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var adventuringGears = await _context.AdventuringGears.FindAsync(id);
-            if (adventuringGears != null)
-            {
-                _context.AdventuringGears.Remove(adventuringGears);
-            }
-
+            _context.AdventuringGears.Remove(adventuringGears);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            return NoContent();
         }
 
         private bool AdventuringGearsExists(int id)

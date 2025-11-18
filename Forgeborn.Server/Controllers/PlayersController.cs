@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Forgeborn.Server.Data;
 using Forgeborn.Server.Models;
 
 namespace Forgeborn.Server.Controllers
 {
-    public class PlayersController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PlayersController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
@@ -19,153 +21,83 @@ namespace Forgeborn.Server.Controllers
             _context = context;
         }
 
-        // GET: Players
-        public async Task<IActionResult> Index()
+        // GET: api/Players
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Players>>> GetPlayers()
         {
-            var applicationDbContext = _context.Players.Include(p => p.Character).Include(p => p.Lobby).Include(p => p.User);
-            return View(await applicationDbContext.ToListAsync());
+            return await _context.Players.ToListAsync();
         }
 
-        // GET: Players/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: api/Players/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Players>> GetPlayers(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var players = await _context.Players
-                .Include(p => p.Character)
-                .Include(p => p.Lobby)
-                .Include(p => p.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (players == null)
-            {
-                return NotFound();
-            }
-
-            return View(players);
-        }
-
-        // GET: Players/Create
-        public IActionResult Create()
-        {
-            ViewData["CharacterId"] = new SelectList(_context.Characters, "Id", "Class");
-            ViewData["LobbyId"] = new SelectList(_context.Lobbys, "Id", "Id");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
-            return View();
-        }
-
-        // POST: Players/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,IsHost,UserId,CharacterId,LobbyId")] Players players)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(players);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CharacterId"] = new SelectList(_context.Characters, "Id", "Class", players.CharacterId);
-            ViewData["LobbyId"] = new SelectList(_context.Lobbys, "Id", "Id", players.LobbyId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", players.UserId);
-            return View(players);
-        }
-
-        // GET: Players/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var players = await _context.Players.FindAsync(id);
+
             if (players == null)
             {
                 return NotFound();
             }
-            ViewData["CharacterId"] = new SelectList(_context.Characters, "Id", "Class", players.CharacterId);
-            ViewData["LobbyId"] = new SelectList(_context.Lobbys, "Id", "Id", players.LobbyId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", players.UserId);
-            return View(players);
+
+            return players;
         }
 
-        // POST: Players/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,IsHost,UserId,CharacterId,LobbyId")] Players players)
+        // PUT: api/Players/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutPlayers(int id, Players players)
         {
             if (id != players.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            if (ModelState.IsValid)
+            _context.Entry(players).State = EntityState.Modified;
+
+            try
             {
-                try
-                {
-                    _context.Update(players);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PlayersExists(players.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();
             }
-            ViewData["CharacterId"] = new SelectList(_context.Characters, "Id", "Class", players.CharacterId);
-            ViewData["LobbyId"] = new SelectList(_context.Lobbys, "Id", "Id", players.LobbyId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", players.UserId);
-            return View(players);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PlayersExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
-        // GET: Players/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // POST: api/Players
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Players>> PostPlayers(Players players)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            _context.Players.Add(players);
+            await _context.SaveChangesAsync();
 
-            var players = await _context.Players
-                .Include(p => p.Character)
-                .Include(p => p.Lobby)
-                .Include(p => p.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            return CreatedAtAction("GetPlayers", new { id = players.Id }, players);
+        }
+
+        // DELETE: api/Players/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePlayers(int id)
+        {
+            var players = await _context.Players.FindAsync(id);
             if (players == null)
             {
                 return NotFound();
             }
 
-            return View(players);
-        }
-
-        // POST: Players/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var players = await _context.Players.FindAsync(id);
-            if (players != null)
-            {
-                _context.Players.Remove(players);
-            }
-
+            _context.Players.Remove(players);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            return NoContent();
         }
 
         private bool PlayersExists(int id)

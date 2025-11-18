@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Forgeborn.Server.Data;
 using Forgeborn.Server.Models;
 
 namespace Forgeborn.Server.Controllers
 {
-    public class RulesetsController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class RulesetsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
@@ -19,141 +21,83 @@ namespace Forgeborn.Server.Controllers
             _context = context;
         }
 
-        // GET: Rulesets
-        public async Task<IActionResult> Index()
+        // GET: api/Rulesets
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Rulesets>>> GetRulesets()
         {
-            var applicationDbContext = _context.Rulesets.Include(r => r.CreatedBy);
-            return View(await applicationDbContext.ToListAsync());
+            return await _context.Rulesets.ToListAsync();
         }
 
-        // GET: Rulesets/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: api/Rulesets/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Rulesets>> GetRulesets(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var rulesets = await _context.Rulesets
-                .Include(r => r.CreatedBy)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (rulesets == null)
-            {
-                return NotFound();
-            }
-
-            return View(rulesets);
-        }
-
-        // GET: Rulesets/Create
-        public IActionResult Create()
-        {
-            ViewData["CharacterId"] = new SelectList(_context.Characters, "Id", "Class");
-            return View();
-        }
-
-        // POST: Rulesets/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,CreatedOn,CharacterId")] Rulesets rulesets)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(rulesets);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CharacterId"] = new SelectList(_context.Characters, "Id", "Class", rulesets.CharacterId);
-            return View(rulesets);
-        }
-
-        // GET: Rulesets/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var rulesets = await _context.Rulesets.FindAsync(id);
+
             if (rulesets == null)
             {
                 return NotFound();
             }
-            ViewData["CharacterId"] = new SelectList(_context.Characters, "Id", "Class", rulesets.CharacterId);
-            return View(rulesets);
+
+            return rulesets;
         }
 
-        // POST: Rulesets/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,CreatedOn,CharacterId")] Rulesets rulesets)
+        // PUT: api/Rulesets/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutRulesets(int id, Rulesets rulesets)
         {
             if (id != rulesets.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            if (ModelState.IsValid)
+            _context.Entry(rulesets).State = EntityState.Modified;
+
+            try
             {
-                try
-                {
-                    _context.Update(rulesets);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!RulesetsExists(rulesets.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();
             }
-            ViewData["CharacterId"] = new SelectList(_context.Characters, "Id", "Class", rulesets.CharacterId);
-            return View(rulesets);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!RulesetsExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
-        // GET: Rulesets/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // POST: api/Rulesets
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Rulesets>> PostRulesets(Rulesets rulesets)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            _context.Rulesets.Add(rulesets);
+            await _context.SaveChangesAsync();
 
-            var rulesets = await _context.Rulesets
-                .Include(r => r.CreatedBy)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            return CreatedAtAction("GetRulesets", new { id = rulesets.Id }, rulesets);
+        }
+
+        // DELETE: api/Rulesets/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteRulesets(int id)
+        {
+            var rulesets = await _context.Rulesets.FindAsync(id);
             if (rulesets == null)
             {
                 return NotFound();
             }
 
-            return View(rulesets);
-        }
-
-        // POST: Rulesets/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var rulesets = await _context.Rulesets.FindAsync(id);
-            if (rulesets != null)
-            {
-                _context.Rulesets.Remove(rulesets);
-            }
-
+            _context.Rulesets.Remove(rulesets);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            return NoContent();
         }
 
         private bool RulesetsExists(int id)

@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Forgeborn.Server.Data;
 using Forgeborn.Server.Models.Items;
 
 namespace Forgeborn.Server.Controllers.Items
 {
-    public class AmmunitionsController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AmmunitionsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
@@ -19,134 +21,83 @@ namespace Forgeborn.Server.Controllers.Items
             _context = context;
         }
 
-        // GET: Ammunitions
-        public async Task<IActionResult> Index()
+        // GET: api/Ammunitions
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Ammunitions>>> GetAmmunitions()
         {
-            return View(await _context.Ammunitions.ToListAsync());
+            return await _context.Ammunitions.ToListAsync();
         }
 
-        // GET: Ammunitions/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: api/Ammunitions/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Ammunitions>> GetAmmunitions(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var ammunitions = await _context.Ammunitions
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (ammunitions == null)
-            {
-                return NotFound();
-            }
-
-            return View(ammunitions);
-        }
-
-        // GET: Ammunitions/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Ammunitions/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Effect,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Ammunitions ammunitions)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(ammunitions);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(ammunitions);
-        }
-
-        // GET: Ammunitions/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var ammunitions = await _context.Ammunitions.FindAsync(id);
+
             if (ammunitions == null)
             {
                 return NotFound();
             }
-            return View(ammunitions);
+
+            return ammunitions;
         }
 
-        // POST: Ammunitions/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Effect,Id,Name,Cost,Weight,Source,Rarity,WondrousItem,Attunement,Requirements")] Ammunitions ammunitions)
+        // PUT: api/Ammunitions/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutAmmunitions(int id, Ammunitions ammunitions)
         {
             if (id != ammunitions.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            if (ModelState.IsValid)
+            _context.Entry(ammunitions).State = EntityState.Modified;
+
+            try
             {
-                try
-                {
-                    _context.Update(ammunitions);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AmmunitionsExists(ammunitions.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();
             }
-            return View(ammunitions);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AmmunitionsExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
-        // GET: Ammunitions/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // POST: api/Ammunitions
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Ammunitions>> PostAmmunitions(Ammunitions ammunitions)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            _context.Ammunitions.Add(ammunitions);
+            await _context.SaveChangesAsync();
 
-            var ammunitions = await _context.Ammunitions
-                .FirstOrDefaultAsync(m => m.Id == id);
+            return CreatedAtAction("GetAmmunitions", new { id = ammunitions.Id }, ammunitions);
+        }
+
+        // DELETE: api/Ammunitions/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAmmunitions(int id)
+        {
+            var ammunitions = await _context.Ammunitions.FindAsync(id);
             if (ammunitions == null)
             {
                 return NotFound();
             }
 
-            return View(ammunitions);
-        }
-
-        // POST: Ammunitions/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var ammunitions = await _context.Ammunitions.FindAsync(id);
-            if (ammunitions != null)
-            {
-                _context.Ammunitions.Remove(ammunitions);
-            }
-
+            _context.Ammunitions.Remove(ammunitions);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            return NoContent();
         }
 
         private bool AmmunitionsExists(int id)

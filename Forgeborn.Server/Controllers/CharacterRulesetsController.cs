@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Forgeborn.Server.Data;
 using Forgeborn.Server.Models;
 
 namespace Forgeborn.Server.Controllers
 {
-    public class CharacterRulesetsController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CharacterRulesetsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
@@ -19,147 +21,83 @@ namespace Forgeborn.Server.Controllers
             _context = context;
         }
 
-        // GET: CharacterRulesets
-        public async Task<IActionResult> Index()
+        // GET: api/CharacterRulesets
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<CharacterRulesets>>> GetCharacterRulesets()
         {
-            var applicationDbContext = _context.CharacterRulesets.Include(c => c.Character).Include(c => c.Ruleset);
-            return View(await applicationDbContext.ToListAsync());
+            return await _context.CharacterRulesets.ToListAsync();
         }
 
-        // GET: CharacterRulesets/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: api/CharacterRulesets/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CharacterRulesets>> GetCharacterRulesets(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var characterRulesets = await _context.CharacterRulesets
-                .Include(c => c.Character)
-                .Include(c => c.Ruleset)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (characterRulesets == null)
-            {
-                return NotFound();
-            }
-
-            return View(characterRulesets);
-        }
-
-        // GET: CharacterRulesets/Create
-        public IActionResult Create()
-        {
-            ViewData["CharacterId"] = new SelectList(_context.Characters, "Id", "Class");
-            ViewData["RulesetId"] = new SelectList(_context.Rulesets, "Id", "Name");
-            return View();
-        }
-
-        // POST: CharacterRulesets/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,IsActive,AssignedDate,CharacterId,RulesetId")] CharacterRulesets characterRulesets)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(characterRulesets);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CharacterId"] = new SelectList(_context.Characters, "Id", "Class", characterRulesets.CharacterId);
-            ViewData["RulesetId"] = new SelectList(_context.Rulesets, "Id", "Name", characterRulesets.RulesetId);
-            return View(characterRulesets);
-        }
-
-        // GET: CharacterRulesets/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var characterRulesets = await _context.CharacterRulesets.FindAsync(id);
+
             if (characterRulesets == null)
             {
                 return NotFound();
             }
-            ViewData["CharacterId"] = new SelectList(_context.Characters, "Id", "Class", characterRulesets.CharacterId);
-            ViewData["RulesetId"] = new SelectList(_context.Rulesets, "Id", "Name", characterRulesets.RulesetId);
-            return View(characterRulesets);
+
+            return characterRulesets;
         }
 
-        // POST: CharacterRulesets/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,IsActive,AssignedDate,CharacterId,RulesetId")] CharacterRulesets characterRulesets)
+        // PUT: api/CharacterRulesets/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutCharacterRulesets(int id, CharacterRulesets characterRulesets)
         {
             if (id != characterRulesets.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            if (ModelState.IsValid)
+            _context.Entry(characterRulesets).State = EntityState.Modified;
+
+            try
             {
-                try
-                {
-                    _context.Update(characterRulesets);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CharacterRulesetsExists(characterRulesets.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();
             }
-            ViewData["CharacterId"] = new SelectList(_context.Characters, "Id", "Class", characterRulesets.CharacterId);
-            ViewData["RulesetId"] = new SelectList(_context.Rulesets, "Id", "Name", characterRulesets.RulesetId);
-            return View(characterRulesets);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CharacterRulesetsExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
-        // GET: CharacterRulesets/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // POST: api/CharacterRulesets
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<CharacterRulesets>> PostCharacterRulesets(CharacterRulesets characterRulesets)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            _context.CharacterRulesets.Add(characterRulesets);
+            await _context.SaveChangesAsync();
 
-            var characterRulesets = await _context.CharacterRulesets
-                .Include(c => c.Character)
-                .Include(c => c.Ruleset)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            return CreatedAtAction("GetCharacterRulesets", new { id = characterRulesets.Id }, characterRulesets);
+        }
+
+        // DELETE: api/CharacterRulesets/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCharacterRulesets(int id)
+        {
+            var characterRulesets = await _context.CharacterRulesets.FindAsync(id);
             if (characterRulesets == null)
             {
                 return NotFound();
             }
 
-            return View(characterRulesets);
-        }
-
-        // POST: CharacterRulesets/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var characterRulesets = await _context.CharacterRulesets.FindAsync(id);
-            if (characterRulesets != null)
-            {
-                _context.CharacterRulesets.Remove(characterRulesets);
-            }
-
+            _context.CharacterRulesets.Remove(characterRulesets);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            return NoContent();
         }
 
         private bool CharacterRulesetsExists(int id)
