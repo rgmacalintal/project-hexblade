@@ -25,14 +25,21 @@ namespace Forgeborn.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Lobbys>>> GetLobbys()
         {
-            return await _context.Lobbys.ToListAsync();
+            return await _context.Lobbys
+            .Include(l => l.Players)
+                .ThenInclude(p => p.Character)
+            .ToListAsync();
         }
 
         // GET: api/Lobbys/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Lobbys>> GetLobbys(int id)
         {
-            var lobbys = await _context.Lobbys.FindAsync(id);
+            //var lobbys = await _context.Lobbys.FindAsync(id);
+            var lobbys = await _context.Lobbys
+            .Include(l => l.Players)
+                .ThenInclude(p => p.Character)
+            .FirstOrDefaultAsync(l => l.Id == id);
 
             if (lobbys == null)
             {
