@@ -1,8 +1,10 @@
 ﻿import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Layout from './Layout';
+import { useLanguage } from './LanguageContext';
 
 export default function Signup({ toggleSidebar, sidebarOpen }) {
+    const { t } = useLanguage();
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -13,32 +15,30 @@ export default function Signup({ toggleSidebar, sidebarOpen }) {
         e.preventDefault();
 
         if (password !== confirmPassword) {
-            alert("Passwords do not match.");
+            alert('Passwords do not match.');
             return;
         }
 
         try {
-            const response = await fetch('/api/auth/register', {
+            const response = await fetch('/api/auth/signup', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, email, password })
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, email, password }),
             });
 
             if (response.ok) {
                 const data = await response.json();
-                console.log('Registration success:', data);
-                alert(data.message || "Registration successful.");
-                navigate('/login');
-            } else if (response.status === 409) {
-                const conflictMsg = await response.text();
-                alert(conflictMsg);
+                localStorage.setItem('username', data.username || username);
+                navigate('/welcome', { state: { username: data.username || username } });
             } else {
-                const errorText = await response.text();
-                alert(errorText || "Registration unsuccessful.");
+                const error = await response.json();
+                alert(error.message || 'Signup failed. Please try again.');
             }
         } catch (error) {
-            console.error("Registration failed:", error);
-            alert(`Registration failed: ${error}`);
+            console.error('Signup error:', error);
+            alert('An error occurred during signup. Please try again.');
         }
     }
 
@@ -47,30 +47,30 @@ export default function Signup({ toggleSidebar, sidebarOpen }) {
             <Layout toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen}>
                 <div className="signup-page">
                     <div className="login-header">
-                        <h2 className="login-heading">Create Account</h2>
-                        <p className="subheading">Sign up to get started!</p>
+                        <h2 className="login-heading">{t('createAccount')}</h2>
+                        <p className="subheading">{t('signUp')}</p>
                     </div>
 
                     <form className="login-form" onSubmit={handleSignup}>
-                        <label>Username</label>
+                        <label>{t('username')}</label>
                         <input
                             type="text"
-                            placeholder="Username"
+                            placeholder={t('username')}
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             required
                         />
 
-                        <label>Email</label>
+                        <label>{t('email')}</label>
                         <input
                             type="email"
-                            placeholder="Email Address"
+                            placeholder={t('emailAddress')}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
                         />
 
-                        <label>Password</label>
+                        <label>{t('password')}</label>
                         <input
                             type="password"
                             placeholder="********"
@@ -79,7 +79,7 @@ export default function Signup({ toggleSidebar, sidebarOpen }) {
                             required
                         />
 
-                        <label>Confirm Password</label>
+                        <label>{t('confirmPassword')}</label>
                         <input
                             type="password"
                             placeholder="********"
@@ -89,13 +89,23 @@ export default function Signup({ toggleSidebar, sidebarOpen }) {
                         />
 
                         <button type="submit" className="login-btn">
-                            Sign Up
+                            {t('signUpBtn')}
                         </button>
 
                         <p className="footer-links">
-                            <Link to="/">Already have an account? Login!</Link>
+                            <Link to="/">{t('alreadyHaveAccountLogin')}</Link>
                         </p>
                     </form>
+
+                    {/* Footer */}
+                    <footer className="site-footer">
+                        <div className="links">
+                            <Link to="/about">{t('about')}</Link>
+                        </div>
+                        <div className="copyright">
+                            © {new Date().getFullYear()} Forge Born. All rights reserved.
+                        </div>
+                    </footer>
                 </div>
             </Layout>
         </div>

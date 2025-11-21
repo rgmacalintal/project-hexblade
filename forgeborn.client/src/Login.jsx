@@ -1,8 +1,10 @@
 ﻿import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Layout from './Layout';
+import { useLanguage } from './LanguageContext';
 
 export default function Login({ toggleSidebar, sidebarOpen }) {
+    const { t } = useLanguage();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
@@ -10,22 +12,35 @@ export default function Login({ toggleSidebar, sidebarOpen }) {
     async function handleLogin(e) {
         e.preventDefault();
 
-        const response = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        });
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            });
 
-        if (response.ok) {
-            const data = await response.json();
-            console.log('Login success:', data);
-            localStorage.setItem('username', data.username);
-            alert(`Welcome, ${data.username}!`);
-            navigate('/welcome', { state: { username: data.username } });
-        } else {
-            const error = await response.text();
-            console.log('Login failed:', error);
-            alert(`Login failed: ${error}`);
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('username', data.username || username);
+                
+                // Check if user wanted to create character after login
+                const redirectAfterLogin = localStorage.getItem('redirectAfterLogin');
+                if (redirectAfterLogin === 'createCharacter') {
+                    localStorage.removeItem('redirectAfterLogin');
+                    localStorage.setItem('openCharacterSheet', 'true');
+                    navigate('/profile', { state: { openCharacterSheet: true } });
+                } else {
+                    navigate('/welcome', { state: { username: data.username || username } });
+                }
+            } else {
+                const error = await response.json();
+                alert(error.message || 'Login failed. Please check your credentials.');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            alert('An error occurred during login. Please try again.');
         }
     }
 
@@ -33,21 +48,21 @@ export default function Login({ toggleSidebar, sidebarOpen }) {
         <div className="fullscreen-wrapper">
             <Layout toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen}>
                 <div className="login-header">
-                    <h2 className="login-heading">Login</h2>
-                    <p className="subheading">Sign in to continue.</p>
+                    <h2 className="login-heading">{t('login')}</h2>
+                    <p className="subheading">{t('signIn')}</p>
                 </div>
 
                 <form className="login-form" onSubmit={handleLogin}>
-                    <label>Username</label>
+                    <label>{t('username')}</label>
                     <input
                         type="text"
-                        placeholder="Username"
+                        placeholder={t('username')}
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         required
                     />
 
-                    <label>Password</label>
+                    <label>{t('password')}</label>
                     <input
                         type="password"
                         placeholder="********"
@@ -57,15 +72,25 @@ export default function Login({ toggleSidebar, sidebarOpen }) {
                     />
 
                     <button type="submit" className="login-btn">
-                        Login
+                        {t('login')}
                     </button>
 
                     <p className="footer-links">
-                        <Link to="/forgot-password">Forgot Password?</Link>
+                        <Link to="/forgot-password">{t('forgotPassword')}</Link>
                         <br />
-                        <Link to="/signup">Don't have an Account? Create Account!</Link>
+                        <Link to="/signup">{t('dontHaveAccount')}</Link>
                     </p>
                 </form>
+
+                {/* Footer */}
+                <footer className="site-footer">
+                    <div className="links">
+                        <Link to="/about">{t('about')}</Link>
+                    </div>
+                    <div className="copyright">
+                        © {new Date().getFullYear()} Forge Born. All rights reserved.
+                    </div>
+                </footer>
             </Layout>
         </div>
     );
