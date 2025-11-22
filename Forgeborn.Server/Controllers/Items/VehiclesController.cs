@@ -6,53 +6,53 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Forgeborn.Server.Data;
-using Forgeborn.Server.Models;
+using Forgeborn.Server.Models.Items;
 
-namespace Forgeborn.Server.Controllers
+namespace Forgeborn.Server.Controllers.Items
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RulesetsController : ControllerBase
+    public class VehiclesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public RulesetsController(ApplicationDbContext context)
+        public VehiclesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Rulesets
+        // GET: api/Vehicles
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Rulesets>>> GetRulesets()
+        public async Task<ActionResult<IEnumerable<Vehicles>>> GetVehicles()
         {
-            return await _context.Rulesets.ToListAsync();
+            return await _context.Vehicles.ToListAsync();
         }
 
-        // GET: api/Rulesets/5
+        // GET: api/Vehicles/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Rulesets>> GetRulesets(int id)
+        public async Task<ActionResult<Vehicles>> GetVehicles(int id)
         {
-            var rulesets = await _context.Rulesets.FindAsync(id);
+            var vehicles = await _context.Vehicles.FindAsync(id);
 
-            if (rulesets == null)
+            if (vehicles == null)
             {
                 return NotFound();
             }
 
-            return rulesets;
+            return vehicles;
         }
 
-        // PUT: api/Rulesets/5
+        // PUT: api/Vehicles/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRulesets(int id, Rulesets rulesets)
+        public async Task<IActionResult> PutVehicles(int id, Vehicles vehicles)
         {
-            if (id != rulesets.Id)
+            if (id != vehicles.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(rulesets).State = EntityState.Modified;
+            _context.Entry(vehicles).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace Forgeborn.Server.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!RulesetsExists(id))
+                if (!VehiclesExists(id))
                 {
                     return NotFound();
                 }
@@ -73,36 +73,36 @@ namespace Forgeborn.Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Rulesets
+        // POST: api/Vehicles
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Rulesets>> PostRulesets(Rulesets rulesets)
+        public async Task<ActionResult<Vehicles>> PostVehicles(Vehicles vehicles)
         {
-            _context.Rulesets.Add(rulesets);
+            _context.Vehicles.Add(vehicles);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetRulesets", new { id = rulesets.Id }, rulesets);
+            return CreatedAtAction("GetVehicles", new { id = vehicles.Id }, vehicles);
         }
 
-        // DELETE: api/Rulesets/5
+        // DELETE: api/Vehicles/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRulesets(int id)
+        public async Task<IActionResult> DeleteVehicles(int id)
         {
-            var rulesets = await _context.Rulesets.FindAsync(id);
-            if (rulesets == null)
+            var vehicles = await _context.Vehicles.FindAsync(id);
+            if (vehicles == null)
             {
                 return NotFound();
             }
 
-            _context.Rulesets.Remove(rulesets);
+            _context.Vehicles.Remove(vehicles);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool RulesetsExists(int id)
+        private bool VehiclesExists(int id)
         {
-            return _context.Rulesets.Any(e => e.Id == id);
+            return _context.Vehicles.Any(e => e.Id == id);
         }
     }
 }

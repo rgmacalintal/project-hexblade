@@ -59,4 +59,5 @@ namespace Forgeborn.Server.Data
         public DbSet<Vehicles> Vehicles { get; set; } = default!;
         public DbSet<Weapons> Weapons { get; set; } = default!;
     }
+
 }

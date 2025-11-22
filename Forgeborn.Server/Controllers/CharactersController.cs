@@ -12,47 +12,47 @@ namespace Forgeborn.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RulesetsController : ControllerBase
+    public class CharactersController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public RulesetsController(ApplicationDbContext context)
+        public CharactersController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Rulesets
+        // GET: api/Characters
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Rulesets>>> GetRulesets()
+        public async Task<ActionResult<IEnumerable<Characters>>> GetCharacters()
         {
-            return await _context.Rulesets.ToListAsync();
+            return await _context.Characters.ToListAsync();
         }
 
-        // GET: api/Rulesets/5
+        // GET: api/Characters/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Rulesets>> GetRulesets(int id)
+        public async Task<ActionResult<Characters>> GetCharacters(int id)
         {
-            var rulesets = await _context.Rulesets.FindAsync(id);
+            var characters = await _context.Characters.FindAsync(id);
 
-            if (rulesets == null)
+            if (characters == null)
             {
                 return NotFound();
             }
 
-            return rulesets;
+            return characters;
         }
 
-        // PUT: api/Rulesets/5
+        // PUT: api/Characters/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRulesets(int id, Rulesets rulesets)
+        public async Task<IActionResult> PutCharacters(int id, Characters characters)
         {
-            if (id != rulesets.Id)
+            if (id != characters.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(rulesets).State = EntityState.Modified;
+            _context.Entry(characters).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace Forgeborn.Server.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!RulesetsExists(id))
+                if (!CharactersExists(id))
                 {
                     return NotFound();
                 }
@@ -73,36 +73,36 @@ namespace Forgeborn.Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Rulesets
+        // POST: api/Characters
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Rulesets>> PostRulesets(Rulesets rulesets)
+        public async Task<ActionResult<Characters>> PostCharacters(Characters characters)
         {
-            _context.Rulesets.Add(rulesets);
+            _context.Characters.Add(characters);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetRulesets", new { id = rulesets.Id }, rulesets);
+            return CreatedAtAction("GetCharacters", new { id = characters.Id }, characters);
         }
 
-        // DELETE: api/Rulesets/5
+        // DELETE: api/Characters/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRulesets(int id)
+        public async Task<IActionResult> DeleteCharacters(int id)
         {
-            var rulesets = await _context.Rulesets.FindAsync(id);
-            if (rulesets == null)
+            var characters = await _context.Characters.FindAsync(id);
+            if (characters == null)
             {
                 return NotFound();
             }
 
-            _context.Rulesets.Remove(rulesets);
+            _context.Characters.Remove(characters);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool RulesetsExists(int id)
+        private bool CharactersExists(int id)
         {
-            return _context.Rulesets.Any(e => e.Id == id);
+            return _context.Characters.Any(e => e.Id == id);
         }
     }
 }

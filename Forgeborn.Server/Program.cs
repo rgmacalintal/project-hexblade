@@ -1,4 +1,5 @@
 using Forgeborn.Server.Data;
+using Forgeborn.Server.Hubs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
@@ -41,6 +42,8 @@ builder.Services.AddHealthChecks()
         tags: new[] { "database", "critical" }
     );
 
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 app.MapHealthChecks("/health");
@@ -57,6 +60,7 @@ app.UseCors("AllowReactApp");
 
 app.UseAuthorization();
 
+app.MapHub<CharacterHub>("/hubs/characters");
 app.MapControllers();
 
 app.Run();

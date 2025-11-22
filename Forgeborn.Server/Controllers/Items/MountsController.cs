@@ -6,53 +6,53 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Forgeborn.Server.Data;
-using Forgeborn.Server.Models;
+using Forgeborn.Server.Models.Items;
 
-namespace Forgeborn.Server.Controllers
+namespace Forgeborn.Server.Controllers.Items
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RulesetsController : ControllerBase
+    public class MountsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public RulesetsController(ApplicationDbContext context)
+        public MountsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Rulesets
+        // GET: api/Mounts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Rulesets>>> GetRulesets()
+        public async Task<ActionResult<IEnumerable<Mounts>>> GetMounts()
         {
-            return await _context.Rulesets.ToListAsync();
+            return await _context.Mounts.ToListAsync();
         }
 
-        // GET: api/Rulesets/5
+        // GET: api/Mounts/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Rulesets>> GetRulesets(int id)
+        public async Task<ActionResult<Mounts>> GetMounts(int id)
         {
-            var rulesets = await _context.Rulesets.FindAsync(id);
+            var mounts = await _context.Mounts.FindAsync(id);
 
-            if (rulesets == null)
+            if (mounts == null)
             {
                 return NotFound();
             }
 
-            return rulesets;
+            return mounts;
         }
 
-        // PUT: api/Rulesets/5
+        // PUT: api/Mounts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRulesets(int id, Rulesets rulesets)
+        public async Task<IActionResult> PutMounts(int id, Mounts mounts)
         {
-            if (id != rulesets.Id)
+            if (id != mounts.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(rulesets).State = EntityState.Modified;
+            _context.Entry(mounts).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace Forgeborn.Server.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!RulesetsExists(id))
+                if (!MountsExists(id))
                 {
                     return NotFound();
                 }
@@ -73,36 +73,36 @@ namespace Forgeborn.Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Rulesets
+        // POST: api/Mounts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Rulesets>> PostRulesets(Rulesets rulesets)
+        public async Task<ActionResult<Mounts>> PostMounts(Mounts mounts)
         {
-            _context.Rulesets.Add(rulesets);
+            _context.Mounts.Add(mounts);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetRulesets", new { id = rulesets.Id }, rulesets);
+            return CreatedAtAction("GetMounts", new { id = mounts.Id }, mounts);
         }
 
-        // DELETE: api/Rulesets/5
+        // DELETE: api/Mounts/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRulesets(int id)
+        public async Task<IActionResult> DeleteMounts(int id)
         {
-            var rulesets = await _context.Rulesets.FindAsync(id);
-            if (rulesets == null)
+            var mounts = await _context.Mounts.FindAsync(id);
+            if (mounts == null)
             {
                 return NotFound();
             }
 
-            _context.Rulesets.Remove(rulesets);
+            _context.Mounts.Remove(mounts);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool RulesetsExists(int id)
+        private bool MountsExists(int id)
         {
-            return _context.Rulesets.Any(e => e.Id == id);
+            return _context.Mounts.Any(e => e.Id == id);
         }
     }
 }

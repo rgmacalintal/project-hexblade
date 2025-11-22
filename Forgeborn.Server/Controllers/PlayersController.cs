@@ -1,6 +1,12 @@
-﻿using Forgeborn.Server.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Forgeborn.Server.Data;
+using Forgeborn.Server.Models;
 
 namespace Forgeborn.Server.Controllers
 {
@@ -8,55 +14,95 @@ namespace Forgeborn.Server.Controllers
     [ApiController]
     public class PlayersController : ControllerBase
     {
-        // In-memory list
-        private static List<Players> Player = new List<Players>();
+        private readonly ApplicationDbContext _context;
+
+        public PlayersController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         // GET: api/Players
         [HttpGet]
-        public ActionResult<IEnumerable<Players>> Get()
+        public async Task<ActionResult<IEnumerable<Players>>> GetPlayers()
         {
-            return Ok(Player);
+            return await _context.Players.ToListAsync();
         }
 
-        // GET: api/Players/{id}
+        // GET: api/Players/5
         [HttpGet("{id}")]
-        public ActionResult<Players> Get(int id)
+        public async Task<ActionResult<Players>> GetPlayers(int id)
         {
-            var player = Player.FirstOrDefault(u => u.Id == id);
-            if (player == null) return NotFound();
-            return Ok(player);
-        }
+            var players = await _context.Players.FindAsync(id);
 
-        // POST: api/Players
-        [HttpPost]
-        public ActionResult<Players> Create(Players player)
-        {
-            player.Id = Player.Count > 0 ? Player.Max(u => u.Id) + 1 : 1;
-            Player.Add(player);
-            return CreatedAtAction(nameof(Get), new { id = player.Id }, player);
+            if (players == null)
+            {
+                return NotFound();
+            }
+
+            return players;
         }
 
         // PUT: api/Players/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public IActionResult Update(int id, Players updatedPlayer)
+        public async Task<IActionResult> PutPlayers(int id, Players players)
         {
-            var player = Player.FirstOrDefault(u => u.Id == id);
-            if (player == null) return NotFound();
+            if (id != players.Id)
+            {
+                return BadRequest();
+            }
 
-            player.IsHost = updatedPlayer.IsHost;
+            _context.Entry(players).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PlayersExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return NoContent();
+        }
+
+        // POST: api/Players
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Players>> PostPlayers(Players players)
+        {
+            _context.Players.Add(players);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetPlayers", new { id = players.Id }, players);
         }
 
         // DELETE: api/Players/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> DeletePlayers(int id)
         {
-            var player = Player.FirstOrDefault(u => u.Id == id);
-            if (player == null) return NotFound();
+            var players = await _context.Players.FindAsync(id);
+            if (players == null)
+            {
+                return NotFound();
+            }
 
-            Player.Remove(player);
+            _context.Players.Remove(players);
+            await _context.SaveChangesAsync();
+
             return NoContent();
+        }
+
+        private bool PlayersExists(int id)
+        {
+            return _context.Players.Any(e => e.Id == id);
         }
     }
 }

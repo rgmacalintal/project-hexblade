@@ -6,53 +6,53 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Forgeborn.Server.Data;
-using Forgeborn.Server.Models;
+using Forgeborn.Server.Models.Items;
 
-namespace Forgeborn.Server.Controllers
+namespace Forgeborn.Server.Controllers.Items
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RulesetsController : ControllerBase
+    public class ArmorsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public RulesetsController(ApplicationDbContext context)
+        public ArmorsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Rulesets
+        // GET: api/Armors
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Rulesets>>> GetRulesets()
+        public async Task<ActionResult<IEnumerable<Armors>>> GetArmors()
         {
-            return await _context.Rulesets.ToListAsync();
+            return await _context.Armors.ToListAsync();
         }
 
-        // GET: api/Rulesets/5
+        // GET: api/Armors/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Rulesets>> GetRulesets(int id)
+        public async Task<ActionResult<Armors>> GetArmors(int id)
         {
-            var rulesets = await _context.Rulesets.FindAsync(id);
+            var armors = await _context.Armors.FindAsync(id);
 
-            if (rulesets == null)
+            if (armors == null)
             {
                 return NotFound();
             }
 
-            return rulesets;
+            return armors;
         }
 
-        // PUT: api/Rulesets/5
+        // PUT: api/Armors/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRulesets(int id, Rulesets rulesets)
+        public async Task<IActionResult> PutArmors(int id, Armors armors)
         {
-            if (id != rulesets.Id)
+            if (id != armors.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(rulesets).State = EntityState.Modified;
+            _context.Entry(armors).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace Forgeborn.Server.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!RulesetsExists(id))
+                if (!ArmorsExists(id))
                 {
                     return NotFound();
                 }
@@ -73,36 +73,36 @@ namespace Forgeborn.Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Rulesets
+        // POST: api/Armors
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Rulesets>> PostRulesets(Rulesets rulesets)
+        public async Task<ActionResult<Armors>> PostArmors(Armors armors)
         {
-            _context.Rulesets.Add(rulesets);
+            _context.Armors.Add(armors);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetRulesets", new { id = rulesets.Id }, rulesets);
+            return CreatedAtAction("GetArmors", new { id = armors.Id }, armors);
         }
 
-        // DELETE: api/Rulesets/5
+        // DELETE: api/Armors/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRulesets(int id)
+        public async Task<IActionResult> DeleteArmors(int id)
         {
-            var rulesets = await _context.Rulesets.FindAsync(id);
-            if (rulesets == null)
+            var armors = await _context.Armors.FindAsync(id);
+            if (armors == null)
             {
                 return NotFound();
             }
 
-            _context.Rulesets.Remove(rulesets);
+            _context.Armors.Remove(armors);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool RulesetsExists(int id)
+        private bool ArmorsExists(int id)
         {
-            return _context.Rulesets.Any(e => e.Id == id);
+            return _context.Armors.Any(e => e.Id == id);
         }
     }
 }
