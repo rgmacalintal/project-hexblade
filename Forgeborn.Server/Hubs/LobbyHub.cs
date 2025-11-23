@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using Forgeborn.Server.Data;
+﻿using Forgeborn.Server.Data;
 using Forgeborn.Server.Models;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 
 namespace Forgeborn.Server.Hubs
@@ -29,7 +30,7 @@ namespace Forgeborn.Server.Hubs
 
             var lobby = new Lobbys
             {
-                Name = $"{username}'s Lobby",
+                Name = code,
                 CreatedOn = DateTime.UtcNow
             };
 
@@ -40,14 +41,23 @@ namespace Forgeborn.Server.Hubs
             UserToLobby[Context.ConnectionId] = code;
 
             await Groups.AddToGroupAsync(Context.ConnectionId, code);
-            await Clients.Caller.SendAsync("LobbyCreated", code, lobby.Name);
+            await Clients.Caller.SendAsync("LobbyCreated", code);
         }
 
         public async Task JoinLobby(string code, string username)
         {
-            if (!LobbyToHost.ContainsKey(code))
+            var lobby = await _context.Lobbys
+                .FirstOrDefaultAsync(l => l.Name == code);
+
+            if (lobby == null)
             {
-                await Clients.Caller.SendAsync("Error", "Lobby not found.");
+                await Clients.Caller.SendAsync("JoinFailed", "Lobby does not exist.");
+                return;
+            }
+
+            if (!LobbyToHost.TryGetValue(code, out var hostConnectionId))
+            {
+                await Clients.Caller.SendAsync("JoinFailed", "Host is offline. Lobby is closed.");
                 return;
             }
 
@@ -55,6 +65,8 @@ namespace Forgeborn.Server.Hubs
             UserToLobby[Context.ConnectionId] = code;
 
             await Clients.Group(code).SendAsync("PlayerJoined", username);
+
+            Console.WriteLine($"{username} joined lobby {code}");
         }
 
         public async Task SendMessage(string message)

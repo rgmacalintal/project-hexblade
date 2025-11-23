@@ -18,13 +18,13 @@ export default defineConfig({
         proxy: {
             '/api/': {
                 target,
-                ws: true,
                 changeOrigin: true,
+                ws: true,
             },
             '/openapi/': {
                 target,
-                ws: true,
                 changeOrigin: true,
+                ws: true,
             }
         }
     },

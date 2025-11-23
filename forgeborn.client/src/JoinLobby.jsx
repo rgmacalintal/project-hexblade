@@ -28,28 +28,31 @@ export default function JoinLobby({ toggleSidebar, sidebarOpen }) {
             .withAutomaticReconnect()
             .build();
 
+        conn.on('JoinFailed', msg => {
+            alert(msg);
+            conn.stop();
+            setConnected(false);
+        });
+
+        conn.on('PlayerJoined', player => {
+            alert(`${player} joined the lobby!`);
+        });
+
+        conn.on('LobbyClosed', () => {
+            alert('Host closed the lobby.');
+            navigate('/welcome');
+        });
+
         try {
             await conn.start();
             console.log('Connected to hub');
 
             await conn.invoke('JoinLobby', lobbyCode.toUpperCase(), username);
 
-            conn.on('JoinFailed', msg => {
-                alert(msg);
-                conn.stop();
-            });
-
-            conn.on('PlayerJoined', player => {
-                alert(`${player} joined the lobby!`);
-            });
-
-            conn.on('LobbyClosed', () => {
-                alert('Host closed the lobby.');
-                navigate('/welcome');
-            });
-
-            setConnection(conn);
-            setConnected(true);
+            if (conn.state === "Connected") {
+                setConnection(conn);
+                setConnected(true);
+            }
         } catch (error) {
             console.error('Error joining lobby:', error);
             alert('Could not connect to the lobby.');
