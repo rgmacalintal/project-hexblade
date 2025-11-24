@@ -1,19 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import Layout from './Layout';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import './App.css';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 
 export default function Profile({ toggleSidebar, sidebarOpen }) {
     const { t } = useLanguage();
     const location = useLocation();
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedCharacter, setSelectedCharacter] = useState(null);
-    const location = useLocation();
     const navigate = useNavigate();
     const username = location.state?.username || localStorage.getItem('username');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isCreatingNew, setIsCreatingNew] = useState(false);
+    const [selectedCharacter, setSelectedCharacter] = useState(null);
+    const [profilePicture, setProfilePicture] = useState('/G1.png');
+    const [isProfilePictureModalOpen, setIsProfilePictureModalOpen] = useState(false);
+    const [formData, setFormData] = useState({
+            name: '',
+            nickname: '',
+            role: '',
+            age: '',
+            gender: '',
+            classOccupation: '',
+            personality: '',
+            physical: {
+                height: '',
+                weight: '',
+                build: '',
+                skinTone: '',
+                hairColor: '',
+                eyeColor: ''
+            },
+            background: '',
+            goals: ['', '', ''],
+            relationships: '',
+            motivations: '',
+            conflicts: '',
+            image: '/G1.png'
+    });
 
     useEffect(() => {
         if (!username) {

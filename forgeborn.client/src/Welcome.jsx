@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from './Layout';
 import { useLanguage } from './LanguageContext';
 import './Welcome.css';
 import './App.css';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { useEffect } from 'react';
 
 export default function Welcome({ toggleSidebar, sidebarOpen }) {
     const { t } = useLanguage();
@@ -37,13 +36,12 @@ export default function Welcome({ toggleSidebar, sidebarOpen }) {
     const navigate = useNavigate();
     const username = location.state?.username || localStorage.getItem('username');
 
-    // Bypass authentication check for now
-    // useEffect(() => {
-    //     if (!username) {
-    //         alert('Please login first.');
-    //         navigate('/login');
-    //     }
-    // }, [username, navigate]);
+     useEffect(() => {
+         if (!username) {
+             alert('Please login first.');
+             navigate('/login');
+         }
+     }, [username, navigate]);
 
     const openCharModal = () => setIsCharModalOpen(true);
     const closeCharModal = () => setIsCharModalOpen(false);
