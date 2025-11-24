@@ -1,18 +1,20 @@
 import React from 'react';
 import Layout from './Layout';
+import { useLanguage } from './LanguageContext';
 import './Welcome.css';
 import './App.css';
 import { Link } from 'react-router-dom';
 
 export default function HomePage({ toggleSidebar, sidebarOpen }) {
+    const { t } = useLanguage();
     return (
         <div className="fullscreen-wrapper">
             <Layout toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen}>
                 {/* Header with Login/Signup buttons */}
                 <div className="homepage-header">
                     <div className="header-buttons">
-                        <Link to="/login" className="header-btn login-btn">Login</Link>
-                        <Link to="/signup" className="header-btn signup-btn">Sign Up</Link>
+                        <Link to="/login" className="header-btn login-btn">{t('loginBtn')}</Link>
+                        <Link to="/signup" className="header-btn signup-btn">{t('signUpBtn')}</Link>
                     </div>
                 </div>
                 
@@ -20,8 +22,8 @@ export default function HomePage({ toggleSidebar, sidebarOpen }) {
                     {/* Hero Section */}
                     <section className="hero-section">
                         <div className="hero-content">
-                            <h1 className="hero-title">The #1 Choice For D&D Online</h1>
-                            <p className="hero-subtitle">Explore why more than 2,000 dedicated players worldwide have chosen Forge Born for its intuitive tools, customizable character creation, interactive dice rolling, and vibrant community, making every Dungeons & Dragons session unforgettable.</p>
+                            <h1 className="hero-title">{t('heroTitle')}</h1>
+                            <p className="hero-subtitle">{t('heroSubtitle')}</p>
                         </div>
                         <div className="hero-image">
                             <div className="character-container">
@@ -151,7 +153,7 @@ export default function HomePage({ toggleSidebar, sidebarOpen }) {
                     <footer className="site-footer">
                         
                         <div className="links">
-                            <Link to="/about">About</Link>
+                            <Link to="/about">{t('about')}</Link>
                         </div>
                         <div className="copyright">
                             © {new Date().getFullYear()} Forgeborn. All rights reserved.

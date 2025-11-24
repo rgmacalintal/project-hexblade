@@ -6,53 +6,53 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Forgeborn.Server.Data;
-using Forgeborn.Server.Models;
+using Forgeborn.Server.Models.Items;
 
-namespace Forgeborn.Server.Controllers
+namespace Forgeborn.Server.Controllers.Items
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RulesetsController : ControllerBase
+    public class WeaponsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public RulesetsController(ApplicationDbContext context)
+        public WeaponsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Rulesets
+        // GET: api/Weapons
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Rulesets>>> GetRulesets()
+        public async Task<ActionResult<IEnumerable<Weapons>>> GetWeapons()
         {
-            return await _context.Rulesets.ToListAsync();
+            return await _context.Weapons.ToListAsync();
         }
 
-        // GET: api/Rulesets/5
+        // GET: api/Weapons/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Rulesets>> GetRulesets(int id)
+        public async Task<ActionResult<Weapons>> GetWeapons(int id)
         {
-            var rulesets = await _context.Rulesets.FindAsync(id);
+            var weapons = await _context.Weapons.FindAsync(id);
 
-            if (rulesets == null)
+            if (weapons == null)
             {
                 return NotFound();
             }
 
-            return rulesets;
+            return weapons;
         }
 
-        // PUT: api/Rulesets/5
+        // PUT: api/Weapons/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRulesets(int id, Rulesets rulesets)
+        public async Task<IActionResult> PutWeapons(int id, Weapons weapons)
         {
-            if (id != rulesets.Id)
+            if (id != weapons.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(rulesets).State = EntityState.Modified;
+            _context.Entry(weapons).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace Forgeborn.Server.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!RulesetsExists(id))
+                if (!WeaponsExists(id))
                 {
                     return NotFound();
                 }
@@ -73,36 +73,36 @@ namespace Forgeborn.Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Rulesets
+        // POST: api/Weapons
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Rulesets>> PostRulesets(Rulesets rulesets)
+        public async Task<ActionResult<Weapons>> PostWeapons(Weapons weapons)
         {
-            _context.Rulesets.Add(rulesets);
+            _context.Weapons.Add(weapons);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetRulesets", new { id = rulesets.Id }, rulesets);
+            return CreatedAtAction("GetWeapons", new { id = weapons.Id }, weapons);
         }
 
-        // DELETE: api/Rulesets/5
+        // DELETE: api/Weapons/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRulesets(int id)
+        public async Task<IActionResult> DeleteWeapons(int id)
         {
-            var rulesets = await _context.Rulesets.FindAsync(id);
-            if (rulesets == null)
+            var weapons = await _context.Weapons.FindAsync(id);
+            if (weapons == null)
             {
                 return NotFound();
             }
 
-            _context.Rulesets.Remove(rulesets);
+            _context.Weapons.Remove(weapons);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool RulesetsExists(int id)
+        private bool WeaponsExists(int id)
         {
-            return _context.Rulesets.Any(e => e.Id == id);
+            return _context.Weapons.Any(e => e.Id == id);
         }
     }
 }

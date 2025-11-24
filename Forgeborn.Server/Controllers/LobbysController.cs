@@ -1,6 +1,12 @@
-﻿using Forgeborn.Server.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Forgeborn.Server.Data;
+using Forgeborn.Server.Models;
 
 namespace Forgeborn.Server.Controllers
 {
@@ -8,55 +14,102 @@ namespace Forgeborn.Server.Controllers
     [ApiController]
     public class LobbysController : ControllerBase
     {
-        // In-memory list
-        private static List<Lobbys> Lobby = new List<Lobbys>();
+        private readonly ApplicationDbContext _context;
+
+        public LobbysController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         // GET: api/Lobbys
         [HttpGet]
-        public ActionResult<IEnumerable<Lobbys>> Get()
+        public async Task<ActionResult<IEnumerable<Lobbys>>> GetLobbys()
         {
-            return Ok(Lobby);
+            return await _context.Lobbys
+            .Include(l => l.Players)
+                .ThenInclude(p => p.Character)
+            .ToListAsync();
         }
 
-        // GET: api/Lobbys/{id}
+        // GET: api/Lobbys/5
         [HttpGet("{id}")]
-        public ActionResult<Lobbys> Get(int id)
+        public async Task<ActionResult<Lobbys>> GetLobbys(int id)
         {
-            var lobby = Lobby.FirstOrDefault(u => u.Id == id);
-            if (lobby == null) return NotFound();
-            return Ok(lobby);
-        }
+            //var lobbys = await _context.Lobbys.FindAsync(id);
+            var lobbys = await _context.Lobbys
+            .Include(l => l.Players)
+                .ThenInclude(p => p.Character)
+            .FirstOrDefaultAsync(l => l.Id == id);
 
-        // POST: api/Lobbys
-        [HttpPost]
-        public ActionResult<Lobbys> Create(Lobbys lobby)
-        {
-            lobby.Id = Lobby.Count > 0 ? Lobby.Max(u => u.Id) + 1 : 1;
-            Lobby.Add(lobby);
-            return CreatedAtAction(nameof(Get), new { id = lobby.Id }, lobby);
+            if (lobbys == null)
+            {
+                return NotFound();
+            }
+
+            return lobbys;
         }
 
         // PUT: api/Lobbys/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public IActionResult Update(int id, Lobbys updatedLobby)
+        public async Task<IActionResult> PutLobbys(int id, Lobbys lobbys)
         {
-            var lobby = Lobby.FirstOrDefault(u => u.Id == id);
-            if (lobby == null) return NotFound();
+            if (id != lobbys.Id)
+            {
+                return BadRequest();
+            }
 
-            lobby.Name = updatedLobby.Name;
+            _context.Entry(lobbys).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!LobbysExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return NoContent();
+        }
+
+        // POST: api/Lobbys
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Lobbys>> PostLobbys(Lobbys lobbys)
+        {
+            _context.Lobbys.Add(lobbys);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetLobbys", new { id = lobbys.Id }, lobbys);
         }
 
         // DELETE: api/Lobbys/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> DeleteLobbys(int id)
         {
-            var lobby = Lobby.FirstOrDefault(u => u.Id == id);
-            if (lobby == null) return NotFound();
+            var lobbys = await _context.Lobbys.FindAsync(id);
+            if (lobbys == null)
+            {
+                return NotFound();
+            }
 
-            Lobby.Remove(lobby);
+            _context.Lobbys.Remove(lobbys);
+            await _context.SaveChangesAsync();
+
             return NoContent();
+        }
+
+        private bool LobbysExists(int id)
+        {
+            return _context.Lobbys.Any(e => e.Id == id);
         }
     }
 }

@@ -6,53 +6,53 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Forgeborn.Server.Data;
-using Forgeborn.Server.Models;
+using Forgeborn.Server.Models.Items;
 
-namespace Forgeborn.Server.Controllers
+namespace Forgeborn.Server.Controllers.Items
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RulesetsController : ControllerBase
+    public class ToolsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public RulesetsController(ApplicationDbContext context)
+        public ToolsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Rulesets
+        // GET: api/Tools
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Rulesets>>> GetRulesets()
+        public async Task<ActionResult<IEnumerable<Tools>>> GetTools()
         {
-            return await _context.Rulesets.ToListAsync();
+            return await _context.Tools.ToListAsync();
         }
 
-        // GET: api/Rulesets/5
+        // GET: api/Tools/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Rulesets>> GetRulesets(int id)
+        public async Task<ActionResult<Tools>> GetTools(int id)
         {
-            var rulesets = await _context.Rulesets.FindAsync(id);
+            var tools = await _context.Tools.FindAsync(id);
 
-            if (rulesets == null)
+            if (tools == null)
             {
                 return NotFound();
             }
 
-            return rulesets;
+            return tools;
         }
 
-        // PUT: api/Rulesets/5
+        // PUT: api/Tools/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRulesets(int id, Rulesets rulesets)
+        public async Task<IActionResult> PutTools(int id, Tools tools)
         {
-            if (id != rulesets.Id)
+            if (id != tools.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(rulesets).State = EntityState.Modified;
+            _context.Entry(tools).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace Forgeborn.Server.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!RulesetsExists(id))
+                if (!ToolsExists(id))
                 {
                     return NotFound();
                 }
@@ -73,36 +73,36 @@ namespace Forgeborn.Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Rulesets
+        // POST: api/Tools
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Rulesets>> PostRulesets(Rulesets rulesets)
+        public async Task<ActionResult<Tools>> PostTools(Tools tools)
         {
-            _context.Rulesets.Add(rulesets);
+            _context.Tools.Add(tools);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetRulesets", new { id = rulesets.Id }, rulesets);
+            return CreatedAtAction("GetTools", new { id = tools.Id }, tools);
         }
 
-        // DELETE: api/Rulesets/5
+        // DELETE: api/Tools/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRulesets(int id)
+        public async Task<IActionResult> DeleteTools(int id)
         {
-            var rulesets = await _context.Rulesets.FindAsync(id);
-            if (rulesets == null)
+            var tools = await _context.Tools.FindAsync(id);
+            if (tools == null)
             {
                 return NotFound();
             }
 
-            _context.Rulesets.Remove(rulesets);
+            _context.Tools.Remove(tools);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool RulesetsExists(int id)
+        private bool ToolsExists(int id)
         {
-            return _context.Rulesets.Any(e => e.Id == id);
+            return _context.Tools.Any(e => e.Id == id);
         }
     }
 }

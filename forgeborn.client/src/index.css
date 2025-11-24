@@ -11,7 +11,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #fffff9;
+  background-color: #fffff9; /* Cream theme default */
+  color: #333333; /* Cream theme default - black text */
   min-height: 100vh;
   overflow-x: hidden;
 }

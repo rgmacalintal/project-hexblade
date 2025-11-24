@@ -19,6 +19,7 @@ namespace Forgeborn.Server.Models
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
 
         public ICollection<Characters> Characters { get; set; } = new List<Characters>();
+        public ICollection<Players> Players { get; set; } = new List<Players>();
 
     }
 }
