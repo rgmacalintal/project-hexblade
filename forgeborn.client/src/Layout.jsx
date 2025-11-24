@@ -1,14 +1,20 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLanguage } from './LanguageContext';
 
 export default function Layout({ sidebarOpen, toggleSidebar, children }) {
+    const { language, setLanguage, t } = useLanguage();
     const [isDarkTheme, setIsDarkTheme] = useState(false);
     const [openSubmenu, setOpenSubmenu] = useState(null);
+    const [characterSheetSidebarOpen, setCharacterSheetSidebarOpen] = useState(false);
+    const [languageSidebarOpen, setLanguageSidebarOpen] = useState(false);
+    const [themeSidebarOpen, setThemeSidebarOpen] = useState(false);
+    const [helpModalOpen, setHelpModalOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Check for saved theme preference or default to light
+        // Check for saved theme preference or default to cream
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
             setIsDarkTheme(true);
@@ -19,22 +25,35 @@ export default function Layout({ sidebarOpen, toggleSidebar, children }) {
         }
     }, []);
 
-    const toggleTheme = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const newTheme = !isDarkTheme;
-        setIsDarkTheme(newTheme);
-        
-        if (newTheme) {
+    const toggleThemeSidebar = () => {
+        setThemeSidebarOpen((prev) => !prev);
+    };
+
+    const closeThemeSidebar = () => {
+        setThemeSidebarOpen(false);
+    };
+
+    const handleThemeSelect = (theme) => {
+        if (theme === 'dark') {
+            setIsDarkTheme(true);
             document.body.classList.add('dark-theme');
             localStorage.setItem('theme', 'dark');
         } else {
+            setIsDarkTheme(false);
             document.body.classList.remove('dark-theme');
-            localStorage.setItem('theme', 'light');
+            localStorage.setItem('theme', 'cream');
         }
-        
-        console.log('Theme toggled to:', newTheme ? 'dark' : 'light');
+        closeThemeSidebar();
+        toggleSidebar();
+    };
+
+    const openHelpModal = () => {
+        setHelpModalOpen(true);
+        toggleSidebar();
+    };
+
+    const closeHelpModal = () => {
+        setHelpModalOpen(false);
     };
 
     const onToggleSubmenu = (key) => {
@@ -46,7 +65,48 @@ export default function Layout({ sidebarOpen, toggleSidebar, children }) {
         });
     };
 
+    const toggleCharacterSheetSidebar = () => {
+        setCharacterSheetSidebarOpen((prev) => !prev);
+    };
+
+    const closeCharacterSheetSidebar = () => {
+        setCharacterSheetSidebarOpen(false);
+    };
+
+    const handleCreateCharacter = () => {
+        const username = localStorage.getItem('username');
+        if (!username) {
+            // Not logged in - redirect to login with flag to open character sheet after login
+            localStorage.setItem('redirectAfterLogin', 'createCharacter');
+            navigate('/login');
+            closeCharacterSheetSidebar();
+            toggleSidebar();
+        } else {
+            // Logged in - open character sheet
+            localStorage.setItem('openCharacterSheet', 'true');
+            navigate('/profile', { state: { openCharacterSheet: true } });
+            closeCharacterSheetSidebar();
+            toggleSidebar();
+        }
+    };
+
+    const toggleLanguageSidebar = () => {
+        setLanguageSidebarOpen((prev) => !prev);
+    };
+
+    const closeLanguageSidebar = () => {
+        setLanguageSidebarOpen(false);
+    };
+
+    const handleLanguageSelect = (lang) => {
+        setLanguage(lang);
+        closeLanguageSidebar();
+        toggleSidebar();
+    };
+
     const shouldShowProfileIcon = (() => {
+        const username = localStorage.getItem('username');
+        if (!username) return false; // Only show if logged in
         if (location.pathname === '/') return false;
         if (location.pathname === '/signup') return false;
         if (location.pathname === '/welcome') {
@@ -56,6 +116,14 @@ export default function Layout({ sidebarOpen, toggleSidebar, children }) {
         }
         return true;
     })();
+
+    const handleProfileClick = (e) => {
+        const username = localStorage.getItem('username');
+        if (!username) {
+            e.preventDefault();
+            navigate('/login');
+        }
+    };
 
     function handleLogout() {
         const username = localStorage.getItem('username');
@@ -86,16 +154,6 @@ export default function Layout({ sidebarOpen, toggleSidebar, children }) {
                             </button>
                         )}
                     </div>
-                    {shouldShowProfileIcon && (
-                        <div className="right-side">
-                            <Link to="/profile" className="profile-icon-btn" aria-label="Open profile">
-                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <circle cx="12" cy="8" r="4" strokeWidth="2" />
-                                    <path d="M4 20c0-4 4-6 8-6s8 2 8 6" strokeWidth="2" strokeLinecap="round" />
-                                </svg>
-                            </Link>
-                        </div>
-                    )}
                 </div>
 
                 <div className="center-logo">
@@ -113,50 +171,99 @@ export default function Layout({ sidebarOpen, toggleSidebar, children }) {
                                 onClick={toggleSidebar}
                                 aria-label="Close menu"
                             >
-                                <div className="menu-icon">☰</div> Close Menu
+                                <div className="menu-icon">☰</div> {t('closeMenu')}
                             </button>
                         </li>
                     )}
                     <li>
                         <Link to="/" onClick={toggleSidebar} style={{ color: 'inherit', textDecoration: 'none' }}>
-                            Home Page
+                            {t('homePage')}
                         </Link>
                     </li>
-                    <li className={`has-submenu ${openSubmenu === 'character' ? 'open' : ''}`}>
-                        <span onClick={() => onToggleSubmenu('character')} style={{ cursor: 'pointer' }}>Character Sheet</span>
-                        <ul className="submenu" onClick={(e) => e.stopPropagation()}>
-                            <li>Create Character</li>
-                            <li>Load Character</li>
-                            <li>Character Stats</li>
-                            <li>Equipment</li>
-                        </ul>
+                    <li>
+                        <span onClick={() => { toggleCharacterSheetSidebar(); }} style={{ cursor: 'pointer' }}>{t('characterSheet')}</span>
                     </li>
                     <li>
                         <Link to="/profile" onClick={toggleSidebar} style={{ color: 'inherit', textDecoration: 'none' }}>
-                            Profile
+                            {t('profile')}
                         </Link>
                     </li>
-                    <li className="has-submenu">
-                        <span>Language</span>
-                        <ul className="submenu">
-                            <li>English</li>
-                            <li>French</li>
-                        </ul>
+                    <li>
+                        <span onClick={() => { toggleLanguageSidebar(); }} style={{ cursor: 'pointer' }}>{t('language')}</span>
                     </li>
-                    <li className="has-submenu">
-                        <span>Theme</span>
-                        <ul className="submenu">
-                            <li onClick={toggleTheme} className="theme-toggle" style={{cursor: 'pointer'}}>
-                                {isDarkTheme ? '🌞 Switch to Light' : '🌙 Switch to Dark'}
-                            </li>
-                            <li>Light Mode</li>
-                            <li>Dark Mode</li>
-                            <li>Auto Theme</li>
-                        </ul>
+                    <li>
+                        <span onClick={() => { toggleThemeSidebar(); }} style={{ cursor: 'pointer' }}>{t('theme')}</span>
                     </li>
-                    <li>Help</li>
-                    <li onClick={handleLogout} style={{ cursor: 'pointer', color: 'red' }}>Log Out</li>
-                    <li>About</li>
+                    <li onClick={openHelpModal} style={{ cursor: 'pointer' }}>{t('help')}</li>
+                    <li onClick={handleLogout} style={{ cursor: 'pointer', color: 'red' }}>{t('logOut')}</li>
+                    <li>
+                        <Link to="/about" onClick={toggleSidebar} style={{ color: 'inherit', textDecoration: 'none' }}>
+                            {t('about')}
+                        </Link>
+                    </li>
+                </ul>
+            </nav>
+
+            {/* Character Sheet Sidebar */}
+            <nav className={`character-sheet-sidebar ${characterSheetSidebarOpen ? 'open' : ''}`}>
+                <ul>
+                    <li>
+                        <button
+                            className="menu-btn sidebar-menu-btn"
+                            onClick={closeCharacterSheetSidebar}
+                            aria-label="Close character sheet menu"
+                        >
+                            <div className="menu-icon">☰</div> {t('close')}
+                        </button>
+                    </li>
+                    <li onClick={handleCreateCharacter} style={{ cursor: 'pointer' }}>
+                        {t('createCharacter')}
+                    </li>
+                    <li onClick={() => { navigate('/profile'); closeCharacterSheetSidebar(); toggleSidebar(); }} style={{ cursor: 'pointer' }}>
+                        {t('allCharacterSheets')}
+                    </li>
+                </ul>
+            </nav>
+
+            {/* Language Sidebar */}
+            <nav className={`language-sidebar ${languageSidebarOpen ? 'open' : ''}`}>
+                <ul>
+                    <li>
+                        <button
+                            className="menu-btn sidebar-menu-btn"
+                            onClick={closeLanguageSidebar}
+                            aria-label="Close language menu"
+                        >
+                            <div className="menu-icon">☰</div> {t('close')}
+                        </button>
+                    </li>
+                    <li onClick={() => handleLanguageSelect('en')} style={{ cursor: 'pointer' }}>
+                        {t('english')}
+                    </li>
+                    <li onClick={() => handleLanguageSelect('fr')} style={{ cursor: 'pointer' }}>
+                        {t('french')}
+                    </li>
+                </ul>
+            </nav>
+
+            {/* Theme Sidebar */}
+            <nav className={`theme-sidebar ${themeSidebarOpen ? 'open' : ''}`}>
+                <ul>
+                    <li>
+                        <button
+                            className="menu-btn sidebar-menu-btn"
+                            onClick={closeThemeSidebar}
+                            aria-label="Close theme menu"
+                        >
+                            <div className="menu-icon">☰</div> {t('close')}
+                        </button>
+                    </li>
+                    <li onClick={() => handleThemeSelect('cream')} style={{ cursor: 'pointer' }}>
+                        {t('creamTheme')}
+                    </li>
+                    <li onClick={() => handleThemeSelect('dark')} style={{ cursor: 'pointer' }}>
+                        {t('darkTheme')}
+                    </li>
                 </ul>
             </nav>
 
@@ -164,7 +271,30 @@ export default function Layout({ sidebarOpen, toggleSidebar, children }) {
             <main>{children}</main>
 
             {/* Overlay */}
-            {sidebarOpen && <div className="overlay" onClick={toggleSidebar} />}
+            {(sidebarOpen || characterSheetSidebarOpen || languageSidebarOpen || themeSidebarOpen) && (
+                <div 
+                    className="overlay" 
+                    onClick={() => {
+                        if (sidebarOpen) toggleSidebar();
+                        if (characterSheetSidebarOpen) closeCharacterSheetSidebar();
+                        if (languageSidebarOpen) closeLanguageSidebar();
+                        if (themeSidebarOpen) closeThemeSidebar();
+                    }} 
+                />
+            )}
+
+            {/* Help Modal */}
+            {helpModalOpen && (
+                <div className="modal-overlay" onClick={closeHelpModal}>
+                    <div className="modal-content dark" onClick={(e) => e.stopPropagation()}>
+                        <button className="modal-close" onClick={closeHelpModal} aria-label="Close">×</button>
+                        <h2 style={{ marginBottom: '20px', color: '#ffffff', textAlign: 'center' }}>{t('help')}</h2>
+                        <p style={{ fontSize: '16px', color: '#cccccc', textAlign: 'center', lineHeight: '1.6' }}>
+                            {t('helpContactText')}
+                        </p>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

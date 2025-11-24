@@ -5,6 +5,10 @@ import Signup from './Signup';
 import Welcome from './Welcome';
 import HomePage from './HomePage';
 import Profile from './Profile';
+import About from './About';
+import CreateLobby from './CreateLobby';
+import JoinLobby from './JoinLobby';
+import { LanguageProvider } from './LanguageContext';
 import './App.css';
 
 function App() {
@@ -12,7 +16,8 @@ function App() {
     const toggleSidebar = () => setSidebarOpen((prev) => !prev);
 
     return (
-        <BrowserRouter>
+        <LanguageProvider>
+            <BrowserRouter>
             <Routes>
                 <Route
                     path="/"
@@ -34,8 +39,21 @@ function App() {
                     path="/profile"
                     element={<Profile toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />}
                 />
+                <Route
+                    path="/about"
+                    element={<About toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />}
+                />
+                <Route
+                    path="/create-lobby"
+                    element={<CreateLobby toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />}
+                />
+                <Route
+                    path="/join-lobby"
+                    element={<JoinLobby toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />}
+                />
             </Routes>
         </BrowserRouter>
+        </LanguageProvider>
     );
 }
 
