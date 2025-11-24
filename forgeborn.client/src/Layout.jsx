@@ -1,6 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useLanguage } from './LanguageContext';
+import { useLanguage } from './language/UseLanguage';
 
 export default function Layout({ sidebarOpen, toggleSidebar, children }) {
     const { language, setLanguage, t } = useLanguage();
@@ -12,6 +12,14 @@ export default function Layout({ sidebarOpen, toggleSidebar, children }) {
     const [helpModalOpen, setHelpModalOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
+
+    // Unused variables
+    const _language = language;
+    const _isDarkTheme = isDarkTheme;
+    const _openSubmenu = openSubmenu;
+    const _onToggleSubmenu = onToggleSubmenu;
+    const _shouldShowProfileIcon = shouldShowProfileIcon;
+    const _handleProfileClick = handleProfileClick;
 
     useEffect(() => {
         // Check for saved theme preference or default to cream
@@ -56,6 +64,7 @@ export default function Layout({ sidebarOpen, toggleSidebar, children }) {
         setHelpModalOpen(false);
     };
 
+    // Unused function
     const onToggleSubmenu = (key) => {
         console.log('Toggling submenu:', key);
         setOpenSubmenu((prev) => {
@@ -104,6 +113,7 @@ export default function Layout({ sidebarOpen, toggleSidebar, children }) {
         toggleSidebar();
     };
 
+    // Unused function
     const shouldShowProfileIcon = (() => {
         const username = localStorage.getItem('username');
         if (!username) return false; // Only show if logged in
@@ -117,6 +127,7 @@ export default function Layout({ sidebarOpen, toggleSidebar, children }) {
         return true;
     })();
 
+    // Unused function
     const handleProfileClick = (e) => {
         const username = localStorage.getItem('username');
         if (!username) {
