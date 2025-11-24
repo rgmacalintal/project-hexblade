@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import './App.css';
 
-export default function CreateLobby({ toggleSidebar, sidebarOpen }) {
+export default function CreateLobby({ toggleSidebar, sidebarOpen }) {  
     const { t } = useLanguage();
     const [lobbyCode, setLobbyCode] = useState('');
     const navigate = useNavigate();
