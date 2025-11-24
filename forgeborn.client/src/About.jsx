@@ -1,7 +1,7 @@
 import React from 'react';
 import Layout from './Layout';
 import { Link } from 'react-router-dom';
-import { useLanguage } from './LanguageContext';
+import { useLanguage } from './language/UseLanguage';
 import './App.css';
 
 export default function About({ toggleSidebar, sidebarOpen }) {

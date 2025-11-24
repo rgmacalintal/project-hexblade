@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Layout from './Layout';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
-import { useLanguage } from './LanguageContext';
+import { useLanguage } from './language/UseLanguage';
 import './App.css';
 
 export default function Profile({ toggleSidebar, sidebarOpen }) {

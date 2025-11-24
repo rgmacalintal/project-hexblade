@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Layout from './Layout';
-import { useLanguage } from './LanguageContext';
+import { useLanguage } from './language/UseLanguage';
 import './Welcome.css';
 import './App.css';
 import { useLocation, useNavigate, Link } from 'react-router-dom';

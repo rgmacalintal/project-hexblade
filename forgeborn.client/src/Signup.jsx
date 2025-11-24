@@ -1,7 +1,7 @@
 ﻿import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Layout from './Layout';
-import { useLanguage } from './LanguageContext';
+import { useLanguage } from './language/UseLanguage';
 
 export default function Signup({ toggleSidebar, sidebarOpen }) {
     const { t } = useLanguage();
