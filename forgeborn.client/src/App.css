@@ -3,12 +3,12 @@
     max-width: 2000px;
     margin: auto;
     padding: 40px;
-    background-color: #fffff9; /* Cream theme default */
+    background-color: #2a2a2a; /* Changed from #fffff9 */
     position: relative;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); /* Darkened shadow */
 }
 
     /* IMPORTANT: Prevent shifting or margin change */
@@ -24,10 +24,10 @@
     left: -300px; /* hidden off screen */
     width: 300px;
     height: 100vh;
-    background-color: #f5f5f0; /* Cream theme default */
+    background-color: #333333; /* Changed from #f5f5f0 */
     padding: 80px 30px 30px;
-    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
-    color: #333333; /* Cream theme default */
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.8); /* Darkened shadow */
+    color: #cccccc; /* Changed from #333 */
     transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 9999;
     overflow-y: auto;
@@ -40,204 +40,6 @@
         overflow-x: visible;
     }
 
-/* Character Sheet Sidebar */
-.character-sheet-sidebar {
-    position: fixed;
-    top: 0;
-    right: -300px; /* hidden off screen */
-    width: 300px;
-    height: 100vh;
-    background-color: #f5f5f0; /* Cream theme default */
-    padding: 80px 30px 30px;
-    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
-    color: #333333; /* Cream theme default */
-    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 10000;
-    overflow-y: auto;
-    overflow-x: visible;
-    border-left: 2px solid rgba(255, 167, 86, 0.3);
-}
-
-    .character-sheet-sidebar.open {
-        right: 0; /* slide in */
-        overflow-x: visible;
-    }
-
-    .character-sheet-sidebar ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .character-sheet-sidebar ul li {
-        padding: 18px 20px;
-        border-bottom: 1px solid rgba(255, 167, 86, 0.2);
-        cursor: pointer;
-        font-size: 16px;
-        user-select: none;
-        transition: all 0.3s ease;
-        border-radius: 8px;
-        margin-bottom: 5px;
-        font-weight: 500;
-        position: relative;
-        overflow: hidden;
-    }
-
-        .character-sheet-sidebar ul li::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 0;
-            background: linear-gradient(90deg, rgba(255, 167, 86, 0.15), rgba(255, 107, 53, 0.15));
-            transition: width 0.3s ease;
-            z-index: -1;
-        }
-
-        .character-sheet-sidebar ul li:hover {
-            background: rgba(255, 167, 86, 0.15);
-            color: #ffa756;
-            transform: translateX(-10px);
-            border-left: 3px solid #ffa756;
-        }
-
-            .character-sheet-sidebar ul li:hover::before {
-                width: 100%;
-            }
-
-/* Language Sidebar */
-.language-sidebar {
-    position: fixed;
-    top: 0;
-    right: -300px; /* hidden off screen */
-    width: 300px;
-    height: 100vh;
-    background-color: #f5f5f0; /* Cream theme default */
-    padding: 80px 30px 30px;
-    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
-    color: #333333; /* Cream theme default */
-    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 10000;
-    overflow-y: auto;
-    overflow-x: visible;
-    border-left: 2px solid rgba(255, 167, 86, 0.3);
-}
-
-    .language-sidebar.open {
-        right: 0; /* slide in */
-        overflow-x: visible;
-    }
-
-    .language-sidebar ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .language-sidebar ul li {
-        padding: 18px 20px;
-        border-bottom: 1px solid rgba(255, 167, 86, 0.2);
-        cursor: pointer;
-        font-size: 16px;
-        user-select: none;
-        transition: all 0.3s ease;
-        border-radius: 8px;
-        margin-bottom: 5px;
-        font-weight: 500;
-        position: relative;
-        overflow: hidden;
-    }
-
-        .language-sidebar ul li::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 0;
-            background: linear-gradient(90deg, rgba(255, 167, 86, 0.15), rgba(255, 107, 53, 0.15));
-            transition: width 0.3s ease;
-            z-index: -1;
-        }
-
-        .language-sidebar ul li:hover {
-            background: rgba(255, 167, 86, 0.15);
-            color: #ffa756;
-            transform: translateX(-10px);
-            border-left: 3px solid #ffa756;
-        }
-
-            .language-sidebar ul li:hover::before {
-                width: 100%;
-            }
-
-/* Theme Sidebar */
-.theme-sidebar {
-    position: fixed;
-    top: 0;
-    right: -300px; /* hidden off screen */
-    width: 300px;
-    height: 100vh;
-    background-color: #f5f5f0; /* Cream theme default */
-    padding: 80px 30px 30px;
-    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
-    color: #333333; /* Cream theme default */
-    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 10000;
-    overflow-y: auto;
-    overflow-x: visible;
-    border-left: 2px solid rgba(255, 167, 86, 0.3);
-}
-
-    .theme-sidebar.open {
-        right: 0; /* slide in */
-        overflow-x: visible;
-    }
-
-    .theme-sidebar ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .theme-sidebar ul li {
-        padding: 18px 20px;
-        border-bottom: 1px solid rgba(255, 167, 86, 0.2);
-        cursor: pointer;
-        font-size: 16px;
-        user-select: none;
-        transition: all 0.3s ease;
-        border-radius: 8px;
-        margin-bottom: 5px;
-        font-weight: 500;
-        position: relative;
-        overflow: hidden;
-    }
-
-        .theme-sidebar ul li::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 0;
-            background: linear-gradient(90deg, rgba(255, 167, 86, 0.15), rgba(255, 107, 53, 0.15));
-            transition: width 0.3s ease;
-            z-index: -1;
-        }
-
-        .theme-sidebar ul li:hover {
-            background: rgba(255, 167, 86, 0.15);
-            color: #ffa756;
-            transform: translateX(-10px);
-            border-left: 3px solid #ffa756;
-        }
-
-            .theme-sidebar ul li:hover::before {
-                width: 100%;
-            }
-
 /* Overlay */
 .overlay {
     position: fixed;
@@ -245,7 +47,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.4); /* Cream theme default */
+    background-color: rgba(0, 0, 0, 0.7); /* Slightly darker overlay */
     z-index: 9998;
 }
 
@@ -269,11 +71,11 @@
 
 /* Language button */
 .language-btn {
-    background-color: #e8e8e0; /* Cream theme default */
+    background-color: #444444; /* Changed from #333 */
     border: none;
     border-radius: 12px;
     padding: 16px 24px;
-    color: #333333; /* Cream theme default */
+    color: #ffffff;
     font-size: 16px;
     cursor: pointer;
     font-weight: 600;
@@ -283,9 +85,9 @@
 }
 
     .language-btn:hover {
-        background-color: #d8d8d0; /* Cream theme default */
+        background-color: #555555; /* Changed from #444 */
         transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Darkened shadow */
     }
 
 /* Menu button */
@@ -461,7 +263,7 @@
     border-bottom: none;
     margin-bottom: 0;
     font-size: 14px;
-    color: #555555; /* Cream theme default */
+    color: #cccccc; /* Changed from #555 */
     transition: all 0.3s ease;
 }
 
@@ -507,15 +309,15 @@
     font-weight: 700;
     margin: 0 0 15px 0;
     margin-top: 120px;
-    color: #333333; /* Cream theme default */
+    color: #ffffff; /* Changed from #333 */
     text-align: center;
     letter-spacing: 1px;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Darkened shadow */
 }
 
 .subheading {
     font-size: 20px;
-    color: #000000; /* Cream theme default - black */
+    color: #cccccc; /* Changed from #666 */
     text-align: center;
     font-weight: 300;
     letter-spacing: 0.5px;
@@ -529,17 +331,17 @@
     max-width: 600px;
     margin: 0 auto;
     padding: 40px;
-    background: rgba(255, 255, 255, 0.8); /* Cream theme default */
+    background: rgba(0, 0, 0, 0.3); /* Changed from rgba(255, 255, 255, 0.8) */
     border-radius: 20px;
     border: 1px solid rgba(255, 167, 86, 0.4);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); /* Darkened shadow */
 }
 
     .login-form label {
         font-size: 14px;
         text-transform: uppercase;
         letter-spacing: 1.5px;
-        color: #000000; /* Cream theme default - black */
+        color: #cccccc; /* Changed from #666 */
         font-weight: 600;
         margin-bottom: 8px;
         display: block;
@@ -549,8 +351,8 @@
         padding: 18px 20px;
         border: 2px solid rgba(255, 167, 86, 0.3);
         border-radius: 12px;
-        background: rgba(255, 255, 255, 0.9); /* Cream theme default */
-        color: #333333; /* Cream theme default */
+        background: rgba(0, 0, 0, 0.4); /* Changed from rgba(255, 255, 255, 0.9) */
+        color: #ffffff; /* Changed from #333 */
         font-size: 16px;
         transition: all 0.3s ease;
         font-weight: 400;
@@ -559,13 +361,13 @@
         .login-form input:focus {
             outline: none;
             border-color: #ffa756;
-            background: rgba(255, 255, 255, 1); /* Cream theme default */
+            background: rgba(0, 0, 0, 0.5); /* Changed from rgba(255, 255, 255, 1) */
             box-shadow: 0 0 20px rgba(255, 167, 86, 0.3);
             transform: translateY(-2px);
         }
 
         .login-form input::placeholder {
-            color: rgba(102, 102, 102, 0.6); /* Cream theme default */
+            color: rgba(204, 204, 204, 0.6); /* Changed from rgba(102, 102, 102, 0.6) */
             font-weight: 300;
         }
 
@@ -614,7 +416,7 @@
 .footer-links {
     font-size: 16px;
     text-align: center;
-    color: #000000; /* Cream theme default - black */
+    color: #cccccc; /* Changed from #666 */
     margin-top: 20px;
     line-height: 1.6;
 }
@@ -649,7 +451,7 @@
 
 /* Fullscreen background wrapper */
 .fullscreen-wrapper {
-    background-color: #fffff9; /* Cream theme default */
+    background-color: #2a2a2a; /* Changed from #fffff9 */
     min-height: 100vh;
     width: 100%;
     display: flex;
@@ -733,7 +535,6 @@
 /* Dark Theme Styles */
 body.dark-theme {
     background-color: #1d1d1d !important;
-    color: #ffffff !important;
 }
 
     body.dark-theme .login-wrapper {
@@ -749,24 +550,6 @@ body.dark-theme {
         background-color: #333333 !important;
         color: #cccccc !important;
         box-shadow: 4px 0 20px rgba(0, 0, 0, 0.8) !important;
-    }
-
-    body.dark-theme .character-sheet-sidebar {
-        background-color: #333333 !important;
-        color: #cccccc !important;
-        box-shadow: -4px 0 20px rgba(0, 0, 0, 0.8) !important;
-    }
-
-    body.dark-theme .language-sidebar {
-        background-color: #333333 !important;
-        color: #cccccc !important;
-        box-shadow: -4px 0 20px rgba(0, 0, 0, 0.8) !important;
-    }
-
-    body.dark-theme .theme-sidebar {
-        background-color: #333333 !important;
-        color: #cccccc !important;
-        box-shadow: -4px 0 20px rgba(0, 0, 0, 0.8) !important;
     }
 
     body.dark-theme .login-heading,
@@ -844,14 +627,6 @@ body.dark-theme {
         color: #cccccc !important;
     }
 
-    body.dark-theme .modal-content h2 {
-        color: #ffffff !important;
-    }
-
-    body.dark-theme .modal-content p {
-        color: #cccccc !important;
-    }
-
     body.dark-theme .submenu {
         background-color: #3c3c3c !important;
         border-color: rgba(255, 167, 86, 0.4) !important;
@@ -866,112 +641,6 @@ body.dark-theme {
                 background-color: rgba(255, 167, 86, 0.15) !important;
                 color: #ffa756 !important;
             }
-
-    /* Welcome Page Dark Theme */
-    body.dark-theme .welcome-page {
-        color: #ffffff !important;
-    }
-
-    body.dark-theme .welcome-subtitle {
-        color: #cccccc !important;
-    }
-
-    body.dark-theme .feature-card {
-        background: rgba(0, 0, 0, 0.2) !important;
-    }
-
-    body.dark-theme .feature-card:hover {
-        background: rgba(0, 0, 0, 0.3) !important;
-    }
-
-    body.dark-theme .feature-description {
-        color: #cccccc !important;
-    }
-
-    /* About Page Dark Theme */
-    body.dark-theme .about-page {
-        color: #ffffff !important;
-    }
-
-    body.dark-theme .about-container {
-        background: rgba(0, 0, 0, 0.3) !important;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
-    }
-
-    body.dark-theme .about-text {
-        color: #cccccc !important;
-    }
-
-    /* Profile Page Dark Theme */
-    body.dark-theme .profile-title {
-        color: #ffffff !important;
-    }
-
-    body.dark-theme .profile-username {
-        color: #ffffff !important;
-    }
-
-    body.dark-theme .profile-info {
-        color: #ffffff !important;
-    }
-
-    body.dark-theme .profile-page {
-        color: #ffffff !important;
-    }
-
-    /* Create Lobby Dark Theme */
-    body.dark-theme .create-lobby-page {
-        color: #ffffff !important;
-    }
-
-    body.dark-theme .lobby-code-container {
-        background: rgba(0, 0, 0, 0.3) !important;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
-    }
-
-    body.dark-theme .lobby-code-display {
-        color: #ffffff !important;
-    }
-
-    body.dark-theme .lobby-code-subtitle {
-        color: #cccccc !important;
-    }
-
-    /* Join Lobby Dark Theme */
-    body.dark-theme .join-lobby-page {
-        color: #ffffff !important;
-    }
-
-    body.dark-theme .join-lobby-container {
-        background: rgba(0, 0, 0, 0.3) !important;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
-    }
-
-    body.dark-theme .join-lobby-subtitle {
-        color: #cccccc !important;
-    }
-
-    body.dark-theme .join-lobby-input {
-        color: #ffffff !important;
-    }
-
-    body.dark-theme .join-lobby-input::placeholder {
-        color: rgba(255, 255, 255, 0.4) !important;
-    }
-
-    body.dark-theme .overlay {
-        background-color: rgba(0, 0, 0, 0.7) !important;
-    }
-
-    body.dark-theme .language-btn {
-        background-color: #444444 !important;
-        color: #ffffff !important;
-    }
-
-    body.dark-theme .language-btn:hover {
-        background-color: #555555 !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important;
-    }
 
 /* Homepage Header */
 .homepage-header {
@@ -1062,7 +731,7 @@ body.dark-theme {
 
 .hero-subtitle {
     font-size: 1.3rem;
-    color: #000000; /* Cream theme default - black */
+    color: #cccccc; /* Changed from #666 */
     margin-bottom: 40px;
     line-height: 1.6;
     font-weight: 300;
@@ -1219,15 +888,15 @@ body.dark-theme {
 .section-title {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #000000; /* Cream theme default - black */
+    color: #ffffff; /* Changed from #333 */
     text-align: center;
     margin-bottom: 20px;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Darkened shadow */
 }
 
 .section-subtitle {
     font-size: 1.2rem;
-    color: #000000; /* Cream theme default - black */
+    color: #cccccc; /* Changed from #666 */
     text-align: center;
     margin-bottom: 60px;
     max-width: 800px;
@@ -1340,7 +1009,7 @@ body.dark-theme {
 }
 
 .step p {
-    color: #000000; /* Cream theme default - black */
+    color: #cccccc; /* Changed from #ccc */
     line-height: 1.6;
 }
 
@@ -1389,7 +1058,7 @@ body.dark-theme {
 }
 
 .customizable-item p {
-    color: #000000; /* Cream theme default - black */
+    color: #cccccc; /* Changed from #ccc */
     line-height: 1.6;
 }
 
@@ -1432,7 +1101,7 @@ body.dark-theme {
 
 .stat-label {
     font-size: 1rem;
-    color: #000000; /* Cream theme default - black */
+    color: #cccccc; /* Changed from #ccc */
     text-transform: uppercase;
     letter-spacing: 1px;
 }
@@ -1456,7 +1125,7 @@ body.dark-theme {
 
 .cta-subtitle {
     font-size: 1.3rem;
-    color: #000000; /* Cream theme default - black */
+    color: #cccccc; /* Changed from #ccc */
     margin-bottom: 40px;
     max-width: 600px;
     margin-left: auto;
@@ -1466,7 +1135,7 @@ body.dark-theme {
 
 .cta-login {
     margin-top: 30px;
-    color: #000000; /* Cream theme default - black */
+    color: #cccccc; /* Changed from #ccc */
 }
 
     .cta-login a {
@@ -1624,13 +1293,6 @@ body.dark-theme {
     color: #333;
 }
 
-.profile-username {
-    margin-top: 16px;
-    font-size: 18px;
-    color: #333;
-    font-weight: 500;
-}
-
 .profile-fields {
     
     display: grid;
@@ -1641,7 +1303,7 @@ body.dark-theme {
 
 .profile-fields label {
     grid-column: span 2;
-    color: #000000; /* Cream theme default - black */
+    color: #666;
     font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -1674,299 +1336,8 @@ body.dark-theme {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #000000; /* Cream theme default - black */
+    color: #666;
     background: rgba(0,0,0,0.05);
-}
-
-/* Create Lobby Page */
-.create-lobby-page {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 40px 20px;
-    color: #333333; /* Cream theme default */
-}
-
-.lobby-code-container {
-    text-align: center;
-    max-width: 600px;
-    padding: 60px 40px;
-    background: rgba(255, 255, 255, 0.8); /* Cream theme default */
-    border-radius: 20px;
-    border: 1px solid rgba(255, 167, 86, 0.3);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-
-.lobby-code-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #ffa756;
-    margin-bottom: 30px;
-    text-shadow: 0 4px 20px rgba(255, 167, 86, 0.3);
-    letter-spacing: 2px;
-}
-
-.lobby-code-display {
-    font-size: 4rem;
-    font-weight: 700;
-    color: #333333; /* Cream theme default */
-    background: rgba(255, 167, 86, 0.2);
-    border: 3px solid #ffa756;
-    border-radius: 15px;
-    padding: 30px 50px;
-    margin: 30px 0;
-    letter-spacing: 8px;
-    font-family: 'Courier New', monospace;
-    text-shadow: 0 2px 10px rgba(255, 167, 86, 0.5);
-    box-shadow: 0 8px 25px rgba(255, 167, 86, 0.3);
-}
-
-.lobby-code-subtitle {
-    font-size: 1.2rem;
-    color: #000000; /* Cream theme default - black */
-    margin-bottom: 40px;
-    line-height: 1.6;
-}
-
-.lobby-back-btn {
-    padding: 14px 32px;
-    font-size: 1rem;
-    font-weight: 600;
-    background-color: transparent;
-    color: #ffa756;
-    border: 2px solid rgba(255, 167, 86, 0.5);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.lobby-back-btn:hover {
-    background-color: rgba(255, 167, 86, 0.1);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(255, 167, 86, 0.3);
-    border-color: rgba(255, 167, 86, 0.8);
-}
-
-.lobby-back-btn:active {
-    transform: translateY(-1px);
-}
-
-@media (max-width: 768px) {
-    .lobby-code-container {
-        padding: 40px 20px;
-    }
-
-    .lobby-code-title {
-        font-size: 2rem;
-    }
-
-    .lobby-code-display {
-        font-size: 2.5rem;
-        padding: 20px 30px;
-        letter-spacing: 4px;
-    }
-
-    .lobby-code-subtitle {
-        font-size: 1rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .lobby-code-display {
-        font-size: 2rem;
-        padding: 15px 20px;
-        letter-spacing: 3px;
-    }
-}
-
-/* Join Lobby Page */
-.join-lobby-page {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 40px 20px;
-    color: #333333; /* Cream theme default */
-}
-
-.join-lobby-container {
-    text-align: center;
-    max-width: 600px;
-    padding: 60px 40px;
-    background: rgba(255, 255, 255, 0.8); /* Cream theme default */
-    border-radius: 20px;
-    border: 1px solid rgba(255, 167, 86, 0.3);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-
-.join-lobby-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #ffa756;
-    margin-bottom: 20px;
-    text-shadow: 0 4px 20px rgba(255, 167, 86, 0.3);
-    letter-spacing: 2px;
-}
-
-.join-lobby-subtitle {
-    font-size: 1.2rem;
-    color: #000000; /* Cream theme default - black */
-    margin-bottom: 40px;
-    line-height: 1.6;
-}
-
-.join-lobby-input-container {
-    margin-bottom: 30px;
-}
-
-.join-lobby-input {
-    width: 100%;
-    max-width: 300px;
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #333333; /* Cream theme default */
-    background: rgba(255, 167, 86, 0.2);
-    border: 3px solid #ffa756;
-    border-radius: 15px;
-    padding: 20px 30px;
-    text-align: center;
-    letter-spacing: 8px;
-    font-family: 'Courier New', monospace;
-    text-transform: uppercase;
-    text-shadow: 0 2px 10px rgba(255, 167, 86, 0.5);
-    box-shadow: 0 8px 25px rgba(255, 167, 86, 0.3);
-    transition: all 0.3s ease;
-}
-
-.join-lobby-input:focus {
-    outline: none;
-    border-color: #ff9640;
-    box-shadow: 0 8px 30px rgba(255, 167, 86, 0.5);
-    background: rgba(255, 167, 86, 0.3);
-}
-
-.join-lobby-input::placeholder {
-    color: rgba(102, 102, 102, 0.6); /* Cream theme default */
-    letter-spacing: 2px;
-    font-size: 0.8rem;
-}
-
-.join-lobby-btn {
-    padding: 16px 48px;
-    font-size: 1.2rem;
-    font-weight: 600;
-    background-color: #ffa756;
-    color: #000000;
-    border: 2px solid rgba(255, 167, 86, 0.5);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: 0 6px 20px rgba(255, 167, 86, 0.4);
-    margin-bottom: 20px;
-    min-width: 180px;
-}
-
-.join-lobby-btn:hover {
-    background-color: #ff9640;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(255, 167, 86, 0.5);
-    border-color: rgba(255, 167, 86, 0.8);
-}
-
-.join-lobby-btn:active {
-    transform: translateY(-1px);
-}
-
-@media (max-width: 768px) {
-    .join-lobby-container {
-        padding: 40px 20px;
-    }
-
-    .join-lobby-title {
-        font-size: 2rem;
-    }
-
-    .join-lobby-input {
-        font-size: 2rem;
-        padding: 15px 20px;
-        letter-spacing: 4px;
-        max-width: 250px;
-    }
-
-    .join-lobby-subtitle {
-        font-size: 1rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .join-lobby-input {
-        font-size: 1.5rem;
-        padding: 12px 15px;
-        letter-spacing: 3px;
-        max-width: 200px;
-    }
-}
-
-/* About Page */
-.about-page {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    padding: 40px 20px;
-    color: #333333; /* Cream theme default */
-}
-
-.about-container {
-    max-width: 900px;
-    margin: 150px auto 0;
-    padding: 60px 40px;
-    background: rgba(255, 255, 255, 0.8); /* Cream theme default */
-    border-radius: 20px;
-    border: 1px solid rgba(255, 167, 86, 0.3);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-
-.about-title {
-    font-size: 3rem;
-    font-weight: 700;
-    color: #ffa756;
-    text-align: center;
-    margin-bottom: 40px;
-    text-shadow: 0 4px 20px rgba(255, 167, 86, 0.3);
-    letter-spacing: 2px;
-}
-
-.about-content {
-    line-height: 1.8;
-}
-
-.about-text {
-    font-size: 1.2rem;
-    color: #333333; /* Cream theme default */
-    text-align: justify;
-    margin: 0;
-    line-height: 1.8;
-}
-
-@media (max-width: 768px) {
-    .about-container {
-        padding: 40px 20px;
-    }
-
-    .about-title {
-        font-size: 2rem;
-    }
-
-    .about-text {
-        font-size: 1rem;
-    }
 }
 
 /* Footer */
@@ -1974,7 +1345,7 @@ body.dark-theme {
     margin-top: 80px;
     padding: 30px 20px;
     border-top: 1px solid rgba(255, 167, 86, 0.3);
-    color: #000000; /* Cream theme default - black */
+    color: #666;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -2309,63 +1680,6 @@ body.dark-theme .add-character-card {
 .bullet-list {
     margin: 0;
     padding-left: 18px;
-}
-
-/* Input fields for character sheet */
-.input-field {
-    background: #000;
-    color: #fff;
-    padding: 4px 10px;
-    border-radius: 8px;
-    font-weight: 700;
-    border: 2px solid transparent;
-    font-family: inherit;
-    font-size: inherit;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.input-field:focus {
-    outline: none;
-    border-color: #ffa756;
-}
-
-.input-field::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-}
-
-/* Buttons for character sheet */
-.btn-primary {
-    background-color: #ffa756;
-    color: #000;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-primary:hover {
-    background-color: #ff9640;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 167, 86, 0.4);
-}
-
-.btn-secondary {
-    background-color: #666;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-secondary:hover {
-    background-color: #777;
-    transform: translateY(-2px);
 }
 
 @media (max-width: 768px) {

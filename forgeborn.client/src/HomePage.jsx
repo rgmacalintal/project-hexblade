@@ -1,20 +1,18 @@
 import React from 'react';
 import Layout from './Layout';
-import { useLanguage } from './LanguageContext';
 import './Welcome.css';
 import './App.css';
 import { Link } from 'react-router-dom';
 
 export default function HomePage({ toggleSidebar, sidebarOpen }) {
-    const { t } = useLanguage();
     return (
         <div className="fullscreen-wrapper">
             <Layout toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen}>
                 {/* Header with Login/Signup buttons */}
                 <div className="homepage-header">
                     <div className="header-buttons">
-                        <Link to="/login" className="header-btn login-btn">{t('loginBtn')}</Link>
-                        <Link to="/signup" className="header-btn signup-btn">{t('signUpBtn')}</Link>
+                        <Link to="/login" className="header-btn login-btn">Login</Link>
+                        <Link to="/signup" className="header-btn signup-btn">Sign Up</Link>
                     </div>
                 </div>
                 
@@ -22,8 +20,8 @@ export default function HomePage({ toggleSidebar, sidebarOpen }) {
                     {/* Hero Section */}
                     <section className="hero-section">
                         <div className="hero-content">
-                            <h1 className="hero-title">{t('heroTitle')}</h1>
-                            <p className="hero-subtitle">{t('heroSubtitle')}</p>
+                            <h1 className="hero-title">The #1 Choice For D&D Online</h1>
+                            <p className="hero-subtitle">Explore why more than 2,000 dedicated players worldwide have chosen Forge Born for its intuitive tools, customizable character creation, interactive dice rolling, and vibrant community, making every Dungeons & Dragons session unforgettable.</p>
                         </div>
                         <div className="hero-image">
                             <div className="character-container">
@@ -143,17 +141,17 @@ export default function HomePage({ toggleSidebar, sidebarOpen }) {
 
                     {/* CTA Section */}
                     <section className="cta-section">
-                        <h2 className="cta-title">{t('playForFree')}</h2>
-                        <p className="cta-subtitle">{t('joinPlayers')}</p>
-                        <Link to="/signup" className="cta-button primary large">{t('createFreeAccount')}</Link>
-                        <p className="cta-login">{t('alreadyHaveAccount')} <Link to="/login">{t('loginBtn')}</Link></p>
+                        <h2 className="cta-title">Play on Forge Born® for Free</h2>
+                        <p className="cta-subtitle">Join over 15 million players and GMs playing dungeons and dragons (and hundreds more systems) online</p>
+                        <button className="cta-button primary large">Create Free Account</button>
+                        <p className="cta-login">Already have an account? <Link to="/login">Login</Link></p>
                     </section>
 
                     {/* Footer */}
                     <footer className="site-footer">
                         
                         <div className="links">
-                            <Link to="/about">{t('about')}</Link>
+                            <Link to="/about">About</Link>
                         </div>
                         <div className="copyright">
                             © {new Date().getFullYear()} Forge Born. All rights reserved.
