@@ -8,8 +8,6 @@ namespace Forgeborn.Server.Models
         [Key]
         public int Id { get; set; }
         public bool IsHost { get; set; }
-
-
         public int UserId { get; set; }
         [ForeignKey(nameof(UserId))]
         public Users? User { get; set; }

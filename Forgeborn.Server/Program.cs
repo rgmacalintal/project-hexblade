@@ -53,14 +53,11 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseAuthorization();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseCors("AllowReactApp");
-
 app.UseAuthorization();
-
-app.MapHub<CharacterHub>("/hubs/characters");
 app.MapControllers();
+app.MapHub<LobbyHub>("/api/lobbyHub");
 
 app.Run();

@@ -101,21 +101,11 @@ export default function Welcome({ toggleSidebar, sidebarOpen }) {
                     <h1 className="welcome-text">
                         {t('welcome', { username: username || 'User' })}
                     </h1>
-                    <p className="welcome-subtitle">{t('journeySubtitle')}</p>
-                    
-                    <div className="welcome-lobby-buttons">
-                        <button 
-                            className="lobby-btn create-lobby-btn"
-                            onClick={() => navigate('/create-lobby')}
-                        >
-                            {t('createLobby')}
-                        </button>
-                        <button 
-                            className="lobby-btn join-lobby-btn"
-                            onClick={() => navigate('/join-lobby')}
-                        >
-                            {t('joinLobby')}
-                        </button>
+                    <p className="welcome-subtitle">Your journey into the realm of adventure begins here</p>
+
+                    <div className="lobby-actions">
+                        <button onClick={() => navigate('/create-lobby')} className="header-btn">Create Lobby</button>
+                        <button onClick={() => navigate('/join-lobby')} className="header-btn">Join Lobby</button>
                     </div>
                     
                     <div className="welcome-features">

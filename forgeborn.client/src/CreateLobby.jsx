@@ -1,57 +1,78 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { HubConnectionBuilder } from '@microsoft/signalr';
+import { useNavigate } from 'react-router-dom';
 import Layout from './Layout';
-import { useNavigate, Link } from 'react-router-dom';
-import { useLanguage } from './LanguageContext';
-import './App.css';
 
 export default function CreateLobby({ toggleSidebar, sidebarOpen }) {
-    const { t } = useLanguage();
+    const [connection, setConnection] = useState(null);
     const [lobbyCode, setLobbyCode] = useState('');
+    const username = localStorage.getItem('username');
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Generate a random 6-character code (letters and numbers)
-        const generateCode = () => {
-            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let code = '';
-            for (let i = 0; i < 6; i++) {
-                code += characters.charAt(Math.floor(Math.random() * characters.length));
+        if (!username) {
+            alert('Please login first.');
+            navigate('/login');
+        }
+    }, [username, navigate]);
+
+    useEffect(() => {
+        const conn = new HubConnectionBuilder()
+            .withUrl('/api/lobbyHub')
+            .withAutomaticReconnect()
+            .build();
+
+        conn.start()
+            .then(() => {
+                console.log('Connected to hub');
+                conn.invoke('CreateLobby', username);
+            })
+            .catch(err => console.error('Connection failed:', err));
+
+        conn.on('LobbyCreated', code => {
+            console.log('Lobby created:', code);
+            setLobbyCode(code);
+        });
+
+        conn.on('PlayerJoined', player => {
+            alert(`${player} joined your lobby!`);
+        });
+
+        conn.on('LobbyClosed', () => {
+            alert('Lobby closed by host.');
+            navigate('/welcome');
+        });
+
+        setConnection(conn);
+
+        return () => {
+            if (conn) {
+                conn.stop();
+                console.log('Disconnected from hub');
             }
-            return code;
         };
-        setLobbyCode(generateCode());
-    }, []);
+    }, [username, navigate]);
+
+    function leaveLobby() {
+        if (connection) {
+            connection.invoke('LeaveLobby', lobbyCode, username)
+                .then(() => {
+                    console.log('Left lobby');
+                    connection.stop();
+                    navigate('/welcome');
+                })
+                .catch(err => console.error('Error leaving lobby:', err));
+        }
+    }
 
     return (
         <div className="fullscreen-wrapper">
             <Layout toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen}>
                 <div className="create-lobby-page">
-                    <div className="lobby-code-container">
-                        <h2 className="lobby-code-title">{t('yourLobbyCode')}</h2>
-                        <div className="lobby-code-display">
-                            {lobbyCode}
-                        </div>
-                        <p className="lobby-code-subtitle">{t('shareCode')}</p>
-                        <button 
-                            className="lobby-back-btn"
-                            onClick={() => navigate('/welcome')}
-                        >
-                            {t('backToWelcome')}
-                        </button>
-                    </div>
-
-                    {/* Footer */}
-                    <footer className="site-footer">
-                        <div className="links">
-                            <Link to="/about">{t('about')}</Link>
-                        </div>
-                        <div className="copyright">
-                            © {new Date().getFullYear()} Forge Born. All rights reserved.
-                        </div>
-                    </footer>
+                    <h2>Lobby Code: {lobbyCode || 'Creating lobby...'}</h2>
+                    <button className="header-btn" onClick={leaveLobby}>Leave Lobby</button>
                 </div>
             </Layout>
         </div>
     );
 }
-

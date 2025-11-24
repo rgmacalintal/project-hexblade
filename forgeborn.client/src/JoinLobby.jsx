@@ -1,71 +1,102 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { HubConnectionBuilder } from '@microsoft/signalr';
+import { useNavigate } from 'react-router-dom';
 import Layout from './Layout';
-import { useNavigate, Link } from 'react-router-dom';
-import { useLanguage } from './LanguageContext';
-import './App.css';
 
 export default function JoinLobby({ toggleSidebar, sidebarOpen }) {
-    const { t } = useLanguage();
+    const [connection, setConnection] = useState(null);
     const [lobbyCode, setLobbyCode] = useState('');
+    const [connected, setConnected] = useState(false);
+    const username = localStorage.getItem('username');
     const navigate = useNavigate();
 
-    const handleJoin = () => {
-        if (lobbyCode.trim().length === 0) {
-            alert('Please enter a lobby code');
+    useEffect(() => {
+        if (!username) {
+            alert('Please login first.');
+            navigate('/login');
+        }
+    }, [username, navigate]);
+
+    async function handleJoin() {
+        if (!lobbyCode.trim()) {
+            alert('Please enter a valid lobby code.');
             return;
         }
-        // Here you would typically validate and join the lobby
-        console.log('Joining lobby with code:', lobbyCode);
-        alert(`Joining lobby: ${lobbyCode}`);
-        // Navigate to lobby/game page or show success message
-    };
+
+        const conn = new HubConnectionBuilder()
+            .withUrl('/api/lobbyHub')
+            .withAutomaticReconnect()
+            .build();
+
+        conn.on('JoinFailed', msg => {
+            alert(msg);
+            conn.stop();
+            setConnected(false);
+        });
+
+        conn.on('PlayerJoined', player => {
+            alert(`${player} joined the lobby!`);
+        });
+
+        conn.on('LobbyClosed', () => {
+            alert('Host closed the lobby.');
+            navigate('/welcome');
+        });
+
+        try {
+            await conn.start();
+            console.log('Connected to hub');
+
+            await conn.invoke('JoinLobby', lobbyCode.toUpperCase(), username);
+
+            if (conn.state === "Connected") {
+                setConnection(conn);
+                setConnected(true);
+            }
+        } catch (error) {
+            console.error('Error joining lobby:', error);
+            alert('Could not connect to the lobby.');
+        }
+    }
+
+    function leaveLobby() {
+        if (connection) {
+            connection.invoke('LeaveLobby', lobbyCode, username)
+                .then(() => {
+                    console.log('Left lobby');
+                    connection.stop();
+                    navigate('/welcome');
+                })
+                .catch(err => console.error('Error leaving lobby:', err));
+        }
+        setConnected(false);
+    }
 
     return (
         <div className="fullscreen-wrapper">
             <Layout toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen}>
                 <div className="join-lobby-page">
-                    <div className="join-lobby-container">
-                        <h2 className="join-lobby-title">{t('joinLobbyTitle')}</h2>
-                        <p className="join-lobby-subtitle">{t('enterLobbyCode')}</p>
-                        
-                        <div className="join-lobby-input-container">
+                    {!connected ? (
+                        <>
+                            <h2>Join a Lobby</h2>
                             <input
                                 type="text"
-                                className="join-lobby-input"
-                                placeholder={t('enter6DigitCode')}
+                                maxLength="4"
+                                placeholder="Enter lobby code"
                                 value={lobbyCode}
                                 onChange={(e) => setLobbyCode(e.target.value.toUpperCase())}
-                                maxLength={6}
+                                className="input-box"
                             />
-                        </div>
-
-                        <button 
-                            className="join-lobby-btn"
-                            onClick={handleJoin}
-                        >
-                            {t('join')}
-                        </button>
-
-                        <button 
-                            className="lobby-back-btn"
-                            onClick={() => navigate('/welcome')}
-                        >
-                            {t('backToWelcome')}
-                        </button>
-                    </div>
-
-                    {/* Footer */}
-                    <footer className="site-footer">
-                        <div className="links">
-                            <Link to="/about">{t('about')}</Link>
-                        </div>
-                        <div className="copyright">
-                            © {new Date().getFullYear()} Forge Born. All rights reserved.
-                        </div>
-                    </footer>
+                            <button className="header-btn" onClick={handleJoin}>Join Lobby</button>
+                        </>
+                    ) : (
+                        <>
+                            <h2>Connected to Lobby {lobbyCode}</h2>
+                            <button className="header-btn" onClick={leaveLobby}>Leave Lobby</button>
+                        </>
+                    )}
                 </div>
             </Layout>
         </div>
     );
 }
-

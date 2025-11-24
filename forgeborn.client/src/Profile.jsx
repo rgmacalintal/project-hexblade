@@ -3,77 +3,24 @@ import Layout from './Layout';
 import { useLocation, Link } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 import './App.css';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export default function Profile({ toggleSidebar, sidebarOpen }) {
     const { t } = useLanguage();
     const location = useLocation();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedCharacter, setSelectedCharacter] = useState(null);
-    const [isCreatingNew, setIsCreatingNew] = useState(false);
-    const [isProfilePictureModalOpen, setIsProfilePictureModalOpen] = useState(false);
-    const [profilePicture, setProfilePicture] = useState(() => {
-        return localStorage.getItem('profilePicture') || '/G1.png';
-    });
-    const username = localStorage.getItem('username') || 'User';
-    const [formData, setFormData] = useState({
-        name: '',
-        nickname: '',
-        role: '',
-        age: '',
-        gender: '',
-        classOccupation: '',
-        personality: '',
-        physical: {
-            height: '',
-            weight: '',
-            build: '',
-            skinTone: '',
-            hairColor: '',
-            eyeColor: ''
-        },
-        background: '',
-        goals: ['', '', ''],
-        relationships: '',
-        motivations: '',
-        conflicts: '',
-        image: '/G1.png'
-    });
+    const location = useLocation();
+    const navigate = useNavigate();
+    const username = location.state?.username || localStorage.getItem('username');
 
     useEffect(() => {
-        // Check if we should open character sheet from menu
-        const shouldOpen = location.state?.openCharacterSheet || localStorage.getItem('openCharacterSheet') === 'true';
-        if (shouldOpen) {
-            setSelectedCharacter(null);
-            setIsCreatingNew(true);
-            setFormData({
-                name: '',
-                nickname: '',
-                role: '',
-                age: '',
-                gender: '',
-                classOccupation: '',
-                personality: '',
-                physical: {
-                    height: '',
-                    weight: '',
-                    build: '',
-                    skinTone: '',
-                    hairColor: '',
-                    eyeColor: ''
-                },
-                background: '',
-                goals: ['', '', ''],
-                relationships: '',
-                motivations: '',
-                conflicts: '',
-                image: '/G1.png'
-            });
-            setIsModalOpen(true);
-            localStorage.removeItem('openCharacterSheet');
-            // Clear location state
-            window.history.replaceState({}, document.title);
+        if (!username) {
+            alert('Please login first.');
+            navigate('/login');
         }
-    }, [location]);
+    }, [username, navigate]);
 
     const openCharacterSheet = (character) => {
         setSelectedCharacter(character);

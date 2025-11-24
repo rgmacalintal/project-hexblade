@@ -19,10 +19,12 @@ export default defineConfig({
             '/api/': {
                 target,
                 changeOrigin: true,
+                ws: true,
             },
             '/openapi/': {
                 target,
                 changeOrigin: true,
+                ws: true,
             }
         }
     },
