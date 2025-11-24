@@ -8,7 +8,7 @@ import JoinLobby from './JoinLobby';
 import HomePage from './HomePage';
 import Profile from './Profile';
 import About from './About';
-import { LanguageProvider } from './LanguageContext';
+import { LanguageProvider } from './language/LanguageProvider';
 import './App.css';
 
 function App() {

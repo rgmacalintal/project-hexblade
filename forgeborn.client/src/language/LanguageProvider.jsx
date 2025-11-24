@@ -1,9 +1,8 @@
-import React, { createContext, useState, useEffect, useCallback } from 'react';
-import { translations } from './language/Translations';
+import React, { useState, useEffect, useCallback } from 'react';
+import { translations } from './Translations';
+import { LanguageContext } from './LanguageContext';
 
-// Contains components
-const LanguageContext = createContext();
-
+// Contains provider component
 export const LanguageProvider = ({ children }) => {
     const [language, setLanguage] = useState(() => {
         return localStorage.getItem('language') || 'en';
@@ -34,4 +33,3 @@ export const LanguageProvider = ({ children }) => {
         </LanguageContext.Provider>
     );
 };
-
