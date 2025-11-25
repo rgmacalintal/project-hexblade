@@ -7,6 +7,7 @@ export default function JoinLobby({ toggleSidebar, sidebarOpen }) {
     const [connection, setConnection] = useState(null);
     const [lobbyCode, setLobbyCode] = useState('');
     const [connected, setConnected] = useState(false);
+    const [players, setPlayers] = useState([]);
     const username = localStorage.getItem('username');
     const navigate = useNavigate();
 
@@ -21,6 +22,17 @@ export default function JoinLobby({ toggleSidebar, sidebarOpen }) {
         if (!lobbyCode.trim()) {
             alert('Please enter a valid lobby code.');
             return;
+        }
+
+        const code = lobbyCode.toUpperCase();
+        setLobbyCode(code);
+
+        let isHost = false;
+        try {
+            const response = await fetch(`/api/Lobbys/IsHost?code=${code}&username=${username}`);
+            isHost = await response.json();
+        } catch (err) {
+            console.error("Failed checking host:", err);
         }
 
         const conn = new HubConnectionBuilder()
@@ -38,16 +50,30 @@ export default function JoinLobby({ toggleSidebar, sidebarOpen }) {
             alert(`${player} joined the lobby!`);
         });
 
+        conn.on("PlayerListUpdated", (list) => {
+            setPlayers(list);
+        });
+
         conn.on('LobbyClosed', () => {
             alert('Host closed the lobby.');
             navigate('/welcome');
+        });
+
+        conn.on('HostReconnected', () => {
+            alert("You have reconnected as the host!");
         });
 
         try {
             await conn.start();
             console.log('Connected to hub');
 
-            await conn.invoke('JoinLobby', lobbyCode.toUpperCase(), username);
+            if (isHost) {
+                console.log("Reconnecting as host...");
+                await conn.invoke('ReconnectHost', code, username);
+            } else {
+                console.log("Joining as player...");
+                await conn.invoke('JoinLobby', code, username);
+            }
 
             if (conn.state === "Connected") {
                 setConnection(conn);
@@ -61,7 +87,7 @@ export default function JoinLobby({ toggleSidebar, sidebarOpen }) {
 
     function leaveLobby() {
         if (connection) {
-            connection.invoke('LeaveLobby', lobbyCode, username)
+            connection.invoke('LeaveLobby', lobbyCode.toUpperCase(), username)
                 .then(() => {
                     console.log('Left lobby');
                     connection.stop();
@@ -92,6 +118,15 @@ export default function JoinLobby({ toggleSidebar, sidebarOpen }) {
                     ) : (
                         <>
                             <h2>Connected to Lobby {lobbyCode}</h2>
+
+                            <h3>Players in Lobby:</h3>
+                            <ul>
+                                {players.map((p, index) => (
+                                    <li key={index}>
+                                        {p.username} {p.isHost ? "(Host)" : ""}
+                                    </li>
+                                ))}
+                            </ul>
                             <button className="header-btn" onClick={leaveLobby}>Leave Lobby</button>
                         </>
                     )}
