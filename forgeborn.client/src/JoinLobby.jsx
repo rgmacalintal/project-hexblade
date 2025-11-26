@@ -8,6 +8,7 @@ export default function JoinLobby({ toggleSidebar, sidebarOpen }) {
     const username = localStorage.getItem('username');
     const navigate = useNavigate();
 
+    //wip
     useEffect(() => {
         if (!username) {
             alert('Please login first.');
