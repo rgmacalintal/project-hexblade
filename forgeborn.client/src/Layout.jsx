@@ -3,9 +3,9 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from './language/UseLanguage';
 
 export default function Layout({ sidebarOpen, toggleSidebar, children }) {
-    const { language, setLanguage, t } = useLanguage();
-    const [isDarkTheme, setIsDarkTheme] = useState(false);
-    const [openSubmenu, setOpenSubmenu] = useState(null);
+    const { Language, setLanguage, t } = useLanguage();
+    const [IsDarkTheme, setIsDarkTheme] = useState(false);
+    const [OpenSubmenu, setOpenSubmenu] = useState(null);
     const [characterSheetSidebarOpen, setCharacterSheetSidebarOpen] = useState(false);
     const [languageSidebarOpen, setLanguageSidebarOpen] = useState(false);
     const [themeSidebarOpen, setThemeSidebarOpen] = useState(false);
@@ -14,16 +14,24 @@ export default function Layout({ sidebarOpen, toggleSidebar, children }) {
     const navigate = useNavigate();
 
     // Unused variables
-    const _language = language;
-    const _isDarkTheme = isDarkTheme;
-    const _openSubmenu = openSubmenu;
-    const _onToggleSubmenu = onToggleSubmenu;
-    const _shouldShowProfileIcon = shouldShowProfileIcon;
-    const _handleProfileClick = handleProfileClick;
+    //const Language = language;
+    //const IsDarkTheme = isDarkTheme;
+    //const OpenSubmenu = openSubmenu;
+    //const OnToggleSubmenu = onToggleSubmenu;
+    //const ShouldShowProfileIcon = shouldShowProfileIcon;
+    //const HandleProfileClick = handleProfileClick;
 
     useEffect(() => {
         // Check for saved theme preference or default to cream
         const savedTheme = localStorage.getItem('theme');
+
+        if (!savedTheme) {
+            setIsDarkTheme(true);
+            document.body.classList.add('dark-theme');
+            localStorage.setItem('theme', 'dark');
+            return;
+        }
+
         if (savedTheme === 'dark') {
             setIsDarkTheme(true);
             document.body.classList.add('dark-theme');
@@ -65,7 +73,7 @@ export default function Layout({ sidebarOpen, toggleSidebar, children }) {
     };
 
     // Unused function
-    const onToggleSubmenu = (key) => {
+    const OnToggleSubmenu = (key) => {
         console.log('Toggling submenu:', key);
         setOpenSubmenu((prev) => {
             const newValue = prev === key ? null : key;
@@ -114,13 +122,14 @@ export default function Layout({ sidebarOpen, toggleSidebar, children }) {
     };
 
     // Unused function
-    const shouldShowProfileIcon = (() => {
+    const ShouldShowProfileIcon = (() => {
         const username = localStorage.getItem('username');
         if (!username) return false; // Only show if logged in
         if (location.pathname === '/') return false;
         if (location.pathname === '/signup') return false;
         if (location.pathname === '/welcome') {
             // Hide on welcome when we came from signup
+            //const from = location.state?.from; solve unused variable blank page?
             const from = location.state && location.state.from;
             if (from === 'signup') return false;
         }
@@ -128,7 +137,7 @@ export default function Layout({ sidebarOpen, toggleSidebar, children }) {
     })();
 
     // Unused function
-    const handleProfileClick = (e) => {
+    const HandleProfileClick = (e) => {
         const username = localStorage.getItem('username');
         if (!username) {
             e.preventDefault();

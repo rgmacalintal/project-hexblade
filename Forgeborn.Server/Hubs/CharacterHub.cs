@@ -7,12 +7,12 @@ namespace Forgeborn.Server.Hubs
     {
         public async Task SubscribeToCharacter(int characterId)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, $"character-{characterId}");
+            await Groups.AddToGroupAsync(Context.ConnectionId, $"{characterId}");
         }
 
         public async Task UnsubscribeFromCharacter(int characterId)
         {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"character-{characterId}");
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"{characterId}");
         }
     }
 }

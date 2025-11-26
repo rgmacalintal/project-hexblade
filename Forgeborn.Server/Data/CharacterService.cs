@@ -121,7 +121,7 @@ namespace Forgeborn.Server.Services
 
             var lobby = await GetLobbyForCharacter(characterId);
 
-            await _hub.Clients.Group($"lobby-{lobby.Id}")
+            await _hub.Clients.Group($"{lobby.Id}")
                 .SendAsync("HPUpdated", new
                 {
                     characterId = character?.Id,
