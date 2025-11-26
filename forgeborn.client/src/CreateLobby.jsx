@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { HubConnectionBuilder } from '@microsoft/signalr';
 import { useNavigate } from 'react-router-dom';
 import Layout from './Layout';
 
 export default function CreateLobby({ toggleSidebar, sidebarOpen }) {
-    const [connection, setConnection] = useState(null);
     const username = localStorage.getItem('username');
     const navigate = useNavigate();
 
@@ -23,15 +22,16 @@ export default function CreateLobby({ toggleSidebar, sidebarOpen }) {
 
         conn.on("JoinFailed", (msg) => alert(msg));
 
-        conn.on("LobbyCreated", (code) => {
+        conn.on("LobbyCreated", async (code) => {
             console.log('Lobby created:', code);
+            localStorage.setItem("currentLobbyCode", code);
+            await conn.stop();
             navigate(`/lobby/${code}`);
         });
 
         try {
             await conn.start();
             await conn.invoke("CreateLobby", username);
-            setConnection(true);
         } catch (err) {
             console.error(err);
             alert("Could not create lobby.");

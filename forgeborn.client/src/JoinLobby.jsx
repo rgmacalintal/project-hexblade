@@ -8,7 +8,6 @@ export default function JoinLobby({ toggleSidebar, sidebarOpen }) {
     const username = localStorage.getItem('username');
     const navigate = useNavigate();
 
-    //wip
     useEffect(() => {
         if (!username) {
             alert('Please login first.');
@@ -57,6 +56,10 @@ export default function JoinLobby({ toggleSidebar, sidebarOpen }) {
                 console.log("Joining as player...");
                 await conn.invoke('JoinLobby', code, username);
             }
+
+            localStorage.setItem("currentLobbyCode", code);
+
+            await conn.stop();
 
             navigate(`/lobby/${code}`);
         } catch (error) {
