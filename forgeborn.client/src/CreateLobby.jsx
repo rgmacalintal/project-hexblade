@@ -5,7 +5,6 @@ import Layout from './Layout';
 
 export default function CreateLobby({ toggleSidebar, sidebarOpen }) {
     const [connection, setConnection] = useState(null);
-    const [lobbyCode, setLobbyCode] = useState('');
     const username = localStorage.getItem('username');
     const navigate = useNavigate();
 
@@ -16,52 +15,26 @@ export default function CreateLobby({ toggleSidebar, sidebarOpen }) {
         }
     }, [username, navigate]);
 
-    useEffect(() => {
+    async function handleCreateLobby() {
         const conn = new HubConnectionBuilder()
             .withUrl('/api/lobbyHub')
             .withAutomaticReconnect()
             .build();
 
-        conn.start()
-            .then(() => {
-                console.log('Connected to hub');
-                conn.invoke('CreateLobby', username);
-            })
-            .catch(err => console.error('Connection failed:', err));
+        conn.on("JoinFailed", (msg) => alert(msg));
 
-        conn.on('LobbyCreated', code => {
+        conn.on("LobbyCreated", (code) => {
             console.log('Lobby created:', code);
-            setLobbyCode(code);
+            navigate(`/lobby/${code}`);
         });
 
-        conn.on('PlayerJoined', player => {
-            alert(`${player} joined your lobby!`);
-        });
-
-        conn.on('LobbyClosed', () => {
-            alert('Lobby closed by host.');
-            navigate('/welcome');
-        });
-
-        setConnection(conn);
-
-        return () => {
-            if (conn) {
-                conn.stop();
-                console.log('Disconnected from hub');
-            }
-        };
-    }, [username, navigate]);
-
-    function leaveLobby() {
-        if (connection) {
-            connection.invoke('LeaveLobby', lobbyCode, username)
-                .then(() => {
-                    console.log('Left lobby');
-                    connection.stop();
-                    navigate('/welcome');
-                })
-                .catch(err => console.error('Error leaving lobby:', err));
+        try {
+            await conn.start();
+            await conn.invoke("CreateLobby", username);
+            setConnection(true);
+        } catch (err) {
+            console.error(err);
+            alert("Could not create lobby.");
         }
     }
 
@@ -69,8 +42,8 @@ export default function CreateLobby({ toggleSidebar, sidebarOpen }) {
         <div className="fullscreen-wrapper">
             <Layout toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen}>
                 <div className="create-lobby-page">
-                    <h2>Lobby Code: {lobbyCode || 'Creating lobby...'}</h2>
-                    <button className="header-btn" onClick={leaveLobby}>Leave Lobby</button>
+                    <h2>Create Lobby</h2>
+                    <button className="header-btn" onClick={handleCreateLobby}>Create Lobby</button>
                 </div>
             </Layout>
         </div>

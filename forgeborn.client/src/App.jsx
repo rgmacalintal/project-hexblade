@@ -8,6 +8,7 @@ import JoinLobby from './JoinLobby';
 import HomePage from './HomePage';
 import Profile from './Profile';
 import About from './About';
+import LobbyPage from './LobbyPage';
 import { LanguageProvider } from './language/LanguageProvider';
 import './App.css';
 
@@ -50,6 +51,10 @@ function App() {
                 <Route
                     path="/about"
                     element={<About toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />}
+                />
+                <Route
+                    path="/lobby/:code"
+                    element={<LobbyPage toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />}
                 />
             </Routes>
         </BrowserRouter>
