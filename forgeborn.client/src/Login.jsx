@@ -88,7 +88,7 @@ export default function Login({ toggleSidebar, sidebarOpen }) {
                         <Link to="/about">{t('about')}</Link>
                     </div>
                     <div className="copyright">
-                        © {new Date().getFullYear()} Forge Born. All rights reserved.
+                        © {new Date().getFullYear()} Forgeborn. All rights reserved.
                     </div>
                 </footer>
             </Layout>

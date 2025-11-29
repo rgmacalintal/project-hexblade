@@ -113,15 +113,15 @@ export const translations = {
         join: 'Join',
 
         // About
-        aboutForgeBorn: 'About Forge Born',
+        aboutForgeBorn: 'About Forgeborn',
         aboutText: 'Currently under the working title "Project Hexblade", this is a D&D web-app for use as a companion app for players to use at tables. D&D can be a complicated game to play sometimes, especially for newer players, and for more advanced players, who like to tweak and change the systems to better fit their ideas, this means adding their own variations to the rules, which can make things even more confusing. Enter Project Hexblade, a modular, easy-to-use, and easy-to-customize web-app. The idea is to have each "chunk" of the "character sheet" as a component, which can be easily modified or replaced by the user.',
 
         // Homepage
         heroTitle: 'The #1 Choice For D&D Online',
-        heroSubtitle: 'Explore why more than 2,000 dedicated players worldwide have chosen Forge Born for its intuitive tools, customizable character creation, interactive dice rolling, and vibrant community, making every Dungeons & Dragons session unforgettable.',
+        heroSubtitle: 'Explore why more than 2,000 dedicated players worldwide have chosen Forgeborn for its intuitive tools, customizable character creation, interactive dice rolling, and vibrant community, making every Dungeons & Dragons session unforgettable.',
         signUpBtn: 'Sign Up',
         loginBtn: 'Login',
-        playForFree: 'Play on Forge Born® for Free',
+        playForFree: 'Play on Forgeborn® for Free',
         joinPlayers: 'Join over 15 million players and GMs playing dungeons and dragons (and hundreds more systems) online',
         createFreeAccount: 'Create Free Account',
         alreadyHaveAccount: 'Already have an account?',
@@ -239,15 +239,15 @@ export const translations = {
         join: 'Rejoindre',
 
         // About
-        aboutForgeBorn: 'À propos de Forge Born',
+        aboutForgeBorn: 'À propos de Forgeborn',
         aboutText: 'Actuellement sous le titre de travail "Project Hexblade", il s\'agit d\'une application web D&D destinée à être utilisée comme application compagnon pour les joueurs à utiliser aux tables. D&D peut être un jeu compliqué à jouer parfois, surtout pour les nouveaux joueurs, et pour les joueurs plus avancés, qui aiment modifier et changer les systèmes pour mieux correspondre à leurs idées, cela signifie ajouter leurs propres variations aux règles, ce qui peut rendre les choses encore plus confuses. Voici Project Hexblade, une application web modulaire, facile à utiliser et facile à personnaliser. L\'idée est d\'avoir chaque "morceau" de la "fiche de personnage" comme un composant, qui peut être facilement modifié ou remplacé par l\'utilisateur.',
 
         // Homepage
         heroTitle: 'Le choix #1 pour D&D en ligne',
-        heroSubtitle: 'Découvrez pourquoi plus de 2 000 joueurs dévoués dans le monde ont choisi Forge Born pour ses outils intuitifs, sa création de personnage personnalisable, ses dés interactifs et sa communauté dynamique, rendant chaque session de Donjons & Dragons inoubliable.',
+        heroSubtitle: 'Découvrez pourquoi plus de 2 000 joueurs dévoués dans le monde ont choisi Forgeborn pour ses outils intuitifs, sa création de personnage personnalisable, ses dés interactifs et sa communauté dynamique, rendant chaque session de Donjons & Dragons inoubliable.',
         signUpBtn: 'S\'inscrire',
         loginBtn: 'Connexion',
-        playForFree: 'Jouez sur Forge Born® gratuitement',
+        playForFree: 'Jouez sur Forgeborn® gratuitement',
         joinPlayers: 'Rejoignez plus de 15 millions de joueurs et de MJ jouant à Donjons & Dragons (et des centaines d\'autres systèmes) en ligne',
         createFreeAccount: 'Créer un compte gratuit',
         alreadyHaveAccount: 'Vous avez déjà un compte?',
