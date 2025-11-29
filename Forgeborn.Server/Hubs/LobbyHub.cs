@@ -97,6 +97,38 @@ namespace Forgeborn.Server.Hubs
                 LobbyId = lobby.Id,
                 IsHost = false
             };
+
+            var defaultCharacter = await _context.Characters.FirstOrDefaultAsync(c => c.UserId == user.Id && c.Name == "Default");
+
+            if (defaultCharacter != null)
+            {
+                player.CharacterId = defaultCharacter.Id;
+            }
+            else
+            {
+                var autoCreated = new Characters
+                {
+                    UserId = user.Id,
+                    Name = "Default",
+                    Class = "None",
+                    Race = "Human",
+                    MaxHP = 10,
+                    CurrentHP = 10,
+                    Strength = 10,
+                    Dexterity = 10,
+                    Constitution = 10,
+                    Intelligence = 10,
+                    Wisdom = 10,
+                    Charisma = 10,
+                    Background = "",
+                    Journal = ""
+                };
+                _context.Characters.Add(autoCreated);
+                await _context.SaveChangesAsync();
+
+                player.CharacterId = autoCreated.Id;
+            }
+
             _context.Players.Add(player);
             await _context.SaveChangesAsync();
 
@@ -126,6 +158,17 @@ namespace Forgeborn.Server.Hubs
 
             await Clients.Caller.SendAsync("HostReconnected", code);
             await BroadcastPlayerList(code);
+        }
+
+        public async Task<bool> IsPlayerInLobby(string code, string username)
+        {
+            var lobby = await _context.Lobbys.FirstOrDefaultAsync(l => l.Name == code);
+            if (lobby == null) return false;
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            if (user == null) return false;
+
+            return await _context.Players.AnyAsync(p => p.LobbyId == lobby.Id && p.UserId == user.Id);
         }
 
         private async Task BroadcastPlayerList(string code)

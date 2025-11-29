@@ -6,13 +6,12 @@ import Layout from './Layout';
 export default function LobbyPage({ toggleSidebar, sidebarOpen }) {
     const { code } = useParams();
     const navigate = useNavigate();
-
     const username = localStorage.getItem("username");
-
     const [connection, setConnection] = useState(null);
     const [players, setPlayers] = useState([]);
     const [isHost, setIsHost] = useState(false);
     const [connected, setConnected] = useState(false);
+    const [selectedPlayer, setSelectedPlayer] = useState(null);
 
     useEffect(() => {
         if (!username) {
@@ -22,7 +21,7 @@ export default function LobbyPage({ toggleSidebar, sidebarOpen }) {
     }, [username, navigate]);
 
     useEffect(() => {
-        let conn = null;
+        const reconnectHandled = { value: false };
 
         async function startConnection() {
             let hostStatus = false;
@@ -34,7 +33,7 @@ export default function LobbyPage({ toggleSidebar, sidebarOpen }) {
                 console.error("Failed checking host status:", err);
             }
 
-            conn = new HubConnectionBuilder()
+            const conn = new HubConnectionBuilder()
                 .withUrl("/api/lobbyHub")
                 .withAutomaticReconnect()
                 .build();
@@ -58,7 +57,10 @@ export default function LobbyPage({ toggleSidebar, sidebarOpen }) {
             });
 
             conn.on("HostReconnected", () => {
-                alert("You are reconnected as the host.");
+                if (!reconnectHandled.value) {
+                    reconnectHandled.value = true;
+                    console.log("Host reconnected.");
+                }
             });
 
             try {
@@ -68,7 +70,11 @@ export default function LobbyPage({ toggleSidebar, sidebarOpen }) {
                 if (hostStatus) {
                     await conn.invoke("ReconnectHost", code, username);
                 } else {
-                    await conn.invoke("JoinLobby", code, username);
+                    const alreadyJoined = await conn.invoke("IsPlayerInLobby", code, username);
+
+                    if (!alreadyJoined) {
+                        await conn.invoke("JoinLobby", code, username);
+                    }
                 }
 
                 setConnection(conn);
@@ -83,18 +89,21 @@ export default function LobbyPage({ toggleSidebar, sidebarOpen }) {
         startConnection();
 
         return () => {
-            if (conn) conn.stop();
+            if (connection) connection.stop();
         };
-    }, [code, username, navigate]);
+    }, [code, username, navigate, connection]);
+
+    function handleSelectPlayer(player) {
+        setSelectedPlayer(player);
+        console.log("Selected player:", player);
+    }
 
     function leaveLobby() {
         if (connection) {
-            connection.invoke("LeaveLobby", code, username)
-                .then(() => {
-                    connection.stop();
-                    navigate("/welcome");
-                })
-                .catch((err) => console.error("Error leaving lobby:", err));
+            connection.invoke("LeaveLobby", code, username).then(() => {
+                connection.stop();
+                navigate("/welcome");
+            }).catch((err) => console.error("Error leaving lobby:", err));
         } else {
             navigate("/welcome");
         }
@@ -105,7 +114,7 @@ export default function LobbyPage({ toggleSidebar, sidebarOpen }) {
             <Layout toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen}>
                 <div className="lobby-page">
                     <h2>Lobby Code: {code}</h2>
-                    <h3>You are {isHost ? "the Host (DM)" : "a Player"}</h3>
+                    <h3>You are {isHost ? "the Dungeon Master" : "a D&D Player"}</h3>
 
                     {!connected && <p>Connecting...</p>}
 
@@ -114,8 +123,8 @@ export default function LobbyPage({ toggleSidebar, sidebarOpen }) {
                             <h3>Players in Lobby:</h3>
                             <ul>
                                 {players.map((p, index) => (
-                                    <li key={index}>
-                                        {p.username} {p.isHost ? "(Host)" : ""}
+                                    <li key={index} onclick={() => handleSelectPlayer(p)} style={{ cursor: "pointer"} }>
+                                        {p.username} {p.isHost ? "(DM)" : ""}
                                     </li>
                                 ))}
                             </ul>
@@ -126,6 +135,12 @@ export default function LobbyPage({ toggleSidebar, sidebarOpen }) {
                                 Leave Lobby
                             </button>
                         </>
+                    )}
+
+                    {selectedPlayer && (
+                        <div className="selected-player-box">
+                            <h4>Selected: {selectedPlayer.username}</h4>
+                        </div>
                     )}
                 </div>
             </Layout>

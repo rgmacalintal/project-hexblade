@@ -57,9 +57,9 @@ export default function JoinLobby({ toggleSidebar, sidebarOpen }) {
                 await conn.invoke('JoinLobby', code, username);
             }
 
-            localStorage.setItem("currentLobbyCode", code);
-
             await conn.stop();
+
+            localStorage.setItem("currentLobbyCode", code);
 
             navigate(`/lobby/${code}`);
         } catch (error) {
