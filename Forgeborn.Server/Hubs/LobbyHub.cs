@@ -99,11 +99,14 @@ namespace Forgeborn.Server.Hubs
                 IsHost = false
             };
 
-            var defaultCharacter = await _context.Characters.FirstOrDefaultAsync(c => c.UserId == user.Id && c.Name == "Default");
+            var defaultCharacterId = await _context.Characters
+                .Where(c => c.UserId == user.Id && c.Name == "Default")
+                .Select(c => c.Id)
+                .FirstOrDefaultAsync();
 
-            if (defaultCharacter != null)
+            if (defaultCharacterId != 0)
             {
-                player.CharacterId = defaultCharacter.Id;
+                player.CharacterId = defaultCharacterId;
             }
             else
             {
@@ -124,6 +127,7 @@ namespace Forgeborn.Server.Hubs
                     Background = "",
                     Journal = ""
                 };
+
                 _context.Characters.Add(autoCreated);
                 await _context.SaveChangesAsync();
 

@@ -110,8 +110,13 @@ export default function LobbyPage({ toggleSidebar, sidebarOpen }) {
     function kickSelectedPlayer() {
         if (!connectionRef.current || !selectedPlayer) return;
 
+        if (selectedPlayer.username === usernameRef.current) {
+            alert("You cannot remove yourself as the Dungeon Master.");
+            return;
+        }
+
         if (window.confirm(`Remove ${selectedPlayer.username} from the lobby?`)) {
-            connectionRef.current.invoke("KickPlayer", code, selectedPlayer.username)
+            connectionRef.current.invoke("KickPlayer", codeRef.current, selectedPlayer.username)
                 .catch(err => console.error("Kick failed:", err));
         }
     }

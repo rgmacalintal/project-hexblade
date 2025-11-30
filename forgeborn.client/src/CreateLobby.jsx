@@ -25,7 +25,6 @@ export default function CreateLobby({ toggleSidebar, sidebarOpen }) {
         conn.on("LobbyCreated", async (code) => {
             console.log('Lobby created:', code);
             localStorage.setItem("currentLobbyCode", code);
-            await conn.stop();
             navigate(`/lobby/${code}`);
         });
 
