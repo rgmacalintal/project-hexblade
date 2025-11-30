@@ -197,9 +197,22 @@ export default function Layout({ sidebarOpen, toggleSidebar, children }) {
                         </li>
                     )}
                     <li>
-                        <Link to="/" onClick={toggleSidebar} style={{ color: 'inherit', textDecoration: 'none' }}>
+                        <span
+                            onClick={() => {
+                                const username = localStorage.getItem('username');
+
+                                toggleSidebar(); // close menu
+
+                                if (username) {
+                                    navigate('/welcome');
+                                } else {
+                                    navigate('/');
+                                }
+                            }}
+                            style={{ color: 'inherit', textDecoration: 'none', cursor: 'pointer' }}
+                        >
                             {t('homePage')}
-                        </Link>
+                        </span>
                     </li>
                     <li>
                         <span onClick={() => { toggleCharacterSheetSidebar(); }} style={{ cursor: 'pointer' }}>{t('characterSheet')}</span>

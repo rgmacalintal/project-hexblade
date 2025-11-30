@@ -37,7 +37,7 @@ export default function HomePage({ toggleSidebar, sidebarOpen }) {
                     {/* Features Section */}
                     <section className="features-section">
                         <h2 className="section-title">A Complete Tabletop for D&D and More</h2>
-                        <p className="section-subtitle">Forge Born® is the most complete solution for digital play. Access character sheets, tokens, rulebooks, dice, and more - with powerful tools to automate the tedious stuff.</p>
+                        <p className="section-subtitle">Forgeborn® is the most complete solution for digital play. Access character sheets, tokens, rulebooks, dice, and more - with powerful tools to automate the tedious stuff.</p>
                         
                         <div className="features-grid">
                             <div className="feature-item">

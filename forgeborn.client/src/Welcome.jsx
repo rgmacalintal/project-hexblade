@@ -139,7 +139,7 @@ export default function Welcome({ toggleSidebar, sidebarOpen }) {
                             <Link to="/about">About</Link>
                         </div>
                         <div className="copyright">
-                            © {new Date().getFullYear()} Forge Born. All rights reserved.
+                            © {new Date().getFullYear()} Forgeborn. All rights reserved.
                         </div>
                     </footer>
                 </div>

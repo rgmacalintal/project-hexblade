@@ -49,6 +49,23 @@ namespace Forgeborn.Server.Controllers
             return lobbys;
         }
 
+        // GET: api/Lobbys/IsHost
+        [HttpGet("IsHost")]
+        public async Task<bool> IsHost(string code, string username)
+        {
+            var lobby = await _context.Lobbys.FirstOrDefaultAsync(l => l.Name == code);
+            if (lobby == null) return false;
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            if (user == null) return false;
+
+            return await _context.Players.AnyAsync(p =>
+                p.LobbyId == lobby.Id &&
+                p.UserId == user.Id &&
+                p.IsHost
+            );
+        }
+
         // PUT: api/Lobbys/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

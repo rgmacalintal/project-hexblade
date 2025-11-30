@@ -4,9 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Layout from './Layout';
 
 export default function JoinLobby({ toggleSidebar, sidebarOpen }) {
-    const [connection, setConnection] = useState(null);
     const [lobbyCode, setLobbyCode] = useState('');
-    const [connected, setConnected] = useState(false);
     const username = localStorage.getItem('username');
     const navigate = useNavigate();
 
@@ -23,6 +21,16 @@ export default function JoinLobby({ toggleSidebar, sidebarOpen }) {
             return;
         }
 
+        const code = lobbyCode.toUpperCase();
+
+        let isHost = false;
+        try {
+            const response = await fetch(`/api/Lobbys/IsHost?code=${code}&username=${username}`);
+            isHost = await response.json();
+        } catch (err) {
+            console.error("Failed checking host:", err);
+        }
+
         const conn = new HubConnectionBuilder()
             .withUrl('/api/lobbyHub')
             .withAutomaticReconnect()
@@ -31,70 +39,49 @@ export default function JoinLobby({ toggleSidebar, sidebarOpen }) {
         conn.on('JoinFailed', msg => {
             alert(msg);
             conn.stop();
-            setConnected(false);
-        });
-
-        conn.on('PlayerJoined', player => {
-            alert(`${player} joined the lobby!`);
         });
 
         conn.on('LobbyClosed', () => {
-            alert('Host closed the lobby.');
+            alert('This lobby is closed.');
             navigate('/welcome');
         });
 
         try {
             await conn.start();
-            console.log('Connected to hub');
 
-            await conn.invoke('JoinLobby', lobbyCode.toUpperCase(), username);
-
-            if (conn.state === "Connected") {
-                setConnection(conn);
-                setConnected(true);
+            if (isHost) {
+                console.log("Reconnecting as host...");
+                await conn.invoke('ReconnectHost', code, username);
+            } else {
+                console.log("Joining as player...");
+                await conn.invoke('JoinLobby', code, username);
             }
+
+            await conn.stop();
+
+            localStorage.setItem("currentLobbyCode", code);
+
+            navigate(`/lobby/${code}`);
         } catch (error) {
             console.error('Error joining lobby:', error);
-            alert('Could not connect to the lobby.');
+            alert('Could not join lobby.');
         }
-    }
-
-    function leaveLobby() {
-        if (connection) {
-            connection.invoke('LeaveLobby', lobbyCode, username)
-                .then(() => {
-                    console.log('Left lobby');
-                    connection.stop();
-                    navigate('/welcome');
-                })
-                .catch(err => console.error('Error leaving lobby:', err));
-        }
-        setConnected(false);
     }
 
     return (
         <div className="fullscreen-wrapper">
             <Layout toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen}>
                 <div className="join-lobby-page">
-                    {!connected ? (
-                        <>
-                            <h2>Join a Lobby</h2>
-                            <input
-                                type="text"
-                                maxLength="4"
-                                placeholder="Enter lobby code"
-                                value={lobbyCode}
-                                onChange={(e) => setLobbyCode(e.target.value.toUpperCase())}
-                                className="input-box"
-                            />
-                            <button className="header-btn" onClick={handleJoin}>Join Lobby</button>
-                        </>
-                    ) : (
-                        <>
-                            <h2>Connected to Lobby {lobbyCode}</h2>
-                            <button className="header-btn" onClick={leaveLobby}>Leave Lobby</button>
-                        </>
-                    )}
+                    <h2>Join Lobby</h2>
+                    <input
+                        type="text"
+                        maxLength="4"
+                        placeholder="Enter lobby code"
+                        value={lobbyCode}
+                        onChange={(e) => setLobbyCode(e.target.value.toUpperCase())}
+                        className="input-box"
+                    />
+                    <button className="header-btn" onClick={handleJoin}>Join Lobby</button>
                 </div>
             </Layout>
         </div>
