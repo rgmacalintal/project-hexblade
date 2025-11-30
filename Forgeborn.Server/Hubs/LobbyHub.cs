@@ -1,5 +1,6 @@
 ﻿using Forgeborn.Server.Data;
 using Forgeborn.Server.Models;
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
@@ -187,65 +188,99 @@ namespace Forgeborn.Server.Hubs
             await Clients.Group(code).SendAsync("PlayerListUpdated", players);
         }
 
-        public async Task LeaveLobby(string code, string username)
+        public async Task KickPlayer(string code, string targetUsername)
         {
             var lobby = await _context.Lobbys.FirstOrDefaultAsync(l => l.Name == code);
-            if (lobby == null) return;
+            if (lobby == null)
+                return;
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
-            if (user != null)
+            if (!LobbyToHost.TryGetValue(code, out var hostConnectionId) ||
+                hostConnectionId != Context.ConnectionId)
             {
-                var player = await _context.Players.FirstOrDefaultAsync(p => p.UserId == user.Id && p.LobbyId == lobby.Id);
-                if (player != null)
-                {
-                    _context.Players.Remove(player);
-                    await _context.SaveChangesAsync();
-                }
+                await Clients.Caller.SendAsync("ActionFailed", "Only the host can kick players.");
+                return;
             }
 
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == targetUsername);
+            if (user == null)
+                return;
+
+            var player = await _context.Players
+                .FirstOrDefaultAsync(p => p.LobbyId == lobby.Id && p.UserId == user.Id);
+
+            if (player == null)
+                return;
+
+            _context.Players.Remove(player);
+            await _context.SaveChangesAsync();
+
+            var targetConnectionId = ConnectionToUsername
+                .Where(k => k.Value == targetUsername)
+                .Select(k => k.Key)
+                .FirstOrDefault();
+
+            if (targetConnectionId != null)
+            {
+                UserToLobby.Remove(targetConnectionId);
+                ConnectionToUsername.Remove(targetConnectionId);
+
+                await Groups.RemoveFromGroupAsync(targetConnectionId, code);
+
+                await Clients.Client(targetConnectionId)
+                    .SendAsync("Kicked", "You have been removed from this lobby.");
+            }
+
+            await BroadcastPlayerList(code);
+        }
+
+        public async Task LeaveLobby(string code, string username)
+        {
             UserToLobby.Remove(Context.ConnectionId);
             ConnectionToUsername.Remove(Context.ConnectionId);
-            await BroadcastPlayerList(code);
 
             if (LobbyToHost.TryGetValue(code, out var hostId) && hostId == Context.ConnectionId)
             {
-                LobbyToHost.Remove(code);
-                await Clients.Group(code).SendAsync("LobbyClosed", "Host left the lobby.");
-                await Groups.RemoveFromGroupAsync(Context.ConnectionId, code);
+                LobbyToHost[code] = "";
+                await Clients.Group(code).SendAsync("HostOffline", username);
             }
             else
             {
-                await Clients.Group(code).SendAsync("PlayerLeft", username);
-                await Groups.RemoveFromGroupAsync(Context.ConnectionId, code);
+                await Clients.Group(code).SendAsync("PlayerOffline", username);
             }
+
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, code);
+
+            await BroadcastPlayerList(code);
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            if (UserToLobby.TryGetValue(Context.ConnectionId, out var code))
+            if (!UserToLobby.TryGetValue(Context.ConnectionId, out var code))
             {
-                UserToLobby.Remove(Context.ConnectionId);
-
-                string username = "Unknown";
-
-                if (ConnectionToUsername.TryGetValue(Context.ConnectionId, out var storedUsername))
-                {
-                    username = storedUsername;
-                    ConnectionToUsername.Remove(Context.ConnectionId);
-                }
-
-                if (LobbyToHost.TryGetValue(code, out var hostId) && hostId == Context.ConnectionId)
-                {
-                    LobbyToHost.Remove(code);
-                    await Clients.Group(code).SendAsync("LobbyClosed", "Host disconnected.");
-                }
-                else
-                {
-                    await Clients.Group(code).SendAsync("PlayerLeft", username);
-                }
-
-                await BroadcastPlayerList(code);
+                return;
             }
+
+            UserToLobby.Remove(Context.ConnectionId);
+
+            string username = "Unknown";
+            if (ConnectionToUsername.TryGetValue(Context.ConnectionId, out var storedUsername))
+            {
+                username = storedUsername;
+                ConnectionToUsername.Remove(Context.ConnectionId);
+            }
+
+            if (LobbyToHost.TryGetValue(code, out var hostId) && hostId == Context.ConnectionId)
+            {
+                LobbyToHost.Remove(code);
+
+                await Clients.Group(code).SendAsync("HostOffline", username);
+            }
+            else
+            {
+                await Clients.Group(code).SendAsync("PlayerOffline", username);
+            }
+
+            await BroadcastPlayerList(code);
 
             await base.OnDisconnectedAsync(exception);
         }

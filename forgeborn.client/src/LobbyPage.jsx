@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { HubConnectionBuilder } from '@microsoft/signalr';
 import Layout from './Layout';
@@ -7,11 +7,14 @@ export default function LobbyPage({ toggleSidebar, sidebarOpen }) {
     const { code } = useParams();
     const navigate = useNavigate();
     const username = localStorage.getItem("username");
-    const [connection, setConnection] = useState(null);
     const [players, setPlayers] = useState([]);
     const [isHost, setIsHost] = useState(false);
     const [connected, setConnected] = useState(false);
     const [selectedPlayer, setSelectedPlayer] = useState(null);
+    const connectionRef = useRef(null);
+    const reconnectHandled = useRef(false);
+    const codeRef = useRef(code);
+    const usernameRef = useRef(username);
 
     useEffect(() => {
         if (!username) {
@@ -21,89 +24,106 @@ export default function LobbyPage({ toggleSidebar, sidebarOpen }) {
     }, [username, navigate]);
 
     useEffect(() => {
-        const reconnectHandled = { value: false };
+        codeRef.current = code;
+        usernameRef.current = username;
+    }, [code, username]);
 
-        async function startConnection() {
-            let hostStatus = false;
-            try {
-                const response = await fetch(`/api/Lobbys/IsHost?code=${code}&username=${username}`);
-                hostStatus = await response.json();
-                setIsHost(hostStatus);
-            } catch (err) {
-                console.error("Failed checking host status:", err);
-            }
+    useEffect(() => {
+        async function start() {
+            if (connectionRef.current) return;
+
+            console.log("Creating SignalR connection...");
 
             const conn = new HubConnectionBuilder()
                 .withUrl("/api/lobbyHub")
                 .withAutomaticReconnect()
                 .build();
 
-            conn.on("JoinFailed", (msg) => {
+            connectionRef.current = conn;
+
+            conn.on("PlayerListUpdated", setPlayers);
+
+            conn.on("JoinFailed", msg => {
                 alert(msg);
                 navigate("/welcome");
             });
 
-            conn.on("PlayerJoined", (player) => {
-                console.log(`${player} joined`);
-            });
-
-            conn.on("PlayerListUpdated", (list) => {
-                setPlayers(list);
-            });
-
-            conn.on("LobbyClosed", () => {
-                alert("This lobby has closed.");
-                navigate("/welcome");
-            });
-
             conn.on("HostReconnected", () => {
-                if (!reconnectHandled.value) {
-                    reconnectHandled.value = true;
-                    console.log("Host reconnected.");
-                }
+                console.log("DM reconnected.");
             });
 
-            try {
-                await conn.start();
-                console.log("Connected to hub.");
-
-                if (hostStatus) {
-                    await conn.invoke("ReconnectHost", code, username);
-                } else {
-                    const alreadyJoined = await conn.invoke("IsPlayerInLobby", code, username);
-
-                    if (!alreadyJoined) {
-                        await conn.invoke("JoinLobby", code, username);
-                    }
-                }
-
-                setConnection(conn);
-                setConnected(true);
-            } catch (error) {
-                console.error("Failed to connect:", error);
-                alert("Could not join lobby.");
+            conn.on("Kicked", (msg) => {
+                alert(msg);
                 navigate("/welcome");
+            });
+
+            conn.on("HostOffline", (username) => {
+                console.log(`${username} (DM) went offline.`);
+            });
+
+            conn.on("PlayerOffline", (username) => {
+                console.log(`${username} went offline.`);
+            });
+
+            let hostStatus = false;
+            try {
+                const response = await fetch(`/api/Lobbys/IsHost?code=${codeRef.current}&username=${usernameRef.current}`);
+                hostStatus = await response.json();
+                setIsHost(hostStatus);
+            } catch (err) {
+                console.error("Failed checking host status:", err);
             }
+
+            await conn.start();
+            console.log("SignalR connected.");
+
+            if (hostStatus && !reconnectHandled.current) {
+                reconnectHandled.current = true;
+                await conn.invoke("ReconnectHost", codeRef.current, usernameRef.current);
+            }
+
+            if (!hostStatus) {
+                const alreadyJoined = await conn.invoke("IsPlayerInLobby", codeRef.current, usernameRef.current);
+                if (!alreadyJoined) {
+                    await conn.invoke("JoinLobby", codeRef.current, usernameRef.current);
+                }
+            }
+
+            setConnected(true);
         }
 
-        startConnection();
+        start();
 
         return () => {
-            if (connection) connection.stop();
+            if (connectionRef.current) {
+                console.log("Stopping SignalR connection…");
+                connectionRef.current.stop();
+            }
         };
-    }, [code, username, navigate, connection]);
+    }, [navigate]);
 
     function handleSelectPlayer(player) {
         setSelectedPlayer(player);
         console.log("Selected player:", player);
     }
 
+    function kickSelectedPlayer() {
+        if (!connectionRef.current || !selectedPlayer) return;
+
+        if (window.confirm(`Remove ${selectedPlayer.username} from the lobby?`)) {
+            connectionRef.current.invoke("KickPlayer", code, selectedPlayer.username)
+                .catch(err => console.error("Kick failed:", err));
+        }
+    }
+
     function leaveLobby() {
-        if (connection) {
-            connection.invoke("LeaveLobby", code, username).then(() => {
-                connection.stop();
-                navigate("/welcome");
-            }).catch((err) => console.error("Error leaving lobby:", err));
+        if (connectionRef.current) {
+            connectionRef.current.invoke("LeaveLobby", codeRef.current, usernameRef.current)
+                .then(() => {
+                    connectionRef.current.stop();
+                    navigate("/welcome");
+                })
+                .catch(err => console.error("Error leaving lobby:", err));
         } else {
             navigate("/welcome");
         }
@@ -123,7 +143,7 @@ export default function LobbyPage({ toggleSidebar, sidebarOpen }) {
                             <h3>Players in Lobby:</h3>
                             <ul>
                                 {players.map((p, index) => (
-                                    <li key={index} onclick={() => handleSelectPlayer(p)} style={{ cursor: "pointer"} }>
+                                    <li key={index} onClick={() => handleSelectPlayer(p)} style={{ cursor: "pointer"} }>
                                         {p.username} {p.isHost ? "(DM)" : ""}
                                     </li>
                                 ))}
@@ -141,6 +161,16 @@ export default function LobbyPage({ toggleSidebar, sidebarOpen }) {
                         <div className="selected-player-box">
                             <h4>Selected: {selectedPlayer.username}</h4>
                         </div>
+                    )}
+
+                    {isHost && selectedPlayer && !selectedPlayer.isHost && (
+                        <button
+                            className="header-btn"
+                            onClick={kickSelectedPlayer}
+                            style={{ backgroundColor: "red", marginTop: "10px" }}
+                        >
+                            Kick {selectedPlayer.username}
+                        </button>
                     )}
                 </div>
             </Layout>
