@@ -41,8 +41,27 @@ export default function CreateLobby({ toggleSidebar, sidebarOpen }) {
         <div className="fullscreen-wrapper">
             <Layout toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen}>
                 <div className="create-lobby-page">
-                    <h2>Create Lobby</h2>
-                    <button className="header-btn" onClick={handleCreateLobby}>Create Lobby</button>
+                    <div className="lobby-code-container">
+                        <h2 className="lobby-code-title">Become a Dungeon Master</h2>
+
+                        <p className="lobby-code-subtitle">
+                            Generate a code to your lobby to share.
+                        </p>
+
+                        <button
+                            className="header-btn signup-btn"
+                            onClick={handleCreateLobby}
+                        >
+                            Create Lobby
+                        </button>
+
+                        <button
+                            className="lobby-back-btn"
+                            onClick={() => navigate('/welcome')}
+                        >
+                            Back
+                        </button>
+                    </div>
                 </div>
             </Layout>
         </div>

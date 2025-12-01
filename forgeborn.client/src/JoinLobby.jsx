@@ -58,9 +58,7 @@ export default function JoinLobby({ toggleSidebar, sidebarOpen }) {
             }
 
             await conn.stop();
-
             localStorage.setItem("currentLobbyCode", code);
-
             navigate(`/lobby/${code}`);
         } catch (error) {
             console.error('Error joining lobby:', error);
@@ -72,16 +70,35 @@ export default function JoinLobby({ toggleSidebar, sidebarOpen }) {
         <div className="fullscreen-wrapper">
             <Layout toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen}>
                 <div className="join-lobby-page">
-                    <h2>Join Lobby</h2>
-                    <input
-                        type="text"
-                        maxLength="4"
-                        placeholder="Enter lobby code"
-                        value={lobbyCode}
-                        onChange={(e) => setLobbyCode(e.target.value.toUpperCase())}
-                        className="input-box"
-                    />
-                    <button className="header-btn" onClick={handleJoin}>Join Lobby</button>
+                    <div className="join-lobby-container">
+                        <h2 className="join-lobby-title">Join or Return</h2>
+                        <p className="join-lobby-subtitle">Enter the code to the lobby.</p>
+
+                        <div className="join-lobby-input-container">
+                            <input
+                                type="text"
+                                className="join-lobby-input"
+                                placeholder=""
+                                value={lobbyCode}
+                                onChange={(e) => setLobbyCode(e.target.value.toUpperCase())}
+                                maxLength={6}
+                            />
+                        </div>
+
+                        <button
+                            className="join-lobby-btn"
+                            onClick={handleJoin}
+                        >
+                            Join Lobby
+                        </button>
+
+                        <button
+                            className="lobby-back-btn"
+                            onClick={() => navigate('/welcome')}
+                        >
+                            Back
+                        </button>
+                    </div>
                 </div>
             </Layout>
         </div>
