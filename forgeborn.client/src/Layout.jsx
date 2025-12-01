@@ -215,12 +215,12 @@ export default function Layout({ sidebarOpen, toggleSidebar, children }) {
                         </span>
                     </li>
                     <li>
-                        <span onClick={() => { toggleCharacterSheetSidebar(); }} style={{ cursor: 'pointer' }}>{t('characterSheet')}</span>
-                    </li>
-                    <li>
                         <Link to="/profile" onClick={toggleSidebar} style={{ color: 'inherit', textDecoration: 'none' }}>
                             {t('profile')}
                         </Link>
+                    </li>
+                    <li>
+                        <span onClick={() => { toggleCharacterSheetSidebar(); }} style={{ cursor: 'pointer' }}>{t('characterSheet')}</span>
                     </li>
                     <li>
                         <span onClick={() => { toggleLanguageSidebar(); }} style={{ cursor: 'pointer' }}>{t('language')}</span>
@@ -228,13 +228,13 @@ export default function Layout({ sidebarOpen, toggleSidebar, children }) {
                     <li>
                         <span onClick={() => { toggleThemeSidebar(); }} style={{ cursor: 'pointer' }}>{t('theme')}</span>
                     </li>
-                    <li onClick={openHelpModal} style={{ cursor: 'pointer' }}>{t('help')}</li>
-                    <li onClick={handleLogout} style={{ cursor: 'pointer', color: 'red' }}>{t('logOut')}</li>
                     <li>
                         <Link to="/about" onClick={toggleSidebar} style={{ color: 'inherit', textDecoration: 'none' }}>
                             {t('about')}
                         </Link>
                     </li>
+                    <li onClick={openHelpModal} style={{ cursor: 'pointer' }}>{t('help')}</li>
+                    <li onClick={handleLogout} style={{ cursor: 'pointer', color: 'red' }}>{t('logOut')}</li>
                 </ul>
             </nav>
 
