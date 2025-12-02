@@ -93,7 +93,7 @@ export default function Signup({ toggleSidebar, sidebarOpen }) {
                         </button>
 
                         <p className="footer-links">
-                            <Link to="/">{t('alreadyHaveAccountLogin')}</Link>
+                            <Link to="/login">{t('alreadyHaveAccountLogin')}</Link>
                         </p>
                     </form>
 
