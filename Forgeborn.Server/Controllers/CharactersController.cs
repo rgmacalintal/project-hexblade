@@ -78,6 +78,7 @@ namespace Forgeborn.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Characters>> PostCharacters(Characters characters)
         {
+            characters.InitializeHP();
             _context.Characters.Add(characters);
             await _context.SaveChangesAsync();
 

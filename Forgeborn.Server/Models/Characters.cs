@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
-using Forgeborn.Server.Models;
+﻿using Forgeborn.Server.Models;
+using Newtonsoft.Json.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Numerics;
+using System.Text.Json;
 
 namespace Forgeborn.Server.Models
 {
@@ -19,9 +21,9 @@ namespace Forgeborn.Server.Models
         [Required]
         public string Race { get; set; } = null!;
         [Required]
-        public int MaxHP { get; set; } = 0;
-        [Required]
-        public int CurrentHP { get; set; } = 0;
+        public int Level { get; set; } = 1;
+        public int MaxHP { get; set; }
+        public int CurrentHP { get; set; }
         [Required]
         [Range (0, 30)]
         public int Strength { get; set; } = 0;
@@ -49,8 +51,19 @@ namespace Forgeborn.Server.Models
         public int UserId { get; set; }
         [ForeignKey(nameof(UserId))]
         public Users? User { get; set; }
+        public int PlayerId { get; set; }
+        [ForeignKey(nameof(PlayerId))]
+        public Players? Player { get; set; }
         public ICollection<Rulesets> Rulesets { get; set; } = new List<Rulesets>();
         public ICollection<Players> Players { get; set; } = new List<Players>();
+        public Lobbys? Lobby => Player?.Lobby;
+
+        public void InitializeHP()
+        {
+            MaxHP = 10 + (Level * 5);
+            CurrentHP = MaxHP;
+        }
 
     }
+
 }
