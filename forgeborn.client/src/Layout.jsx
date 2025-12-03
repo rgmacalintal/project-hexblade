@@ -177,8 +177,23 @@ export default function Layout({ sidebarOpen, toggleSidebar, children }) {
                 </div>
 
                 <div className="center-logo">
-                    <img src="/FORGEBORN_Text.png" alt="Logo" className="logo-img" width="50%" />
-                    <img src="/SwordShield.png" alt="Logo" className="logo-img" width="10%" />
+                    <span
+                        onClick={() => {
+                            const username = localStorage.getItem('username');
+
+                            toggleSidebar(); // close menu
+
+                            if (username) {
+                                navigate('/welcome');
+                            } else {
+                                navigate('/');
+                            }
+                        }}
+                        style={{ color: 'inherit', textDecoration: 'none', cursor: 'pointer', textAlign: 'center' }}
+                    >
+                        <img src="/FORGEBORN_Text.png" alt="Logo" className="logo-img" width="50%" />
+                        <img src="/SwordShield.png" alt="Logo" className="logo-img" width="10%" />
+                    </span>
                 </div>
             </header>
 
